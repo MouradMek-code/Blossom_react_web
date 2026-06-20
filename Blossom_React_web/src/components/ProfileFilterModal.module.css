@@ -1,0 +1,112 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: white;
+  width: min(560px, 92vw);
+  max-height: 85vh;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.header h2 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.closeButton {
+  border: none;
+  background: none;
+  font-size: 1.2rem;
+  color: #777;
+  cursor: pointer;
+}
+
+.scroll {
+  padding: 16px 24px;
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.optionGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.optionChip {
+  width: auto;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 6px 12px;
+  background: white;
+  color: #333;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.optionChip:hover {
+  border-color: #d6336c;
+}
+
+.optionChipSelected {
+  background: #d6336c;
+  border-color: #d6336c;
+  color: white;
+  font-weight: 700;
+}
+
+.footer {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #eee;
+}
+
+.resetButton {
+  flex: 1;
+  border: 1px solid #d6336c;
+  border-radius: 12px;
+  padding: 12px;
+  background: white;
+  color: #d6336c;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.applyButton {
+  flex: 2;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  background: #d6336c;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}

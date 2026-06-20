@@ -1,0 +1,10 @@
+.head {
+  position: absolute;
+  height: 1200px;
+  background-image: url("blossom.png");
+  filter: brightness(70%);
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

@@ -1,0 +1,319 @@
+:root {
+  --rose-primary: #e11d48;
+  --rose-light: #fb7185;
+  --rose-soft: #fff1f4;
+
+  --text-main: #111827;
+  --text-muted: #6b7280;
+
+  --card-bg: rgba(255, 255, 255, 0.85);
+
+  --shadow: 0 12px 40px rgba(225, 29, 72, 0.08);
+
+  --radius: 24px;
+}
+
+/* ================= PAGE ================= */
+
+.profile-page {
+  min-height: 100vh;
+  padding-bottom: 60px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(251, 113, 133, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(225, 29, 72, 0.08),
+      transparent 35%
+    ),
+    #fff8fa;
+}
+
+.profile-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 24px;
+}
+
+/* ================= HERO ================= */
+
+.hero-card {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 40px;
+
+  border-radius: 32px;
+
+  background: linear-gradient(135deg, #ffffff, #fff5f7);
+
+  box-shadow: var(--shadow);
+
+  margin-bottom: 24px;
+}
+
+.hero-card::before {
+  content: "";
+
+  position: absolute;
+
+  width: 350px;
+  height: 350px;
+
+  border-radius: 50%;
+
+  background: radial-gradient(rgba(225, 29, 72, 0.12), transparent);
+
+  top: -150px;
+  right: -120px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.name {
+  margin: 0;
+
+  font-size: 3rem;
+
+  font-weight: 800;
+
+  letter-spacing: -1px;
+
+  color: var(--text-main);
+}
+
+.age {
+  color: var(--rose-primary);
+  font-weight: 700;
+}
+
+.location {
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.hero-badges span {
+  background: white;
+
+  padding: 10px 16px;
+
+  border-radius: 999px;
+
+  font-size: 0.9rem;
+
+  font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= CARDS ================= */
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+
+  backdrop-filter: blur(20px);
+
+  border-radius: 24px;
+
+  padding: 28px;
+
+  margin-bottom: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  box-shadow: var(--shadow);
+
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+
+  font-size: 1.3rem;
+
+  font-weight: 700;
+
+  color: var(--text-main);
+}
+
+.card h2::after {
+  content: "";
+
+  display: block;
+
+  width: 60px;
+  height: 4px;
+
+  margin-top: 8px;
+
+  border-radius: 999px;
+
+  background: linear-gradient(90deg, var(--rose-primary), var(--rose-light));
+}
+
+/* ================= PHOTOS ================= */
+
+.photos-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+
+  gap: 16px;
+}
+
+.photos-grid img {
+  width: 100%;
+
+  height: 360px;
+
+  object-fit: cover;
+
+  border-radius: 24px;
+
+  transition: all 0.35s ease;
+
+  cursor: pointer;
+}
+
+.photos-grid img:hover {
+  transform: scale(1.03);
+}
+
+/* ================= BIO ================= */
+
+.bio {
+  line-height: 1.8;
+
+  color: #374151;
+
+  font-size: 1rem;
+}
+
+/* ================= INFO GRID ================= */
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+
+  gap: 16px;
+}
+
+.grid div {
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 18px;
+
+  border: 1px solid #f1f5f9;
+
+  transition: all 0.25s ease;
+}
+
+.grid div:hover {
+  transform: translateY(-2px);
+
+  border-color: #fda4af;
+}
+
+.grid span {
+  display: block;
+
+  font-size: 0.75rem;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+
+  color: #9ca3af;
+}
+
+.grid b {
+  display: block;
+
+  margin-top: 8px;
+
+  font-size: 1rem;
+
+  color: var(--text-main);
+}
+
+/* ================= TAGS ================= */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tags span {
+  background: linear-gradient(135deg, #fff1f4, #ffe4e6);
+
+  color: #be123c;
+
+  padding: 10px 18px;
+
+  border-radius: 999px;
+
+  font-weight: 600;
+
+  border: 1px solid #fecdd3;
+}
+
+/* ================= LOADING ================= */
+
+.loading {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  min-height: 100vh;
+
+  font-size: 1.2rem;
+
+  color: #6b7280;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 16px;
+  }
+
+  .hero-card {
+    padding: 28px;
+  }
+
+  .name {
+    font-size: 2.2rem;
+  }
+
+  .photos-grid img {
+    height: 280px;
+  }
+}

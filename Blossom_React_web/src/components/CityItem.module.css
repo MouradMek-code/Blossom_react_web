@@ -1,0 +1,23 @@
+.city {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 40px;
+  background: rgb(40, 39, 39);
+  border-radius: 5px;
+  border-color: rgb(73, 73, 73);
+  margin-bottom: 10px;
+  color: white;
+  padding: 30px;
+  cursor: pointer;
+}
+
+.date {
+  margin-right: 10px;
+}
+
+.date button {
+  border-radius: 10px;
+  background: black;
+  color: white;
+}

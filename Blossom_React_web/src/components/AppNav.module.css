@@ -1,0 +1,18 @@
+.nav {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+.nav a {
+  font-size: 23px;
+  border: 10px;
+  background-color: rgb(60, 60, 60);
+  border-radius: 10px;
+  color: white;
+  padding: 5px 15px;
+}
+
+.nav a:global(.active) {
+  background: black;
+}

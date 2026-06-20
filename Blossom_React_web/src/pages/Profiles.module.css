@@ -1,0 +1,245 @@
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 40px 0;
+}
+
+.filterButton {
+  border: 1px solid #d6336c;
+  border-radius: 20px;
+  padding: 8px 16px;
+  background: white;
+  color: #d6336c;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.filterButton:hover {
+  background: #fbe4ec;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 24px 40px 40px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #777;
+  font-size: 1.1rem;
+  padding: 40px;
+}
+
+.card {
+  position: relative;
+  height: 500px;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.15),
+    transparent
+  );
+
+  display: flex;
+  align-items: flex-end;
+}
+
+.profileInfo {
+  width: 100%;
+  color: white;
+  padding: 24px;
+}
+
+.profileInfo h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.location {
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  margin-bottom: 12px;
+}
+
+.loveButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+
+  width: 56px;
+  height: 56px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: white;
+  cursor: pointer;
+
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 20;
+
+  transition: all 0.3s ease;
+}
+
+.loveButton:hover {
+  transform: scale(1.15);
+}
+
+.viewProfileButton {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #d6336c;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.viewProfileButton:hover {
+  background: white;
+}
+
+.matchOverlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.92);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 99999;
+
+  animation: fadeIn 0.4s ease;
+}
+
+.matchCard {
+  text-align: center;
+  color: white;
+
+  animation: popUp 0.4s ease;
+}
+
+.matchHeart {
+  font-size: 5rem;
+  margin-bottom: 20px;
+
+  animation: heartbeat 1s infinite;
+}
+
+.matchCard h1 {
+  font-size: 3.5rem;
+  margin-bottom: 25px;
+}
+
+.matchImage {
+  width: 320px;
+  height: 320px;
+
+  border-radius: 50%;
+  object-fit: cover;
+
+  border: 8px solid white;
+
+  box-shadow:
+    0 0 30px rgba(255, 255, 255, 0.3),
+    0 0 60px rgba(255, 105, 180, 0.4);
+}
+
+.matchCard h2 {
+  margin-top: 25px;
+  font-size: 2rem;
+}
+
+.matchCard p {
+  opacity: 0.85;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.15);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(1.15);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popUp {
+  from {
+    transform: scale(0.75);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

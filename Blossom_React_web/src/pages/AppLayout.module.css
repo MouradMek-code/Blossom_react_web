@@ -1,0 +1,5 @@
+.applayout {
+  display: flex;
+  height: 600px;
+  gap: 10px;
+}

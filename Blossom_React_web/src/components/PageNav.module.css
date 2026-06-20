@@ -1,0 +1,55 @@
+.nav :global(.active) {
+  color: black;
+  border-radius: 2px;
+}
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  vertical-align: top;
+  display: inline-block;
+  width: calc(100% - 200px);
+  box-sizing: border-box;
+  text-align: right;
+}
+
+.head {
+  position: sticky;
+  z-index: 999;
+  top: 0px;
+}
+
+.nav span {
+  padding: 0px 2px;
+  margin: 0px 15px;
+  font-size: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+
+.title {
+  font-size: 30px;
+  padding: 30px;
+  margin: 20px;
+  border: 20px;
+}
+
+.login {
+  background: green;
+  color: white;
+  padding: 4px 15px;
+  border-radius: 3px;
+}
+.login:hover {
+  color: black;
+  background-color: red;
+}
+
+.logout {
+  background: rgba(255, 255, 255, 0.15);
+  display: inline-block;
+  width: 75px;
+  font-size: 18px;
+  color: rgb(50, 1, 44);
+  border-radius: 20px;
+}

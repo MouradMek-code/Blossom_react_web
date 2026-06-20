@@ -1,0 +1,14 @@
+.image {
+  display: inline-block;
+  position: sticky;
+  margin: 20px;
+  width: 6%;
+  top: 0;
+  z-index: 999;
+}
+.image img {
+  width: 100%;
+  top: 0;
+  border-radius: 50%;
+  z-index: 999;
+}
