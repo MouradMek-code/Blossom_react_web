@@ -96,7 +96,7 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    border: "solid",
+    padding: "24px 0",
   },
 
   button: {
@@ -111,13 +111,17 @@ const styles = {
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(3, 120px)",
+    gridTemplateColumns: "repeat(3, minmax(90px, 120px))",
     gap: "12px",
+    justifyContent: "center",
+    width: "100%",
+    maxWidth: "400px",
+    padding: "0 16px",
   },
 
   box: {
-    width: "120px",
-    height: "120px",
+    width: "100%",
+    aspectRatio: "1",
     position: "relative",
     borderRadius: "12px",
     overflow: "hidden",

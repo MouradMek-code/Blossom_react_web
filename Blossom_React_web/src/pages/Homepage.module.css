@@ -1,10 +1,22 @@
 .head {
-  position: absolute;
-  height: 1200px;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-image: url("blossom.png");
-  filter: brightness(70%);
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.head::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.head > * {
+  position: relative;
+  z-index: 1;
 }

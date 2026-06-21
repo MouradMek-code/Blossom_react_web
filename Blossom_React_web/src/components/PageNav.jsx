@@ -7,13 +7,20 @@ function PageNav() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [token, setToken] = useState(sessionStorage.getItem("token"));
+  const [menuOpen, setMenuOpen] = useState(false);
   const istokenundefined = token === "undefined" || token === null;
 
   function HandleLogOut() {
     sessionStorage.setItem("token", undefined);
     setToken(null);
+    setMenuOpen(false);
     navigate("/login");
   }
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
   useEffect(() => {
     const storedToken = sessionStorage.getItem("token");
     const storedTokenMissing = storedToken === "undefined" || storedToken === null;
@@ -41,28 +48,42 @@ function PageNav() {
   }, []);
   return (
     <nav className={styles.head}>
-      <Logo />
+      <div className={styles.bar}>
+        <Logo />
 
-      <ul className={styles.nav}>
+        <button
+          type="button"
+          className={styles.menuToggle}
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span className={styles.menuToggleBar} />
+          <span className={styles.menuToggleBar} />
+          <span className={styles.menuToggleBar} />
+        </button>
+      </div>
+
+      <ul className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
         {istokenundefined !== true && profile !== null && (
           <>
             <span>
-              <NavLink to="/profile" style={{ textDecoration: "none" }}>
+              <NavLink to="/profile" style={{ textDecoration: "none" }} onClick={closeMenu}>
                 Your Profile
               </NavLink>
             </span>
             <span>
-              <NavLink to="/profiles" style={{ textDecoration: "none" }}>
+              <NavLink to="/profiles" style={{ textDecoration: "none" }} onClick={closeMenu}>
                 Profiles
               </NavLink>
             </span>
             <span>
-              <NavLink to="/MatchedList" style={{ textDecoration: "none" }}>
+              <NavLink to="/MatchedList" style={{ textDecoration: "none" }} onClick={closeMenu}>
                 Matched
               </NavLink>
             </span>
             <span>
-              <NavLink to="/liked_you" style={{ textDecoration: "none" }}>
+              <NavLink to="/liked_you" style={{ textDecoration: "none" }} onClick={closeMenu}>
                 Likes You
               </NavLink>
             </span>
@@ -75,14 +96,14 @@ function PageNav() {
         )}
         {istokenundefined === true && (
           <span>
-            <NavLink to="/" style={{ textDecoration: "none" }}>
+            <NavLink to="/" style={{ textDecoration: "none" }} onClick={closeMenu}>
               HomePage
             </NavLink>
           </span>
         )}
         {istokenundefined === true && (
           <span>
-            <NavLink to="/sign_up" style={{ textDecoration: "none" }}>
+            <NavLink to="/sign_up" style={{ textDecoration: "none" }} onClick={closeMenu}>
               Sign Up
             </NavLink>
           </span>
@@ -90,7 +111,7 @@ function PageNav() {
 
         {istokenundefined === true && (
           <span>
-            <NavLink to="/login" style={{ textDecoration: "none" }}>
+            <NavLink to="/login" style={{ textDecoration: "none" }} onClick={closeMenu}>
               Login
             </NavLink>
           </span>
