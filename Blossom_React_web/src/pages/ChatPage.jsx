@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./ChatPage.module.css";
 import PageNav from "../components/PageNav";
@@ -16,7 +16,7 @@ function ChatPage() {
 
   const bottomRef = useRef(null);
 
-  async function loadMessages() {
+  const loadMessages = useCallback(async () => {
     const resp = await fetch(
       `${BASE_URL}/messages/conversation/${conversationId}`,
       {
@@ -26,14 +26,14 @@ function ChatPage() {
 
     const data = await resp.json();
     setMessages(data);
-  }
+  }, [conversationId, token]);
 
   useEffect(() => {
     loadMessages();
 
     const interval = setInterval(loadMessages, 3000);
     return () => clearInterval(interval);
-  }, [conversationId]);
+  }, [loadMessages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });

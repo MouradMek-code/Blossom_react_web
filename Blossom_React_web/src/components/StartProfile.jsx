@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styles from "./StartProfile.module.css";
-import { useNavigate } from "react-router-dom";
 
 function StartProfile({ setQuestionEnded, answer, setAnswer }) {
   const [questions, setQuestions] = useState([]);
@@ -96,14 +95,6 @@ function StartQuizProgressBar({ indiceQuestion, point, length }) {
       <div className={styles.spanning}>
         <span>{`${indiceQuestion + 1}/${length}`} Question</span>
       </div>
-    </div>
-  );
-}
-
-function GoBack({ onclick }) {
-  return (
-    <div className={styles.let_start_btn}>
-      <button onClick={onclick}>Go back create profile page</button>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Profile from "./pages/Profile";
 import Profiles from "./pages/Profiles";
 import SignUp from "./pages/SignUp";
@@ -7,7 +7,6 @@ import Homepage from "./pages/Homepage";
 import PageNotFound from "./pages/PageNotFound";
 import Login from "./pages/Login";
 import MatchedList from "./pages/MatchedList";
-import CityDetail from "./components/CityDetail";
 import ProfileDetails from "./pages/ProfileDetails";
 import ChatPage from "./pages/ChatPage";
 import LikedYou from "./pages/LikedYou";

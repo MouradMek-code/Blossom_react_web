@@ -7,7 +7,6 @@ function PageNav() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [token, setToken] = useState(sessionStorage.getItem("token"));
-  const [error, setError] = useState("");
   const istokenundefined = token === "undefined" || token === null;
 
   function HandleLogOut() {
@@ -16,25 +15,25 @@ function PageNav() {
     navigate("/login");
   }
   useEffect(() => {
+    const storedToken = sessionStorage.getItem("token");
+    const storedTokenMissing = storedToken === "undefined" || storedToken === null;
+
     async function fetchProfile() {
-      if (istokenundefined === true) {
+      if (storedTokenMissing) {
         return;
       }
       try {
         const resp = await fetch(`${BASE_URL}/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${storedToken}` },
         });
-
+        const data = await resp.json();
         if (resp.status !== 200)
           throw new Error(`error happeneded on login : ${data.detail[0].msg}`);
-        const data = await resp.json();
         setProfile(data);
       } catch (err) {
-        if (!istokenundefined) {
+        if (!storedTokenMissing) {
           setToken(null);
         }
-
-        setError(err);
       }
     }
 
