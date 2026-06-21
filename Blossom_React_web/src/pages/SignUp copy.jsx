@@ -5,7 +5,7 @@ import styles from "./Homepage.module.css";
 import StartProfile from "../components/StartProfile";
 import MultiImageUpload from "../components/MultiImageUpload";
 import Localisation from "../components/Localisation";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 function SignUp() {
   const [isregistered, setRegistered] = useState(false);
   const [error, setError] = useState("");

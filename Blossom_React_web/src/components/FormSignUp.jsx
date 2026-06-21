@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./FormSignUp.module.css";
 import styles2 from "./VerifyPhone.module.css";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 
 function FormSignUp({ setRegistered, error, setError, verify, setVerified }) {
   const [username, setUsername] = useState("");

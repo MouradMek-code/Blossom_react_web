@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import styles from "./LikedYou.module.css";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 
 // /likes/profile_likes only returns the ids of profiles that liked the
 // current user, so each id has to be resolved via /profile/{id} to get the

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PageNav from "../components/PageNav";
 import styles from "./MatchedList.module.css";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 function MatchedList() {
   const [listMatchedProfiles, setListMatchedProfiles] = useState(null);
   const token = sessionStorage.getItem("token");

@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./PageNav.module.css";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 function PageNav() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);

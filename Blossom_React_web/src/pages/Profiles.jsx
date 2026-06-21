@@ -4,7 +4,7 @@ import PageNav from "../components/PageNav";
 import ProfileFilterModal from "../components/ProfileFilterModal";
 import { matchesFilters } from "../api/profileFilters";
 import styles from "./Profiles.module.css";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 
 function Profiles() {
   const navigate = useNavigate();

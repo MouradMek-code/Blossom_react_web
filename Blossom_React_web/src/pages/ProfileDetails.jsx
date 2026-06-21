@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PageNav from "../components/PageNav";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 
 function ProfileDetails() {
   const { id } = useParams();

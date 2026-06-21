@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./FormSignUp.module.css";
 import { useNavigate } from "react-router";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 function FormLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

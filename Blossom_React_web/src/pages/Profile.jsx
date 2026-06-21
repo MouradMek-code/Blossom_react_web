@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import "./profile.css";
 
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 
 function Profile() {
   const navigate = useNavigate();

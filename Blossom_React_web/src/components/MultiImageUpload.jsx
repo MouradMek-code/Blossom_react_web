@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 export default function ImageUploader() {
   const MAX = 6;
   const [images, setImages] = useState([]);

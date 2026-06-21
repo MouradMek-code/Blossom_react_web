@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import styles from "./ChatPage.module.css";
 import PageNav from "../components/PageNav";
 
-const BASE_URL = "http://localhost:8000";
+import { BASE_URL } from "../api/config";
 
 function ChatPage() {
   const { conversationId } = useParams();
