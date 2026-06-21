@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PageNav from "../components/PageNav";
 import styles from "./MatchedList.module.css";
 import { useNavigate } from "react-router-dom";
@@ -26,29 +26,30 @@ function MatchedList() {
       console.log(err);
     }
   }
+  const fetchMatchedProfile = useCallback(async () => {
+    try {
+      const resp = await fetch(`${BASE_URL}/profile/profiles/matched`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data_profile_match = await resp.json();
+      setListMatchedProfiles(data_profile_match);
+      if (resp.status !== 200)
+        throw new Error(
+          `error happeneded on matching service : ${data_profile_match.detail[0].msg}`,
+        );
+    } catch (err) {
+      sessionStorage.setItem("token", null);
+      navigate("/login");
+    }
+  }, [token, navigate]);
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
-    }
-
-    async function fetchMatchedProfile() {
-      try {
-        const resp = await fetch(`${BASE_URL}/profile/profiles/matched`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data_profile_match = await resp.json();
-        setListMatchedProfiles(data_profile_match);
-        if (resp.status !== 200)
-          throw new Error(
-            `error happeneded on matching service : ${data_profile_match.detail[0].msg}`,
-          );
-      } catch (err) {
-        sessionStorage.setItem("token", null);
-        navigate("/login");
-      }
+      return;
     }
     fetchMatchedProfile();
-  }, []);
+  }, [token, navigate, fetchMatchedProfile]);
   return (
     <div>
       <PageNav />

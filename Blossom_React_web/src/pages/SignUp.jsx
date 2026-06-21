@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FormSignUp from "../components/FormSignUp";
 import PageNav from "../components/PageNav";
 import styles from "./Homepage.module.css";
@@ -16,7 +16,7 @@ function SignUp() {
   const [verify, setVerified] = useState(false);
   const token = sessionStorage.getItem("token");
   const istokenundefined = token === undefined || token === null;
-  async function CreateLanguage() {
+  const CreateLanguage = useCallback(async () => {
     await Promise.all(
       answer?.language_name.map((ln) =>
         fetch(`${BASE_URL}/profile_language`, {
@@ -31,8 +31,9 @@ function SignUp() {
         }),
       ),
     );
-  }
-  async function CreateProfile() {
+  }, [answer, token]);
+
+  const CreateProfile = useCallback(async () => {
     const resp = await fetch(`${BASE_URL}/profile`, {
       method: "POST",
       headers: {
@@ -61,7 +62,8 @@ function SignUp() {
     });
     const data = await resp.json();
     sessionStorage.setItem("profile_id", data.id);
-  }
+  }, [answer, token]);
+
   useEffect(() => {
     async function submit() {
       if (questionEnded && !istokenundefined) {
@@ -72,7 +74,7 @@ function SignUp() {
       }
     }
     submit();
-  }, [questionEnded, setPhoto]);
+  }, [questionEnded, setPhoto, CreateProfile, CreateLanguage, istokenundefined]);
   return (
     <div className={styles.head}>
       <PageNav />

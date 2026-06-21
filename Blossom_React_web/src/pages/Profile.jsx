@@ -11,7 +11,6 @@ function Profile() {
 
   const token = sessionStorage.getItem("token");
   const istokenundefined = token === "undefined" || token === null;
-  console.log(token);
   useEffect(() => {
     if (istokenundefined) {
       navigate("/login");
@@ -36,7 +35,7 @@ function Profile() {
     }
 
     fetchProfile();
-  }, [token, navigate]);
+  }, [token, navigate, istokenundefined]);
 
   if (!profile) return <div className="loading">Loading...</div>;
   return (

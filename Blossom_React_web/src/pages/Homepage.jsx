@@ -1,4 +1,3 @@
-import { Link, NavLink } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import StartHome from "../components/StartHome";
 import styles from "./Homepage.module.css";

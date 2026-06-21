@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import styles from "./LikedYou.module.css";
@@ -18,7 +18,7 @@ function LikedYou() {
   const [likedByProfiles, setLikedByProfiles] = useState([]);
   const [matchedProfile, setMatchedProfile] = useState(null);
 
-  async function fetchLikedBy() {
+  const fetchLikedBy = useCallback(async () => {
     try {
       const resp = await fetch(`${BASE_URL}/likes/profile_likes`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -42,7 +42,7 @@ function LikedYou() {
       sessionStorage.setItem("token", null);
       navigate("/login");
     }
-  }
+  }, [token, navigate]);
 
   useEffect(() => {
     if (!token) {
@@ -50,7 +50,7 @@ function LikedYou() {
       return;
     }
     fetchLikedBy();
-  }, []);
+  }, [token, navigate, fetchLikedBy]);
 
   async function handleLikeBack(profile) {
     try {
