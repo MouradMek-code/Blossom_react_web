@@ -1,11 +1,9 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./PageNav.module.css";
 import Logo from "./Logo";
-import { useEffect, useState } from "react";
-import { BASE_URL } from "../api/config";
+import { useState } from "react";
 function PageNav() {
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(null);
   const [token, setToken] = useState(sessionStorage.getItem("token"));
   const [menuOpen, setMenuOpen] = useState(false);
   const istokenundefined = token === "undefined" || token === null;
@@ -20,32 +18,6 @@ function PageNav() {
   function closeMenu() {
     setMenuOpen(false);
   }
-
-  useEffect(() => {
-    const storedToken = sessionStorage.getItem("token");
-    const storedTokenMissing = storedToken === "undefined" || storedToken === null;
-
-    async function fetchProfile() {
-      if (storedTokenMissing) {
-        return;
-      }
-      try {
-        const resp = await fetch(`${BASE_URL}/profile`, {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
-        const data = await resp.json();
-        if (resp.status !== 200)
-          throw new Error(`error happeneded on login : ${data.detail[0].msg}`);
-        setProfile(data);
-      } catch (err) {
-        if (!storedTokenMissing) {
-          setToken(null);
-        }
-      }
-    }
-
-    fetchProfile();
-  }, []);
   return (
     <nav className={styles.head}>
       <div className={styles.bar}>
@@ -65,7 +37,7 @@ function PageNav() {
       </div>
 
       <ul className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
-        {istokenundefined !== true && profile !== null && (
+        {istokenundefined !== true && (
           <>
             <span>
               <NavLink to="/profile" style={{ textDecoration: "none" }} onClick={closeMenu}>
