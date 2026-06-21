@@ -35,7 +35,6 @@ function Profiles() {
         setTimeout(() => setMatchedProfile(null), 2000);
       }
     } catch (err) {
-      console.log(err);
     }
   }
 

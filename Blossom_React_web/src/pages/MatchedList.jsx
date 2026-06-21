@@ -23,7 +23,6 @@ function MatchedList() {
 
       navigate(`/chat/${data.conversation_id}`);
     } catch (err) {
-      console.log(err);
     }
   }
   const fetchMatchedProfile = useCallback(async () => {

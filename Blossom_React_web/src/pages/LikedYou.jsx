@@ -38,7 +38,6 @@ function LikedYou() {
       );
       setLikedByProfiles(profiles);
     } catch (err) {
-      console.log(err);
       sessionStorage.setItem("token", null);
       navigate("/login");
     }
@@ -71,7 +70,6 @@ function LikedYou() {
       }
       setLikedByProfiles((prev) => prev.filter((p) => p.id !== profile.id));
     } catch (err) {
-      console.log(err);
     }
   }
 

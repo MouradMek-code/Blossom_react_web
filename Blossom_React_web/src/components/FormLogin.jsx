@@ -24,9 +24,9 @@ function FormLogin() {
       try {
         const resp = await fetch(`${BASE_URL}/login`, requestOptionsLogin);
         const data = await resp.json();
-        console.log(data);
         sessionStorage.setItem("token", data.access_token);
         if (resp.status !== 200)
+		  Console.log(data)
           throw new Error(`error happeneded on login : ${data.detail[0].msg}`);
         navigate("/profile");
       } catch (err) {

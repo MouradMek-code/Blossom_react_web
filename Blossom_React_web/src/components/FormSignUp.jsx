@@ -28,7 +28,6 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified }) {
         const data = await resp.json();
 
         if (resp.status !== 200) {
-          console.log(data);
           throw new Error(`error happeneded on sign up : ${data.detail}`);
         }
         setVerified((c) => !c);
@@ -131,17 +130,13 @@ function VerificationForm({
         phone_number: phoneNumber,
       }),
     };
-    console.log(requestOptions);
-    console.log(requestPin);
     try {
       const resp1 = await fetch(`${BASE_URL}/user/verify-email`, requestPin);
       const data1 = await resp1.json();
-      console.log(data1);
       if (resp1.status !== 200)
         throw new Error(`error happeneded on sign up : ${data1.detail}`);
       const resp = await fetch(`${BASE_URL}/user`, requestOptions);
       const data = await resp.json();
-      console.log(data);
       if (resp.status !== 200)
         throw new Error(`error happeneded on sign up : ${data.detail}`);
       setRegistered((c) => !c);

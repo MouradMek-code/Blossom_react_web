@@ -26,7 +26,13 @@ function ProfileDetails() {
     fetchProfile();
   }, [id]);
 
-  if (!profile) return <div className="loading">Loading...</div>;
+  if (!profile)
+    return (
+      <div className="profile-page">
+        <PageNav />
+        <div className="loading">Loading...</div>
+      </div>
+    );
 
   return (
     <div className="profile-page">
