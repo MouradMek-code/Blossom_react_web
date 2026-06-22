@@ -111,6 +111,11 @@
   padding: 40px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.4s ease;
+
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .questions h2 {
@@ -158,11 +163,16 @@
   padding: 18px;
   border-radius: 18px;
   background: linear-gradient(135deg, #ff5c72, #ff7a8d);
-  color: white;
+  color: rgb(15, 14, 14);
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.25s ease;
+
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  flex-shrink: 0;
 }
 
 .end_button:hover {
@@ -241,24 +251,6 @@
   height: 100px;
 }
 
-/* Question Container */
-.questions {
-  max-width: 750px;
-  margin: 30px auto;
-  padding: 40px;
-  background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-}
-
-.questions h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
 /* Option Cards */
 .optionGrid {
   display: grid;
@@ -330,26 +322,6 @@
   border-radius: 999px;
   background: linear-gradient(90deg, #6366f1, #8b5cf6);
   transition: width 0.4s ease;
-}
-
-/* Next Button */
-.end_button {
-  width: 100%;
-  margin-top: 30px;
-  padding: 16px;
-  border: none;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.end_button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 25px rgba(99, 102, 241, 0.3);
 }
 
 /* Mobile */
