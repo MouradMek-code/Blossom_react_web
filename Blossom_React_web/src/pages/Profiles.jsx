@@ -28,14 +28,15 @@ function Profiles() {
 
       const data = await resp.json();
       if (resp.status !== 200)
-        throw new Error(`error happened on like service : ${data.detail?.[0]?.msg}`);
+        throw new Error(
+          `error happened on like service : ${data.detail?.[0]?.msg}`,
+        );
 
       if (data.matched) {
         setMatchedProfile(profile);
         setTimeout(() => setMatchedProfile(null), 2000);
       }
-    } catch (err) {
-    }
+    } catch (err) {}
   }
 
   useEffect(() => {
@@ -51,7 +52,9 @@ function Profiles() {
         });
         const data = await resp.json();
         if (resp.status !== 200)
-          throw new Error(`error happeneded on login : ${data.detail?.[0]?.msg}`);
+          throw new Error(
+            `error happeneded on login : ${data.detail?.[0]?.msg}`,
+          );
         setProfiles(data);
       } catch (err) {
         sessionStorage.setItem("token", null);
@@ -100,7 +103,11 @@ function Profiles() {
       <PageNav />
 
       <div className={styles.toolbar}>
-        <button type="button" className={styles.filterButton} onClick={openFilters}>
+        <button
+          type="button"
+          className={styles.filterButton}
+          onClick={openFilters}
+        >
           ⚙️ Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
         </button>
       </div>
@@ -117,7 +124,9 @@ function Profiles() {
       <div className={styles.container}>
         {filteredProfiles.length === 0 && (
           <p className={styles.empty}>
-            {activeFilterCount > 0 ? "No profiles match your filters" : "No profiles to show"}
+            {activeFilterCount > 0
+              ? "No profiles match your filters"
+              : "profiles available ...."}
           </p>
         )}
 

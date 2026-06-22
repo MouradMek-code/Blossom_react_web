@@ -9,7 +9,9 @@ import { BASE_URL } from "../api/config";
 // actual name/photos/etc.
 function extractId(entry) {
   if (typeof entry === "number" || typeof entry === "string") return entry;
-  return entry.profile_id ?? entry.id ?? entry.liker_id ?? entry.liker_profile_id;
+  return (
+    entry.profile_id ?? entry.id ?? entry.liker_id ?? entry.liker_profile_id
+  );
 }
 
 function LikedYou() {
@@ -25,9 +27,13 @@ function LikedYou() {
       });
       const data = await resp.json();
       if (resp.status !== 200)
-        throw new Error(`error happeneded on likes service : ${data.detail?.[0]?.msg}`);
+        throw new Error(
+          `error happeneded on likes service : ${data.detail?.[0]?.msg}`,
+        );
 
-      const ids = data.map(extractId).filter((id) => id !== undefined && id !== null);
+      const ids = data
+        .map(extractId)
+        .filter((id) => id !== undefined && id !== null);
       const profiles = await Promise.all(
         ids.map(async (id) => {
           const profileResp = await fetch(`${BASE_URL}/profile/${id}`, {
@@ -62,15 +68,16 @@ function LikedYou() {
       });
       const data = await resp.json();
       if (resp.status !== 200)
-        throw new Error(`error happened on like service : ${data.detail?.[0]?.msg}`);
+        throw new Error(
+          `error happened on like service : ${data.detail?.[0]?.msg}`,
+        );
 
       if (data.matched) {
         setMatchedProfile(profile);
         setTimeout(() => setMatchedProfile(null), 2000);
       }
       setLikedByProfiles((prev) => prev.filter((p) => p.id !== profile.id));
-    } catch (err) {
-    }
+    } catch (err) {}
   }
 
   return (
@@ -97,7 +104,7 @@ function LikedYou() {
 
       <div className={styles.container}>
         {likedByProfiles.length === 0 && (
-          <p className={styles.empty}>No likes yet - check back soon!</p>
+          <p className={styles.empty}>likes ....</p>
         )}
 
         {likedByProfiles.map((profile) => (
