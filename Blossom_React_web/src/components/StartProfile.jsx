@@ -1,5 +1,20 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import styles from "./StartProfile.module.css";
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= breakpoint,
+  );
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= breakpoint);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 function StartProfile({ setQuestionEnded, answer, setAnswer }) {
   const [questions, setQuestions] = useState([]);
@@ -108,6 +123,13 @@ function QuestionOption({
   answer,
   setClicked,
 }) {
+  const isMobile = useIsMobile();
+  const nextButton = (
+    <button className={styles.end_button} onClick={onclick}>
+      NEXT
+    </button>
+  );
+
   return (
     <>
       <div className={styles.questions}>
@@ -122,12 +144,9 @@ function QuestionOption({
             setClicked={setClicked}
           />
         </div>
-        {clicked && (
-          <button className={styles.end_button} onClick={onclick}>
-            NEXT
-          </button>
-        )}
+        {clicked && !isMobile && nextButton}
       </div>
+      {clicked && isMobile && createPortal(nextButton, document.body)}
     </>
   );
 }
