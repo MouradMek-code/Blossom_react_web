@@ -81,7 +81,8 @@
   width: 22px;
   height: 2px;
   margin: 0 auto;
-  background: white;
+  background: rgb(179, 34, 162);
+
   border-radius: 2px;
 }
 
