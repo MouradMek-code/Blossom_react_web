@@ -35,6 +35,29 @@
   white-space: nowrap;
 }
 
+.navItemWithBadge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  margin: 0;
+  border-radius: 999px;
+  background: #ff2d55;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .title {
   font-size: 30px;
   padding: 30px;
