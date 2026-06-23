@@ -92,6 +92,7 @@ function LikedYou() {
       {matchedProfile && (
         <div className={styles.matchOverlay}>
           <div className={styles.matchCard}>
+            <div className={styles.matchHeart}>❤️</div>
             <h1>It's a Match!</h1>
             <img
               src={matchedProfile.photos?.[0]?.image_url}
@@ -123,7 +124,7 @@ function LikedYou() {
                 className={styles.image}
               />
 
-              <div className={styles.heartBadge}>❤️</div>
+            
 
               <div className={styles.overlay}>
                 <div className={styles.profileInfo}>
