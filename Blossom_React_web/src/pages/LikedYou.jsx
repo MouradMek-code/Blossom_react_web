@@ -43,6 +43,11 @@ function LikedYou() {
         }),
       );
       setLikedByProfiles(profiles);
+
+      fetch(`${BASE_URL}/likes/profile_likes/mark_seen`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
     } catch (err) {
       sessionStorage.setItem("token", null);
       navigate("/login");

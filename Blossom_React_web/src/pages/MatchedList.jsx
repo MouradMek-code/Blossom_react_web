@@ -36,6 +36,11 @@ function MatchedList() {
         throw new Error(
           `error happeneded on matching service : ${data_profile_match.detail[0].msg}`,
         );
+
+      fetch(`${BASE_URL}/matches/mark_seen`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
     } catch (err) {
       sessionStorage.setItem("token", null);
       navigate("/login");

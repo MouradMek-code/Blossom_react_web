@@ -30,17 +30,17 @@ function PageNav() {
     async function fetchCounts() {
       try {
         const [matchedResp, likedResp] = await Promise.all([
-          fetch(`${BASE_URL}/profile/profiles/matched`, {
+          fetch(`${BASE_URL}/matches/unseen_count`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           }),
-          fetch(`${BASE_URL}/likes/profile_likes`, {
+          fetch(`${BASE_URL}/likes/profile_likes/unseen_count`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           }),
         ]);
-        const matched = matchedResp.ok ? await matchedResp.json() : [];
-        const liked = likedResp.ok ? await likedResp.json() : [];
-        setMatchCount(Array.isArray(matched) ? matched.length : 0);
-        setLikeCount(Array.isArray(liked) ? liked.length : 0);
+        const matched = matchedResp.ok ? await matchedResp.json() : { count: 0 };
+        const liked = likedResp.ok ? await likedResp.json() : { count: 0 };
+        setMatchCount(matched.count || 0);
+        setLikeCount(liked.count || 0);
       } catch (err) {
         // Leave counts at 0 if the backend is unreachable - not worth
         // bouncing the user to login just because a badge couldn't load.
