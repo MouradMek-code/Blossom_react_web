@@ -10,6 +10,7 @@ import MatchedList from "./pages/MatchedList";
 import ProfileDetails from "./pages/ProfileDetails";
 import ChatPage from "./pages/ChatPage";
 import LikedYou from "./pages/LikedYou";
+import ForgotPassword from "./pages/ForgotPassword";
 function App() {
   return (
     <BrowserRouter>
@@ -23,6 +24,7 @@ function App() {
         <Route index element={<Homepage />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot_password" element={<ForgotPassword />} />
         <Route path="/profile/:id" element={<ProfileDetails />} />
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./FormSignUp.module.css";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import { BASE_URL } from "../api/config";
 function FormLogin() {
   const [username, setUsername] = useState("");
@@ -63,6 +64,9 @@ function FormLogin() {
         <div className={styles.registerform}>
           <button onClick={(e) => HandleLogin(e)}> Login </button>
         </div>
+        <p style={{ textAlign: "center", marginTop: "12px" }}>
+          <Link to="/forgot_password">Forgot password?</Link>
+        </p>
       </form>
     </div>
   );
