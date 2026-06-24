@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Localisation.css";
+import { saveSignupDraft } from "../api/signupDraft";
 
 function Localisation({ setlocated, setAnswer, answer }) {
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
@@ -68,7 +69,14 @@ function Localisation({ setlocated, setAnswer, answer }) {
               📍 {locationData.city}, {locationData.country}
             </p>
 
-            <button onClick={() => setlocated(true)}>Continue</button>
+            <button
+              onClick={() => {
+                saveSignupDraft({ located: true, answer });
+                setlocated(true);
+              }}
+            >
+              Continue
+            </button>
           </div>
         )}
       </div>

@@ -33,6 +33,7 @@ export default function ImageUploader() {
     });
 
     e.target.value = "";
+    sessionStorage.setItem("profilecreated", "yes");
   };
 
   const removeImage = (index) => {

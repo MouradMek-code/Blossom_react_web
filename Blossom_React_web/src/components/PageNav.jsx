@@ -10,9 +10,11 @@ function PageNav() {
   const [matchCount, setMatchCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
   const istokenundefined = token === "undefined" || token === null;
+  const profileCreated = sessionStorage.getItem("profilecreated");
 
   function HandleLogOut() {
     sessionStorage.setItem("token", undefined);
+    sessionStorage.setItem("profilecreated", undefined);
     setToken(null);
     setMenuOpen(false);
     navigate("/login");
@@ -24,7 +26,8 @@ function PageNav() {
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem("token");
-    const storedTokenMissing = storedToken === "undefined" || storedToken === null;
+    const storedTokenMissing =
+      storedToken === "undefined" || storedToken === null;
     if (storedTokenMissing) return;
 
     async function fetchCounts() {
@@ -37,7 +40,9 @@ function PageNav() {
             headers: { Authorization: `Bearer ${storedToken}` },
           }),
         ]);
-        const matched = matchedResp.ok ? await matchedResp.json() : { count: 0 };
+        const matched = matchedResp.ok
+          ? await matchedResp.json()
+          : { count: 0 };
         const liked = likedResp.ok ? await likedResp.json() : { count: 0 };
         setMatchCount(matched.count || 0);
         setLikeCount(liked.count || 0);
@@ -71,32 +76,52 @@ function PageNav() {
       </div>
 
       <ul className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
-        {istokenundefined !== true && (
+        {istokenundefined !== true && profileCreated === "yes" && (
           <>
             <span>
-              <NavLink to="/profile" style={{ textDecoration: "none" }} onClick={closeMenu}>
+              <NavLink
+                to="/profile"
+                style={{ textDecoration: "none" }}
+                onClick={closeMenu}
+              >
                 Your Profile
               </NavLink>
             </span>
             <span>
-              <NavLink to="/profiles" style={{ textDecoration: "none" }} onClick={closeMenu}>
+              <NavLink
+                to="/profiles"
+                style={{ textDecoration: "none" }}
+                onClick={closeMenu}
+              >
                 Profiles
               </NavLink>
             </span>
             <span className={styles.navItemWithBadge}>
-              <NavLink to="/MatchedList" style={{ textDecoration: "none" }} onClick={closeMenu}>
+              <NavLink
+                to="/MatchedList"
+                style={{ textDecoration: "none" }}
+                onClick={closeMenu}
+              >
                 Matched
               </NavLink>
               {matchCount > 0 && (
-                <span className={styles.badge}>{matchCount > 9 ? "9+" : matchCount}</span>
+                <span className={styles.badge}>
+                  {matchCount > 9 ? "9+" : matchCount}
+                </span>
               )}
             </span>
             <span className={styles.navItemWithBadge}>
-              <NavLink to="/liked_you" style={{ textDecoration: "none" }} onClick={closeMenu}>
+              <NavLink
+                to="/liked_you"
+                style={{ textDecoration: "none" }}
+                onClick={closeMenu}
+              >
                 Likes You
               </NavLink>
               {likeCount > 0 && (
-                <span className={styles.badge}>{likeCount > 9 ? "9+" : likeCount}</span>
+                <span className={styles.badge}>
+                  {likeCount > 9 ? "9+" : likeCount}
+                </span>
               )}
             </span>
             <span>
@@ -106,24 +131,37 @@ function PageNav() {
             </span>
           </>
         )}
-        {istokenundefined === true && (
+        {profileCreated === null ||
+          (profileCreated === "undefined" && (
+            <span>
+              <NavLink
+                to="/"
+                style={{ textDecoration: "none" }}
+                onClick={closeMenu}
+              >
+                HomePage
+              </NavLink>
+            </span>
+          ))}
+        {profileCreated === null && (
           <span>
-            <NavLink to="/" style={{ textDecoration: "none" }} onClick={closeMenu}>
-              HomePage
-            </NavLink>
-          </span>
-        )}
-        {istokenundefined === true && (
-          <span>
-            <NavLink to="/sign_up" style={{ textDecoration: "none" }} onClick={closeMenu}>
+            <NavLink
+              to="/sign_up"
+              style={{ textDecoration: "none" }}
+              onClick={closeMenu}
+            >
               Sign Up
             </NavLink>
           </span>
         )}
 
-        {istokenundefined === true && (
+        {profileCreated === null && (
           <span>
-            <NavLink to="/login" style={{ textDecoration: "none" }} onClick={closeMenu}>
+            <NavLink
+              to="/login"
+              style={{ textDecoration: "none" }}
+              onClick={closeMenu}
+            >
               Login
             </NavLink>
           </span>

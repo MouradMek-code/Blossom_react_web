@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./StartProfile.module.css";
+import { saveSignupDraft } from "../api/signupDraft";
 
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(
@@ -16,10 +17,10 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
-function StartProfile({ setQuestionEnded, answer, setAnswer }) {
+function StartProfile({ setQuestionEnded, answer, setAnswer, initialIndex = 0, autoStart = false }) {
   const [questions, setQuestions] = useState([]);
-  const [started, setStart] = useState(false);
-  const [indiceQuestion, setIndiceQuestion] = useState(0);
+  const [started, setStart] = useState(autoStart);
+  const [indiceQuestion, setIndiceQuestion] = useState(initialIndex);
   const [clicked, setClicked] = useState(false);
 
   function Handleclicked(question, values) {
@@ -47,13 +48,16 @@ function StartProfile({ setQuestionEnded, answer, setAnswer }) {
     setStart((s) => !s);
     setIndiceQuestion(0);
     setClicked(false);
+    saveSignupDraft({ started: true, questionIndex: 0, answer });
   }
   function Handleindicequestion(i) {
     setClicked(false);
     if (indiceQuestion >= questions.length - 1) {
       setQuestionEnded((c) => !c);
     }
-    setIndiceQuestion((c) => c + 1);
+    const nextIndex = indiceQuestion + 1;
+    setIndiceQuestion(nextIndex);
+    saveSignupDraft({ started: true, questionIndex: nextIndex, answer });
   }
   return (
     <div className={styles.container}>
