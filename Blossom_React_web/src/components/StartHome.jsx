@@ -6,9 +6,9 @@ function StartHome() {
   const istokenundefined = token === "undefined" || token === null;
   return (
     <div className={styles.center}>
-      <h1 className={styles.title}>Stop swiping. Start dating.</h1>
-      <h1 className={styles.subtitle}>Real plans, not endless chats</h1>
-      <h2 className={styles.tagline}>Pick a date, not just a face</h2>
+      <h1 className={styles.title}>Meet your dating soul TODAY !!</h1>
+      <h1 className={styles.subtitle}>Free Fast Account</h1>
+      <h2 className={styles.tagline}>swipe → chat → maybe meet</h2>
       {istokenundefined === true && (
         <Link to="sign_up" className={styles.cta}>
           Start Dating Now ❤️
