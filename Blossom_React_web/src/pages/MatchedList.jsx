@@ -27,9 +27,6 @@ function MatchedList() {
   }
 
   async function handleUnmatch(profile) {
-    if (!window.confirm(`Unmatch with ${profile.first_name}? They'll disappear from your matches and reappear in Browse.`)) {
-      return;
-    }
     try {
       const resp = await fetch(`${BASE_URL}/matches/unmatch/${profile.id}`, {
         method: "DELETE",
