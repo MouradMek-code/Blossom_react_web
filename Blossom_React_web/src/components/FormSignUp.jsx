@@ -2,12 +2,13 @@ import { useState } from "react";
 import styles from "./FormSignUp.module.css";
 import styles2 from "./VerifyPhone.module.css";
 import { BASE_URL } from "../api/config";
+import { saveSignupDraft, clearSignupDraft } from "../api/signupDraft";
 
-function FormSignUp({ setRegistered, error, setError, verify, setVerified }) {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefill }) {
+  const [username, setUsername] = useState(prefill?.username || "");
+  const [email, setEmail] = useState(prefill?.email || "");
   const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(prefill?.phoneNumber || "");
 
   function FormHandler(e) {
     e.preventDefault();
@@ -30,6 +31,10 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified }) {
         if (resp.status !== 200) {
           throw new Error(`error happeneded on sign up : ${data.detail}`);
         }
+        // The account doesn't exist yet and there's no token until the
+        // OTP is verified - save just enough (no password) to resume
+        // straight at the verification screen if the user leaves now.
+        saveSignupDraft({ stage: "verify_otp", username, email, phoneNumber });
         setVerified((c) => !c);
         sessionStorage.setItem("token", data.access_token);
       } catch (err) {
@@ -108,8 +113,16 @@ function VerificationForm({
   setRegistered,
 }) {
   const [code, setCode] = useState("");
+  // Resuming after a reload means the password was never persisted (by
+  // design - we don't store it locally), so it has to be re-entered here
+  // to finish account creation. On a fresh, uninterrupted signup it's
+  // already known from the previous step and this field stays hidden.
+  const [passwordInput, setPasswordInput] = useState("");
+  const needsPassword = !password;
+
   const SignUp = async () => {
     setError("");
+    const effectivePassword = password || passwordInput;
 
     const requestPin = {
       method: "POST",
@@ -126,7 +139,7 @@ function VerificationForm({
       body: JSON.stringify({
         username: username,
         email: email,
-        password: password,
+        password: effectivePassword,
         phone_number: phoneNumber,
       }),
     };
@@ -139,6 +152,7 @@ function VerificationForm({
       const data = await resp.json();
       if (resp.status !== 200)
         throw new Error(`error happeneded on sign up : ${data.detail}`);
+      clearSignupDraft();
       setRegistered((c) => !c);
       sessionStorage.setItem("token", data.access_token);
     } catch (err) {
@@ -163,6 +177,16 @@ function VerificationForm({
           maxLength={6}
           onChange={(e) => setCode(e.target.value)}
         />
+
+        {needsPassword && (
+          <input
+            className={styles2.input}
+            type="password"
+            placeholder="Re-enter your password"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+          />
+        )}
 
         <button className={styles2.button} onClick={SignUp}>
           Continue

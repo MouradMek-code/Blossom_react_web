@@ -18,9 +18,10 @@ function SignUp() {
   const [checkingResume, setCheckingResume] = useState(true);
   const [resumeIndex, setResumeIndex] = useState(0);
   const [resumeAutoStart, setResumeAutoStart] = useState(false);
+  const [prefill, setPrefill] = useState(null);
 
   const token = sessionStorage.getItem("token");
-  const istokenundefined = token === undefined || token === null;
+  const istokenundefined = token === undefined || token === null || token === "undefined";
 
   // A token alone means signup + email/OTP verification already
   // succeeded in a previous visit - figure out how much further they got
@@ -28,6 +29,18 @@ function SignUp() {
   useEffect(() => {
     async function checkResume() {
       if (istokenundefined) {
+        // No real token yet, but they may have already sent themselves
+        // an OTP and abandoned the verification screen - resume straight
+        // there instead of having them retype name/email/phone.
+        const draft = getSignupDraft();
+        if (draft?.stage === "verify_otp") {
+          setVerified(true);
+          setPrefill({
+            username: draft.username,
+            email: draft.email,
+            phoneNumber: draft.phoneNumber,
+          });
+        }
         setCheckingResume(false);
         return;
       }
@@ -155,6 +168,7 @@ function SignUp() {
           setError={setError}
           setVerified={setVerified}
           verify={verify}
+          prefill={prefill}
         />
       )}
       {isregistered === true && located === false && (
