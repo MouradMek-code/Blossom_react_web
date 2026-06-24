@@ -25,6 +25,22 @@ function MatchedList() {
     } catch (err) {
     }
   }
+
+  async function handleUnmatch(profile) {
+    if (!window.confirm(`Unmatch with ${profile.first_name}? They'll disappear from your matches and reappear in Browse.`)) {
+      return;
+    }
+    try {
+      const resp = await fetch(`${BASE_URL}/matches/unmatch/${profile.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!resp.ok) throw new Error("Failed to unmatch");
+      setListMatchedProfiles((prev) => prev.filter((p) => p.id !== profile.id));
+    } catch (err) {
+      console.log(err);
+    }
+  }
   const fetchMatchedProfile = useCallback(async () => {
     try {
       const resp = await fetch(`${BASE_URL}/profile/profiles/matched`, {
@@ -88,13 +104,22 @@ function MatchedList() {
               </div>
             </div>
 
-            <button
-              type="button"
-              className={styles.messageButton}
-              onClick={() => openConversation(profile)}
-            >
-              💬 Message
-            </button>
+            <div className={styles.actionsRow}>
+              <button
+                type="button"
+                className={styles.messageButton}
+                onClick={() => openConversation(profile)}
+              >
+                💬 Message
+              </button>
+              <button
+                type="button"
+                className={styles.unmatchButton}
+                onClick={() => handleUnmatch(profile)}
+              >
+                Unmatch
+              </button>
+            </div>
           </div>
         ))}
       </div>
