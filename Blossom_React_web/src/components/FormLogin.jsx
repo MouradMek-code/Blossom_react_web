@@ -26,6 +26,7 @@ function FormLogin() {
         const resp = await fetch(`${BASE_URL}/login`, requestOptionsLogin);
         const data = await resp.json();
         sessionStorage.setItem("token", data.access_token);
+        sessionStorage.setItem("profilecreated", "yes");
         if (resp.status !== 200)
           throw new Error(`error happeneded on login : ${data.detail}`);
         navigate("/profile");
