@@ -8,6 +8,15 @@
   position: sticky;
   top: 0;
   z-index: 999;
+  /* Nav text/pills are styled for a dark backdrop (white text). Without
+     its own background, the nav was invisible-on-white whenever it sat
+     on top of a light page (Profile/Browse/Matches/Likes You) instead of
+     the homepage's dark photo hero. A consistent semi-opaque dark bar
+     keeps contrast correct on every page, light or dark behind it. */
+  background-color: rgba(31, 15, 20, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 8px 20px;
 }
 
 .bar {
@@ -156,7 +165,7 @@
 
 @media (max-width: 768px) {
   .head {
-    padding: 8px 0;
+    padding: 8px 16px;
   }
 
   .menuToggle {
