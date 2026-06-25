@@ -47,11 +47,12 @@ function FormLogin() {
           <span className={styles.error}>{error.toString()}</span>
         )}
         <div className={styles.group}>
-          <label>Name</label>
+          <label>Username or Email</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            autoCapitalize="none"
           ></input>
         </div>
         <div className={styles.group}>
