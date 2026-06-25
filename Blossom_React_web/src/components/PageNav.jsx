@@ -69,9 +69,15 @@ function PageNav() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
         >
-          <span className={styles.menuToggleBar} />
-          <span className={styles.menuToggleBar} />
-          <span className={styles.menuToggleBar} />
+          <span
+            className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarTopOpen : ""}`}
+          />
+          <span
+            className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarMidOpen : ""}`}
+          />
+          <span
+            className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarBottomOpen : ""}`}
+          />
         </button>
       </div>
 

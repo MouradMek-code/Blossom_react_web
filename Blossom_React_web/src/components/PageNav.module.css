@@ -118,23 +118,40 @@
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 5px;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: #d6336c;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.menuToggle:hover {
+  background: #b32859;
 }
 
 .menuToggleBar {
-  width: 22px;
+  width: 20px;
   height: 2px;
-  margin: 0 auto;
-  background: rgb(179, 34, 162);
-
+  background: #fff;
   border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.menuToggleBarTopOpen {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menuToggleBarMidOpen {
+  opacity: 0;
+}
+
+.menuToggleBarBottomOpen {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 @media (max-width: 768px) {
@@ -148,11 +165,12 @@
 
   .nav {
     display: none;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
     width: 100%;
-    margin-top: 12px;
-    gap: 4px;
+    margin-top: 10px;
+    gap: 8px;
   }
 
   .navOpen {
@@ -160,17 +178,25 @@
   }
 
   .nav span {
-    margin: 4px 0;
+    margin: 0;
+    width: calc(50% - 4px);
+  }
+
+  .nav span:last-child {
     width: 100%;
   }
 
   .nav a {
     width: 100%;
     justify-content: center;
+    padding: 7px 10px;
+    font-size: 14px;
   }
 
   .logout {
     width: 100%;
     justify-content: center;
+    padding: 7px 10px;
+    font-size: 14px;
   }
 }
