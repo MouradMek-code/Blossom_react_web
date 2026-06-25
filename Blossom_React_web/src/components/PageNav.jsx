@@ -93,7 +93,7 @@ function PageNav() {
                 style={{ textDecoration: "none" }}
                 onClick={closeMenu}
               >
-                Profiles
+                Browse
               </NavLink>
             </span>
             <span className={styles.navItemWithBadge}>
