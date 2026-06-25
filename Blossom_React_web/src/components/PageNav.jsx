@@ -13,8 +13,8 @@ function PageNav() {
   const profileCreated = sessionStorage.getItem("profilecreated");
 
   function HandleLogOut() {
-    sessionStorage.setItem("token", undefined);
-    sessionStorage.setItem("profilecreated", undefined);
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("profilecreated");
     setToken(null);
     setMenuOpen(false);
     navigate("/login");
@@ -131,18 +131,17 @@ function PageNav() {
             </span>
           </>
         )}
-        {profileCreated === null ||
-          (profileCreated === "undefined" && (
-            <span>
-              <NavLink
-                to="/"
-                style={{ textDecoration: "none" }}
-                onClick={closeMenu}
-              >
-                HomePage
-              </NavLink>
-            </span>
-          ))}
+        {profileCreated === null && (
+          <span>
+            <NavLink
+              to="/"
+              style={{ textDecoration: "none" }}
+              onClick={closeMenu}
+            >
+              HomePage
+            </NavLink>
+          </span>
+        )}
         {profileCreated === null && (
           <span>
             <NavLink
