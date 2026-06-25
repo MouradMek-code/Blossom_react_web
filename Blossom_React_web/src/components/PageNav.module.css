@@ -1,6 +1,7 @@
 .nav :global(.active) {
-  color: black;
-  border-radius: 2px;
+  background-color: #d6336c;
+  border-color: #d6336c;
+  font-weight: 600;
 }
 
 .head {
@@ -27,12 +28,29 @@
 }
 
 .nav span {
-  padding: 0px 2px;
-  margin: 0px 15px;
-  font-size: 20px;
+  margin: 0 6px;
+  white-space: nowrap;
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 500;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: white;
+  background-color: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
   white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.nav a:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .navItemWithBadge {
@@ -77,13 +95,23 @@
 }
 
 .logout {
-  background: rgba(255, 255, 255, 0.15);
-  display: inline-block;
-  width: 75px;
-  font-size: 18px;
-  color: rgb(50, 1, 44);
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  background-color: #d6336c;
+  border: 1.5px solid #d6336c;
+  border-radius: 999px;
   cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.logout:hover {
+  background-color: #b32859;
+  border-color: #b32859;
 }
 
 .menuToggle {
@@ -132,13 +160,17 @@
   }
 
   .nav span {
-    margin: 6px 4px;
-    font-size: 18px;
+    margin: 4px 0;
     width: 100%;
   }
 
+  .nav a {
+    width: 100%;
+    justify-content: center;
+  }
+
   .logout {
-    width: auto;
-    padding: 6px 16px;
+    width: 100%;
+    justify-content: center;
   }
 }
