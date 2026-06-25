@@ -3,20 +3,41 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url("blossom.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  overflow: hidden;
 }
 
 .head::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  /* Combining the dark tint and the photo into one layered background
+     means animating this single element's transform (scale) zooms the
+     photo without distorting the tint, which stays a flat full-cover
+     color regardless of scale. */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("blossom.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .head > * {
   position: relative;
   z-index: 1;
+}
+
+/* Slow "Ken Burns" zoom - applied only where .animatedBg is added
+   alongside .head (currently just the homepage hero), so Login/SignUp
+   keep the plain static background. */
+.animatedBg::before {
+  animation: kenBurns 20s ease-in-out infinite alternate;
+}
+
+@keyframes kenBurns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.15);
+  }
 }
