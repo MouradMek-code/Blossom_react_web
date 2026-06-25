@@ -7,7 +7,6 @@ function Homepage() {
     <div className={styles.head}>
       <PageNav />
       <StartHome />
-      <HowItWorks />
     </div>
   );
 }
