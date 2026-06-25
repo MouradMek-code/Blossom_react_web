@@ -8,15 +8,6 @@
   position: sticky;
   top: 0;
   z-index: 999;
-  /* Nav text/pills are styled for a dark backdrop (white text). Without
-     its own background, the nav was invisible-on-white whenever it sat
-     on top of a light page (Profile/Browse/Matches/Likes You) instead of
-     the homepage's dark photo hero. A consistent semi-opaque dark bar
-     keeps contrast correct on every page, light or dark behind it. */
-  background-color: rgba(31, 15, 20, 0.85);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  padding: 8px 20px;
 }
 
 .bar {
@@ -60,6 +51,25 @@
 .nav a:hover {
   background-color: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Profile/Browse/Matches/Likes You/Logout sit on the light page
+   backgrounds (not the homepage's dark photo hero), so their text needs
+   to be dark instead of white to stay visible. The active pill and
+   Logout button keep white text since they have their own solid pink
+   fill regardless of the page behind them. */
+.navLoggedIn a {
+  color: #1a1a1a;
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.navLoggedIn a:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.45);
+}
+
+.navLoggedIn a:global(.active) {
+  color: #fff;
 }
 
 .navItemWithBadge {
@@ -165,7 +175,7 @@
 
 @media (max-width: 768px) {
   .head {
-    padding: 8px 16px;
+    padding: 8px 0;
   }
 
   .menuToggle {

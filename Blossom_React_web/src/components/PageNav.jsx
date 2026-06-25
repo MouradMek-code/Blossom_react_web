@@ -11,6 +11,7 @@ function PageNav() {
   const [likeCount, setLikeCount] = useState(0);
   const istokenundefined = token === "undefined" || token === null;
   const profileCreated = sessionStorage.getItem("profilecreated");
+  const isLoggedInNav = istokenundefined !== true && profileCreated === "yes";
 
   function HandleLogOut() {
     sessionStorage.removeItem("token");
@@ -81,8 +82,12 @@ function PageNav() {
         </button>
       </div>
 
-      <ul className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
-        {istokenundefined !== true && profileCreated === "yes" && (
+      <ul
+        className={`${styles.nav} ${menuOpen ? styles.navOpen : ""} ${
+          isLoggedInNav ? styles.navLoggedIn : ""
+        }`}
+      >
+        {isLoggedInNav && (
           <>
             <span>
               <NavLink
