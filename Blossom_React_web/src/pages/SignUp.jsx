@@ -39,6 +39,7 @@ function SignUp() {
             username: draft.username,
             email: draft.email,
             phoneNumber: draft.phoneNumber,
+            dateOfBirth: draft.dateOfBirth,
           });
         }
         setCheckingResume(false);

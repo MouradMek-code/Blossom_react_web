@@ -9,11 +9,27 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
   const [email, setEmail] = useState(prefill?.email || "");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(prefill?.phoneNumber || "");
+  const [dateOfBirth, setDateOfBirth] = useState(prefill?.dateOfBirth || "");
 
   function FormHandler(e) {
     e.preventDefault();
     async function SignUp() {
       setError("");
+
+      const today = new Date();
+      const birth = new Date(dateOfBirth);
+      const age =
+        today.getFullYear() -
+        birth.getFullYear() -
+        (today.getMonth() < birth.getMonth() ||
+        (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
+          ? 1
+          : 0);
+      if (!dateOfBirth || isNaN(birth.getTime()) || age < 18) {
+        setError(new Error("You must be at least 18 years old to sign up"));
+        return;
+      }
+
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -22,6 +38,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
           email: email,
           password: password,
           phone_number: phoneNumber,
+          date_of_birth: dateOfBirth,
         }),
       };
       try {
@@ -34,7 +51,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
         // The account doesn't exist yet and there's no token until the
         // OTP is verified - save just enough (no password) to resume
         // straight at the verification screen if the user leaves now.
-        saveSignupDraft({ stage: "verify_otp", username, email, phoneNumber });
+        saveSignupDraft({ stage: "verify_otp", username, email, phoneNumber, dateOfBirth });
         setVerified((c) => !c);
         sessionStorage.setItem("token", data.access_token);
       } catch (err) {
@@ -85,6 +102,14 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
               onChange={(e) => setPhoneNumber(e.target.value)}
             ></input>
           </div>
+          <div className={styles.group}>
+            <label>Date of Birth</label>
+            <input
+              type="date"
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+            ></input>
+          </div>
           <div className={styles.registerform}>
             <button onClick={(e) => FormHandler(e)}> Register </button>
           </div>
@@ -97,6 +122,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
           email={email}
           password={password}
           phoneNumber={phoneNumber}
+          dateOfBirth={dateOfBirth}
           setError={setError}
           setRegistered={setRegistered}
         />
@@ -109,6 +135,7 @@ function VerificationForm({
   email,
   password,
   phoneNumber,
+  dateOfBirth,
   setError,
   setRegistered,
 }) {
@@ -141,6 +168,7 @@ function VerificationForm({
         email: email,
         password: effectivePassword,
         phone_number: phoneNumber,
+        date_of_birth: dateOfBirth,
       }),
     };
     try {
