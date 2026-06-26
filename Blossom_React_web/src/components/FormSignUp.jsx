@@ -113,6 +113,13 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
           <div className={styles.registerform}>
             <button onClick={(e) => FormHandler(e)}> Register </button>
           </div>
+          <p style={{ textAlign: "center", fontSize: "12px", color: "#888", marginTop: "12px" }}>
+            By creating an account, you agree to our{" "}
+            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+              Privacy Policy
+            </a>
+            .
+          </p>
         </form>
       )}
 
