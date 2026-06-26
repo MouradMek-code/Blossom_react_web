@@ -11,6 +11,7 @@ import ProfileDetails from "./pages/ProfileDetails";
 import ChatPage from "./pages/ChatPage";
 import LikedYou from "./pages/LikedYou";
 import ForgotPassword from "./pages/ForgotPassword";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot_password" element={<ForgotPassword />} />
         <Route path="/profile/:id" element={<ProfileDetails />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       </Routes>
     </BrowserRouter>
   );
