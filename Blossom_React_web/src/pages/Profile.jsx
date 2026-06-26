@@ -12,6 +12,7 @@ function Profile() {
   const [bioDraft, setBioDraft] = useState("");
   const [savingBio, setSavingBio] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef(null);
 
@@ -110,6 +111,28 @@ function Profile() {
       }));
     } catch (err) {
       setError(err.toString());
+    }
+  }
+
+  async function handleDeleteAccount() {
+    const confirmed = window.confirm(
+      "Delete your account permanently? This will remove your profile, photos, matches, and messages. This cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setDeletingAccount(true);
+    setError("");
+    try {
+      const resp = await fetch(`${BASE_URL}/user/me`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (resp.status !== 200) throw new Error("Failed to delete account");
+      sessionStorage.clear();
+      navigate("/");
+    } catch (err) {
+      setError(err.toString());
+      setDeletingAccount(false);
     }
   }
 
@@ -372,6 +395,30 @@ function Profile() {
               <span>No languages listed</span>
             )}
           </div>
+        </section>
+
+        {/* DANGER ZONE */}
+        <section className="card" style={{ borderColor: "#e11d48" }}>
+          <h2>Danger Zone</h2>
+          <p style={{ color: "#666", marginBottom: "12px" }}>
+            Permanently delete your account, profile, photos, matches, and messages.
+          </p>
+          <button
+            type="button"
+            onClick={handleDeleteAccount}
+            disabled={deletingAccount}
+            style={{
+              border: "none",
+              borderRadius: "999px",
+              padding: "8px 18px",
+              background: "#e11d48",
+              color: "white",
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            {deletingAccount ? "Deleting..." : "Delete Account"}
+          </button>
         </section>
       </div>
     </div>
