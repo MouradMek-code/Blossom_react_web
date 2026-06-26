@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
 
 function ProfileDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [profile, setProfile] = useState(null);
 
@@ -25,6 +26,46 @@ function ProfileDetails() {
 
     fetchProfile();
   }, [id]);
+
+  async function handleBlock() {
+    const confirmed = window.confirm(
+      "Block this person? You won't see each other again, and you won't be able to message them."
+    );
+    if (!confirmed) return;
+
+    const token = sessionStorage.getItem("token");
+    try {
+      const resp = await fetch(`${BASE_URL}/blocks/${id}`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!resp.ok) throw new Error("Failed to block");
+      navigate("/profiles");
+    } catch (err) {
+      window.alert(err.toString());
+    }
+  }
+
+  async function handleReport() {
+    const reason = window.prompt("Why are you reporting this profile?");
+    if (!reason) return;
+
+    const token = sessionStorage.getItem("token");
+    try {
+      const resp = await fetch(`${BASE_URL}/reports`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ reported_profile_id: Number(id), reason }),
+      });
+      if (!resp.ok) throw new Error("Failed to submit report");
+      window.alert("Report submitted. Thank you.");
+    } catch (err) {
+      window.alert(err.toString());
+    }
+  }
 
   if (!profile)
     return (
@@ -52,6 +93,39 @@ function ProfileDetails() {
             <p className="goal">
               💘 {profile.relationship_goal || "Not specified"}
             </p>
+
+            <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
+              <button
+                type="button"
+                onClick={handleReport}
+                style={{
+                  border: "1px solid #999",
+                  borderRadius: "999px",
+                  padding: "6px 14px",
+                  background: "white",
+                  color: "#555",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                Report
+              </button>
+              <button
+                type="button"
+                onClick={handleBlock}
+                style={{
+                  border: "none",
+                  borderRadius: "999px",
+                  padding: "6px 14px",
+                  background: "#e11d48",
+                  color: "white",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                Block
+              </button>
+            </div>
           </div>
         </section>
 
