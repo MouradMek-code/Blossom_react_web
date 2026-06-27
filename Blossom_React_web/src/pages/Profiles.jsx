@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import ProfileFilterModal from "../components/ProfileFilterModal";
-import { matchesFilters } from "../api/profileFilters";
+import { matchesFilters, getDefaultFilters } from "../api/profileFilters";
 import styles from "./Profiles.module.css";
 import { BASE_URL } from "../api/config";
 
@@ -64,6 +64,28 @@ function Profiles() {
 
     fetchProfiles();
   }, [token, navigate, matchedProfile]);
+
+  useEffect(() => {
+    if (!token) return;
+
+    async function fetchOwnProfile() {
+      try {
+        const resp = await fetch(`${BASE_URL}/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        const defaults = getDefaultFilters(data);
+        setDraftFilters(defaults);
+        setAppliedFilters(defaults);
+      } catch (err) {
+        // Default opposite-gender filter is a convenience, not a
+        // requirement - silently skip it if the profile fetch fails.
+      }
+    }
+
+    fetchOwnProfile();
+  }, [token]);
 
   const filteredProfiles = useMemo(
     () => profiles.filter((p) => matchesFilters(p, appliedFilters)),
