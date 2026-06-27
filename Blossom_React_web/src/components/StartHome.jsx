@@ -14,6 +14,9 @@ function StartHome() {
           Start Dating Now ❤️
         </Link>
       )}
+      <p className={styles.trustLine}>
+        Where she always makes the first move 💌
+      </p>
     </div>
   );
 }

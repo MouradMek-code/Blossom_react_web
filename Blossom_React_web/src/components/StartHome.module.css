@@ -106,6 +106,18 @@
   transform: translateY(0);
 }
 
+.trustLine {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: rgba(255, 255, 255, 0.75);
+
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 0.65s;
+}
+
 @media (max-width: 480px) {
   .tagline {
     font-size: 1.05rem;
