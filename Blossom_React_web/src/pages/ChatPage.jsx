@@ -13,6 +13,7 @@ function ChatPage() {
 
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
+  const [error, setError] = useState("");
 
   const bottomRef = useRef(null);
 
@@ -41,6 +42,7 @@ function ChatPage() {
 
   async function sendMessage() {
     if (!text.trim()) return;
+    setError("");
 
     const resp = await fetch(
       `${BASE_URL}/messages/conversation/${conversationId}`,
@@ -54,9 +56,14 @@ function ChatPage() {
       },
     );
 
-    const newMessage = await resp.json();
+    const data = await resp.json();
 
-    setMessages((prev) => [...prev, newMessage]);
+    if (!resp.ok) {
+      setError(data.detail || "Failed to send message");
+      return;
+    }
+
+    setMessages((prev) => [...prev, data]);
     setText("");
   }
 
@@ -90,6 +97,12 @@ function ChatPage() {
 
           <div ref={bottomRef} />
         </div>
+
+        {error !== "" && (
+          <p style={{ color: "#e11d48", textAlign: "center", padding: "0 12px" }}>
+            {error}
+          </p>
+        )}
 
         <div className={styles.inputBox}>
           <input
