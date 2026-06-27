@@ -321,7 +321,7 @@ function Profile() {
             </div>
             <div>
               <span>Height</span>
-              <b>{profile.height_cm} cm</b>
+              <b>{profile.height_cm}</b>
             </div>
             <div>
               <span>Occupation</span>
