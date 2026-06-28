@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../api/config";
 export default function ImageUploader() {
   const MAX = 6;
+  const MIN_REQUIRED = 2;
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
   const handleUpload = async (e, index) => {
@@ -44,6 +45,8 @@ export default function ImageUploader() {
     });
   };
 
+  const uploadedCount = images.filter(Boolean).length;
+
   return (
     <div style={styles.wrapper}>
       <h2 style={styles.title}>Upload Images (max 6)</h2>
@@ -80,12 +83,18 @@ export default function ImageUploader() {
           );
         })}
       </div>
-      <div style={styles.button}>
-        <button onClick={() => navigate("/profiles")}>
-          {" "}
-          Go Check Profiles
-        </button>
-      </div>
+      {uploadedCount < MIN_REQUIRED ? (
+        <p style={styles.hint}>
+          Add {MIN_REQUIRED - uploadedCount} more photo
+          {MIN_REQUIRED - uploadedCount > 1 ? "s" : ""} to continue
+        </p>
+      ) : (
+        <div style={styles.buttonWrap}>
+          <button style={styles.button} onClick={() => navigate("/profiles")}>
+            Go Check Profiles →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -100,8 +109,30 @@ const styles = {
     padding: "24px 0",
   },
 
+  buttonWrap: {
+    marginTop: "24px",
+  },
+
+  hint: {
+    marginTop: "24px",
+    fontSize: "14px",
+    fontWeight: "600",
+    color: "#888",
+    textAlign: "center",
+  },
+
   button: {
-    marginTop: "20px",
+    border: "none",
+    borderRadius: "999px",
+    padding: "16px 36px",
+    background: "#e11d48",
+    color: "white",
+    fontWeight: 700,
+    fontSize: "16px",
+    letterSpacing: "0.3px",
+    cursor: "pointer",
+    boxShadow: "0 8px 20px rgba(225, 29, 72, 0.3)",
+    transition: "transform 0.15s ease, box-shadow 0.15s ease",
   },
 
   title: {
