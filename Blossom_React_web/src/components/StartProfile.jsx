@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./StartProfile.module.css";
 import { saveSignupDraft } from "../api/signupDraft";
+import questions from "../data/questions.json";
 
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(
@@ -18,7 +19,6 @@ function useIsMobile(breakpoint = 768) {
 }
 
 function StartProfile({ setQuestionEnded, answer, setAnswer, initialIndex = 0, autoStart = false }) {
-  const [questions, setQuestions] = useState([]);
   const [started, setStart] = useState(autoStart);
   const [indiceQuestion, setIndiceQuestion] = useState(initialIndex);
   const [clicked, setClicked] = useState(false);
@@ -35,15 +35,6 @@ function StartProfile({ setQuestionEnded, answer, setAnswer, initialIndex = 0, a
     }
     setAnswer((c) => ({ ...c, [question.field]: values }));
   }
-  useEffect(function () {
-    async function fetchQuestions() {
-      const resp = await fetch("/data/questions.json");
-      const data = await resp.json();
-      setQuestions(data);
-    }
-    fetchQuestions();
-  }, []);
-
   function HandleLetStartButton() {
     setStart((s) => !s);
     setIndiceQuestion(0);
