@@ -221,6 +221,26 @@ function ProfileDetails() {
           </div>
         </section>
 
+        {/* DATING PREFERENCES */}
+        <section className="card">
+          <h2>Dating Preferences</h2>
+
+          <div className="grid">
+            <div>
+              <span>Ideal first date</span>
+              <b>{profile.first_date_preference || "-"}</b>
+            </div>
+            <div>
+              <span>Past relationships</span>
+              <b>{profile.past_relationships_count || "-"}</b>
+            </div>
+            <div>
+              <span>Last breakup reason</span>
+              <b>{profile.last_breakup_reason || "-"}</b>
+            </div>
+          </div>
+        </section>
+
         {/* LANGUAGES */}
         <section className="card">
           <h2>Languages</h2>
