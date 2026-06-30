@@ -62,6 +62,33 @@ function PrivacyPolicy() {
         </section>
 
         <section style={sectionStyle}>
+          <h2 style={headingStyle}>Child Safety</h2>
+          <p>
+            Blossom is strictly for adults aged 18 and older. We do not knowingly
+            allow minors to create accounts, and age is verified at signup via
+            date of birth.
+          </p>
+          <p>
+            Blossom has <b>zero tolerance</b> for child sexual abuse material
+            (CSAM) or any form of child sexual exploitation. Any account found
+            to be involved in such activity is immediately banned and reported
+            to the National Center for Missing &amp; Exploited Children (NCMEC)
+            and/or relevant law enforcement authorities.
+          </p>
+          <p>
+            You can report a profile for any reason, including suspected child
+            safety violations, directly from that profile using the{" "}
+            <b>Report</b> button. You can also report concerns directly to our
+            designated point of contact at{" "}
+            <a href="mailto:mourad.meknioui@gmail.com?subject=Child%20Safety%20Report">
+              mourad.meknioui@gmail.com
+            </a>
+            . We review and act on all reports, including removing violating
+            accounts and content.
+          </p>
+        </section>
+
+        <section style={sectionStyle}>
           <h2 style={headingStyle}>Data Retention &amp; Deletion</h2>
           <p>
             You can permanently delete your account at any time from the
