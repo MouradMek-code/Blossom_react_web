@@ -30,18 +30,6 @@ export default function ProfileFilterModal({ open, filters, onChange, onApply, o
 
   if (!open) return null;
 
-  function toggleSingle(field, option) {
-    onChange((prev) => {
-      const next = { ...prev };
-      if (next[field] === option) {
-        delete next[field];
-      } else {
-        next[field] = option;
-      }
-      return next;
-    });
-  }
-
   function toggleMultiple(field, option) {
     onChange((prev) => {
       const current = prev[field] || [];
@@ -84,19 +72,13 @@ export default function ProfileFilterModal({ open, filters, onChange, onApply, o
                   <h3>{q.question}</h3>
                   <div className={styles.optionGrid}>
                     {q.options.map((option) => {
-                      const selected = q.multiple
-                        ? (filters[q.field] || []).includes(option)
-                        : filters[q.field] === option;
+                      const selected = (filters[q.field] || []).includes(option);
                       return (
                         <button
                           key={option}
                           type="button"
                           className={`${styles.optionChip} ${selected ? styles.optionChipSelected : ""}`}
-                          onClick={() =>
-                            q.multiple
-                              ? toggleMultiple(q.field, option)
-                              : toggleSingle(q.field, option)
-                          }
+                          onClick={() => toggleMultiple(q.field, option)}
                         >
                           {option}
                         </button>
