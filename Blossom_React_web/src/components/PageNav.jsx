@@ -9,6 +9,7 @@ function PageNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [matchCount, setMatchCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
   const istokenundefined = token === "undefined" || token === null;
   const profileCreated = sessionStorage.getItem("profilecreated");
   const isLoggedInNav = istokenundefined !== true && profileCreated === "yes";
@@ -33,20 +34,22 @@ function PageNav() {
 
     async function fetchCounts() {
       try {
-        const [matchedResp, likedResp] = await Promise.all([
+        const [matchedResp, likedResp, userResp] = await Promise.all([
           fetch(`${BASE_URL}/matches/unseen_count`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           }),
           fetch(`${BASE_URL}/likes/profile_likes/unseen_count`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           }),
+          fetch(`${BASE_URL}/user/admin/users`, {
+            headers: { Authorization: `Bearer ${storedToken}` },
+          }),
         ]);
-        const matched = matchedResp.ok
-          ? await matchedResp.json()
-          : { count: 0 };
+        const matched = matchedResp.ok ? await matchedResp.json() : { count: 0 };
         const liked = likedResp.ok ? await likedResp.json() : { count: 0 };
         setMatchCount(matched.count || 0);
         setLikeCount(liked.count || 0);
+        setIsAdmin(userResp.ok);
       } catch (err) {
         // Leave counts at 0 if the backend is unreachable - not worth
         // bouncing the user to login just because a badge couldn't load.
@@ -135,6 +138,13 @@ function PageNav() {
                 </span>
               )}
             </span>
+            {isAdmin && (
+              <span>
+                <NavLink to="/admin" style={{ textDecoration: "none" }} onClick={closeMenu}>
+                  🛡️ Admin
+                </NavLink>
+              </span>
+            )}
             <span>
               <button className={styles.logout} onClick={HandleLogOut}>
                 Logout

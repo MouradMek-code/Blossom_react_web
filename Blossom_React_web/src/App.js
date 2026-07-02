@@ -13,6 +13,7 @@ import LikedYou from "./pages/LikedYou";
 import ForgotPassword from "./pages/ForgotPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import DeleteAccount from "./pages/DeleteAccount";
+import Admin from "./pages/Admin";
 function App() {
   return (
     <BrowserRouter>
@@ -30,6 +31,7 @@ function App() {
         <Route path="/profile/:id" element={<ProfileDetails />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/delete-account" element={<DeleteAccount />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );
