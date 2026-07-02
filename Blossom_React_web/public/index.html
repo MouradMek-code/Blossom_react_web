@@ -5,39 +5,102 @@
     <link rel="icon" href="%PUBLIC_URL%/LogoBlossom.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#d6336c" />
-    <meta
-      name="description"
-      content="Blossom - meet your dating soul"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/LogoBlossom.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Blossom</title>
+    <!-- Primary SEO -->
+    <title>Blossom — Dating App Where Women Make the First Move | Meet, Chat & Fall in Love</title>
+    <meta name="description" content="Blossom is a free dating app where women always make the first move. Meet real people, chat with your matches, and find love. Join thousands looking for meaningful relationships." />
+    <meta name="keywords" content="dating app, free dating, meet people, online dating, chat, find love, relationships, dating site, women first, bumble alternative, tinder alternative, dating 2024, meet singles, love app, romance, match, dating online, blossom dating" />
+    <meta name="author" content="Blossom Dating" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://blossom-date.com/" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://blossom-date.com/" />
+    <meta property="og:title" content="Blossom — Where Women Make the First Move 💌" />
+    <meta property="og:description" content="Free dating app where women always start the conversation. Meet real people, chat, and find love. Sign up free in 2 minutes." />
+    <meta property="og:image" content="https://blossom-date.com/LogoBlossom.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Blossom Dating" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://blossom-date.com/" />
+    <meta name="twitter:title" content="Blossom — Where Women Make the First Move 💌" />
+    <meta name="twitter:description" content="Free dating app where women always start the conversation. Meet real people, chat, and find love." />
+    <meta name="twitter:image" content="https://blossom-date.com/LogoBlossom.png" />
+
+    <!-- App links -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Blossom Dating" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/LogoBlossom.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Structured Data — WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Blossom Dating",
+      "url": "https://blossom-date.com",
+      "description": "Free dating app where women always make the first move. Meet real people, chat and find love.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://blossom-date.com/profiles?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Structured Data — MobileApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MobileApplication",
+      "name": "Blossom Dating",
+      "description": "Free dating app where women always make the first move. Meet, chat and find love on Android.",
+      "url": "https://blossom-date.com",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Android",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1"
+      }
+    }
+    </script>
+
+    <!-- Structured Data — Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Blossom Dating",
+      "url": "https://blossom-date.com",
+      "logo": "https://blossom-date.com/LogoBlossom.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "mourad.meknioui@gmail.com",
+        "contactType": "customer support"
+      },
+      "sameAs": []
+    }
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>
+      <h1>Blossom Dating — Where Women Make the First Move</h1>
+      <p>Free dating app where women always start the conversation. Meet real people, chat, and find love. <a href="https://blossom-date.com/sign_up">Sign up free</a>.</p>
+    </noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

@@ -1,3 +1,10 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /profile
+Disallow: /profiles
+Disallow: /MatchedList
+Disallow: /liked_you
+Disallow: /chat/
+Disallow: /admin
+
+Sitemap: https://blossom-date.com/sitemap.xml
