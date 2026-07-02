@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="400" height="320">
+  <defs>
+    <radialGradient id="bg6" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#fff8e7"/>
+      <stop offset="100%" stop-color="#ffe0b2"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="320" fill="url(#bg6)" rx="20"/>
+
+  <!-- Stars/sparkles -->
+  <text x="70" y="55" font-size="16" opacity="0.6">✨</text>
+  <text x="310" y="65" font-size="14" opacity="0.5">✨</text>
+  <text x="180" y="35" font-size="12" opacity="0.4">⭐</text>
+  <text x="340" y="180" font-size="12" opacity="0.4">✨</text>
+  <text x="50" y="190" font-size="10" opacity="0.3">⭐</text>
+
+  <!-- Hearts -->
+  <text x="200" y="52" font-size="32" text-anchor="middle">💛</text>
+  <text x="115" y="85" font-size="18" opacity="0.7">🧡</text>
+  <text x="278" y="88" font-size="16" opacity="0.6">💛</text>
+
+  <!-- Left fox tail -->
+  <path d="M 75 290 Q 30 220 65 170 Q 85 145 110 165" stroke="#e07b39" stroke-width="28" fill="none" stroke-linecap="round"/>
+  <path d="M 75 290 Q 30 220 65 170 Q 85 145 110 165" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <!-- Left fox tail tip -->
+  <circle cx="75" cy="290" r="18" fill="white"/>
+
+  <!-- Right fox tail -->
+  <path d="M 325 290 Q 370 220 335 170 Q 315 145 290 165" stroke="#c0392b" stroke-width="28" fill="none" stroke-linecap="round"/>
+  <path d="M 325 290 Q 370 220 335 170 Q 315 145 290 165" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="325" cy="290" r="18" fill="white"/>
+
+  <!-- Left fox body -->
+  <ellipse cx="148" cy="235" rx="50" ry="60" fill="#e07b39"/>
+  <!-- Left fox chest -->
+  <ellipse cx="148" cy="250" rx="30" ry="40" fill="#fdebd0"/>
+  <!-- Left fox head -->
+  <circle cx="148" cy="158" r="46" fill="#e07b39"/>
+  <!-- Left fox snout -->
+  <ellipse cx="148" cy="178" rx="22" ry="16" fill="#fdebd0"/>
+  <!-- Left fox ears -->
+  <polygon points="112,122 122,82 148,122" fill="#e07b39"/>
+  <polygon points="117,122 124,90 144,122" fill="#c0392b"/>
+  <polygon points="148,122 174,82 188,122" fill="#e07b39"/>
+  <polygon points="152,122 174,90 183,122" fill="#c0392b"/>
+  <!-- Left fox eyes -->
+  <ellipse cx="135" cy="152" rx="8" ry="9" fill="#2d2d2d"/>
+  <ellipse cx="161" cy="152" rx="8" ry="9" fill="#2d2d2d"/>
+  <circle cx="137" cy="150" r="3" fill="white"/>
+  <circle cx="163" cy="150" r="3" fill="white"/>
+  <!-- Left fox blush -->
+  <ellipse cx="118" cy="170" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <ellipse cx="178" cy="170" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <!-- Left fox nose -->
+  <ellipse cx="148" cy="173" rx="6" ry="4" fill="#2d2d2d"/>
+  <!-- Left fox smile -->
+  <path d="M 140 179 Q 148 186 156 179" stroke="#2d2d2d" stroke-width="2" fill="none"/>
+  <!-- Left fox paws -->
+  <ellipse cx="118" cy="280" rx="20" ry="12" fill="#e07b39"/>
+  <ellipse cx="178" cy="280" rx="20" ry="12" fill="#e07b39"/>
+
+  <!-- Right fox body -->
+  <ellipse cx="252" cy="235" rx="50" ry="60" fill="#c0392b"/>
+  <!-- Right fox chest -->
+  <ellipse cx="252" cy="250" rx="30" ry="40" fill="#fdebd0"/>
+  <!-- Right fox head -->
+  <circle cx="252" cy="158" r="46" fill="#c0392b"/>
+  <!-- Right fox snout -->
+  <ellipse cx="252" cy="178" rx="22" ry="16" fill="#fdebd0"/>
+  <!-- Right fox ears -->
+  <polygon points="216,122 226,82 252,122" fill="#c0392b"/>
+  <polygon points="221,122 228,90 248,122" fill="#e07b39"/>
+  <polygon points="252,122 278,82 292,122" fill="#c0392b"/>
+  <polygon points="256,122 278,90 287,122" fill="#e07b39"/>
+  <!-- Right fox eyes (heart shaped) -->
+  <text x="228" y="160" font-size="18">🧡</text>
+  <text x="249" y="160" font-size="18">🧡</text>
+  <!-- Right fox blush -->
+  <ellipse cx="222" cy="170" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <ellipse cx="282" cy="170" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <!-- Right fox nose -->
+  <ellipse cx="252" cy="173" rx="6" ry="4" fill="#2d2d2d"/>
+  <!-- Right fox smile -->
+  <path d="M 244 179 Q 252 186 260 179" stroke="#2d2d2d" stroke-width="2" fill="none"/>
+  <!-- Right fox bow -->
+  <text x="238" y="128" font-size="20">🎀</text>
+  <!-- Right fox paws -->
+  <ellipse cx="222" cy="280" rx="20" ry="12" fill="#c0392b"/>
+  <ellipse cx="282" cy="280" rx="20" ry="12" fill="#c0392b"/>
+
+  <!-- Nuzzling -->
+  <ellipse cx="200" cy="172" rx="14" ry="8" fill="#ffb3ba" opacity="0.35"/>
+
+  <text x="200" y="314" font-size="13" text-anchor="middle" fill="#e07b39" font-family="Arial" font-weight="bold">Foxy love 🦊💛</text>
+</svg>

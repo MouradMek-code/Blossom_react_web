@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="400" height="320">
+  <defs>
+    <radialGradient id="bg7" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#f3e5f5"/>
+      <stop offset="100%" stop-color="#e1bee7"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="320" fill="url(#bg7)" rx="20"/>
+
+  <!-- Flowers -->
+  <text x="55" y="65" font-size="22" opacity="0.6">🌸</text>
+  <text x="308" y="70" font-size="18" opacity="0.5">🌸</text>
+  <text x="170" y="38" font-size="16" opacity="0.4">🌷</text>
+  <text x="340" y="190" font-size="14" opacity="0.4">🌸</text>
+  <text x="45" y="195" font-size="12" opacity="0.3">🌷</text>
+
+  <!-- Hearts -->
+  <text x="200" y="54" font-size="32" text-anchor="middle">💜</text>
+  <text x="108" y="88" font-size="18" opacity="0.7">🩷</text>
+  <text x="275" y="92" font-size="16" opacity="0.6">💜</text>
+
+  <!-- Left bear body -->
+  <ellipse cx="145" cy="238" rx="54" ry="62" fill="#8d6e63"/>
+  <!-- Left bear tummy -->
+  <ellipse cx="145" cy="252" rx="34" ry="44" fill="#bcaaa4"/>
+  <!-- Left bear head -->
+  <circle cx="145" cy="158" r="50" fill="#8d6e63"/>
+  <!-- Left bear ears -->
+  <circle cx="110" cy="118" r="20" fill="#8d6e63"/>
+  <circle cx="110" cy="118" r="13" fill="#bcaaa4"/>
+  <circle cx="180" cy="118" r="20" fill="#8d6e63"/>
+  <circle cx="180" cy="118" r="13" fill="#bcaaa4"/>
+  <!-- Left bear snout -->
+  <ellipse cx="145" cy="175" rx="24" ry="18" fill="#bcaaa4"/>
+  <!-- Left bear eyes -->
+  <circle cx="132" cy="150" r="8" fill="#2d2d2d"/>
+  <circle cx="158" cy="150" r="8" fill="#2d2d2d"/>
+  <circle cx="134" cy="148" r="3" fill="white"/>
+  <circle cx="160" cy="148" r="3" fill="white"/>
+  <!-- Left bear blush -->
+  <ellipse cx="115" cy="168" rx="13" ry="8" fill="#ffb3ba" opacity="0.65"/>
+  <ellipse cx="175" cy="168" rx="13" ry="8" fill="#ffb3ba" opacity="0.65"/>
+  <!-- Left bear nose -->
+  <ellipse cx="145" cy="170" rx="7" ry="5" fill="#4a2c2a"/>
+  <!-- Left bear smile -->
+  <path d="M 136 178 Q 145 186 154 178" stroke="#4a2c2a" stroke-width="2.5" fill="none"/>
+  <!-- Honey jar -->
+  <rect x="118" y="268" width="30" height="32" rx="6" fill="#ffc107"/>
+  <rect x="118" y="264" width="30" height="10" rx="4" fill="#ffb300"/>
+  <text x="133" y="289" font-size="14" text-anchor="middle">🍯</text>
+  <!-- Left bear arms -->
+  <ellipse cx="96" cy="240" rx="16" ry="36" fill="#8d6e63" transform="rotate(-20 96 240)"/>
+  <ellipse cx="194" cy="240" rx="16" ry="36" fill="#8d6e63" transform="rotate(20 194 240)"/>
+
+  <!-- Right bear body -->
+  <ellipse cx="255" cy="238" rx="54" ry="62" fill="#7b1fa2"/>
+  <!-- Right bear tummy -->
+  <ellipse cx="255" cy="252" rx="34" ry="44" fill="#ce93d8"/>
+  <!-- Right bear head -->
+  <circle cx="255" cy="158" r="50" fill="#7b1fa2"/>
+  <!-- Right bear ears -->
+  <circle cx="220" cy="118" r="20" fill="#7b1fa2"/>
+  <circle cx="220" cy="118" r="13" fill="#ce93d8"/>
+  <circle cx="290" cy="118" r="20" fill="#7b1fa2"/>
+  <circle cx="290" cy="118" r="13" fill="#ce93d8"/>
+  <!-- Right bear snout -->
+  <ellipse cx="255" cy="175" rx="24" ry="18" fill="#ce93d8"/>
+  <!-- Right bear eyes heart -->
+  <text x="237" y="158" font-size="18">💜</text>
+  <text x="254" y="158" font-size="18">💜</text>
+  <!-- Right bear blush -->
+  <ellipse cx="225" cy="168" rx="13" ry="8" fill="#ffb3ba" opacity="0.65"/>
+  <ellipse cx="285" cy="168" rx="13" ry="8" fill="#ffb3ba" opacity="0.65"/>
+  <!-- Right bear nose -->
+  <ellipse cx="255" cy="170" rx="7" ry="5" fill="#4a2c2a"/>
+  <!-- Right bear smile -->
+  <path d="M 246 178 Q 255 186 264 178" stroke="#4a2c2a" stroke-width="2.5" fill="none"/>
+  <!-- Right bear bow -->
+  <text x="238" y="122" font-size="22">🎀</text>
+  <!-- Right bear arms -->
+  <ellipse cx="206" cy="240" rx="16" ry="36" fill="#7b1fa2" transform="rotate(-20 206 240)"/>
+  <ellipse cx="304" cy="240" rx="16" ry="36" fill="#7b1fa2" transform="rotate(20 304 240)"/>
+  <!-- Bears hugging / arms meeting -->
+  <ellipse cx="200" cy="248" rx="20" ry="12" fill="#9c4dcc" opacity="0.4"/>
+
+  <text x="200" y="314" font-size="13" text-anchor="middle" fill="#7b1fa2" font-family="Arial" font-weight="bold">Bear hugs forever 🐻💜</text>
+</svg>

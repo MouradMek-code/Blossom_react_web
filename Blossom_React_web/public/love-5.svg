@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="400" height="320">
+  <defs>
+    <radialGradient id="bg5" cx="50%" cy="60%" r="60%">
+      <stop offset="0%" stop-color="#e0f7fa"/>
+      <stop offset="100%" stop-color="#b2ebf2"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="320" fill="url(#bg5)" rx="20"/>
+  <!-- Snow ground -->
+  <ellipse cx="200" cy="310" rx="180" ry="30" fill="white" opacity="0.7"/>
+  <ellipse cx="200" cy="300" rx="160" ry="20" fill="white" opacity="0.5"/>
+
+  <!-- Snowflakes -->
+  <text x="60" y="60" font-size="18" opacity="0.5">❄️</text>
+  <text x="300" y="80" font-size="14" opacity="0.4">❄️</text>
+  <text x="150" y="40" font-size="12" opacity="0.3">❄️</text>
+  <text x="340" y="150" font-size="10" opacity="0.3">❄️</text>
+
+  <!-- Hearts -->
+  <text x="200" y="52" font-size="30" text-anchor="middle">💕</text>
+  <text x="120" y="90" font-size="16" opacity="0.7">🩷</text>
+  <text x="275" y="95" font-size="18" opacity="0.6">💗</text>
+
+  <!-- Left penguin body -->
+  <ellipse cx="148" cy="230" rx="42" ry="58" fill="#1a1a2e"/>
+  <!-- Left penguin belly -->
+  <ellipse cx="148" cy="240" rx="27" ry="42" fill="white"/>
+  <!-- Left penguin head -->
+  <circle cx="148" cy="162" r="40" fill="#1a1a2e"/>
+  <!-- Left penguin face white -->
+  <ellipse cx="148" cy="168" rx="24" ry="20" fill="white"/>
+  <!-- Left penguin eyes -->
+  <circle cx="139" cy="158" r="7" fill="white"/>
+  <circle cx="157" cy="158" r="7" fill="white"/>
+  <circle cx="140" cy="159" r="4" fill="#1a1a2e"/>
+  <circle cx="158" cy="159" r="4" fill="#1a1a2e"/>
+  <circle cx="141" cy="157" r="1.5" fill="white"/>
+  <circle cx="159" cy="157" r="1.5" fill="white"/>
+  <!-- Left penguin blush -->
+  <ellipse cx="126" cy="170" rx="10" ry="6" fill="#ffb3ba" opacity="0.7"/>
+  <ellipse cx="170" cy="170" rx="10" ry="6" fill="#ffb3ba" opacity="0.7"/>
+  <!-- Left penguin beak -->
+  <polygon points="148,173 141,181 155,181" fill="#ff9800"/>
+  <!-- Left penguin scarf -->
+  <rect x="110" y="192" width="76" height="14" rx="7" fill="#e63946"/>
+  <rect x="144" y="192" width="16" height="30" rx="4" fill="#e63946"/>
+  <!-- Left penguin flippers -->
+  <ellipse cx="104" cy="228" rx="14" ry="32" fill="#1a1a2e" transform="rotate(-15 104 228)"/>
+  <ellipse cx="192" cy="228" rx="14" ry="32" fill="#1a1a2e" transform="rotate(15 192 228)"/>
+  <!-- Left penguin feet -->
+  <ellipse cx="138" cy="284" rx="16" ry="8" fill="#ff9800"/>
+  <ellipse cx="158" cy="284" rx="16" ry="8" fill="#ff9800"/>
+
+  <!-- Right penguin body -->
+  <ellipse cx="252" cy="230" rx="42" ry="58" fill="#16213e"/>
+  <!-- Right penguin belly -->
+  <ellipse cx="252" cy="240" rx="27" ry="42" fill="#fce4ec"/>
+  <!-- Right penguin head -->
+  <circle cx="252" cy="162" r="40" fill="#16213e"/>
+  <!-- Right penguin face -->
+  <ellipse cx="252" cy="168" rx="24" ry="20" fill="#fce4ec"/>
+  <!-- Right penguin eyes -->
+  <circle cx="243" cy="158" r="7" fill="white"/>
+  <circle cx="261" cy="158" r="7" fill="white"/>
+  <circle cx="244" cy="159" r="4" fill="#1a1a2e"/>
+  <circle cx="262" cy="159" r="4" fill="#1a1a2e"/>
+  <circle cx="245" cy="157" r="1.5" fill="white"/>
+  <circle cx="263" cy="157" r="1.5" fill="white"/>
+  <!-- Right penguin blush -->
+  <ellipse cx="230" cy="170" rx="10" ry="6" fill="#ffb3ba" opacity="0.7"/>
+  <ellipse cx="274" cy="170" rx="10" ry="6" fill="#ffb3ba" opacity="0.7"/>
+  <!-- Right penguin beak -->
+  <polygon points="252,173 245,181 259,181" fill="#ff9800"/>
+  <!-- Right penguin bow -->
+  <text x="236" y="200" font-size="22">🎀</text>
+  <!-- Right penguin flippers -->
+  <ellipse cx="208" cy="228" rx="14" ry="32" fill="#16213e" transform="rotate(-15 208 228)"/>
+  <ellipse cx="296" cy="228" rx="14" ry="32" fill="#16213e" transform="rotate(15 296 228)"/>
+  <!-- Right penguin feet -->
+  <ellipse cx="242" cy="284" rx="16" ry="8" fill="#ff9800"/>
+  <ellipse cx="262" cy="284" rx="16" ry="8" fill="#ff9800"/>
+
+  <!-- Flippers touching in the middle -->
+  <ellipse cx="200" cy="248" rx="18" ry="10" fill="#2a2a4a" opacity="0.6"/>
+
+  <text x="200" y="314" font-size="13" text-anchor="middle" fill="#0077b6" font-family="Arial" font-weight="bold">Waddling into love 🐧</text>
+</svg>

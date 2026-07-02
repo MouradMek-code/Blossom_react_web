@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="400" height="320">
+  <defs>
+    <radialGradient id="bg4" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffe0ec"/>
+      <stop offset="100%" stop-color="#ffb3cc"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="320" fill="url(#bg4)" rx="20"/>
+
+  <!-- Hearts floating -->
+  <text x="190" y="48" font-size="28" text-anchor="middle" opacity="0.8">💕</text>
+  <text x="100" y="80" font-size="18" opacity="0.5">🩷</text>
+  <text x="290" y="90" font-size="22" opacity="0.6">💗</text>
+  <text x="60" y="160" font-size="14" opacity="0.4">🩷</text>
+  <text x="330" y="170" font-size="16" opacity="0.5">💕</text>
+
+  <!-- Left cat body -->
+  <ellipse cx="145" cy="230" rx="55" ry="60" fill="#f4a261"/>
+  <!-- Left cat head -->
+  <circle cx="145" cy="155" r="48" fill="#f4a261"/>
+  <!-- Left cat ears -->
+  <polygon points="108,118 120,90 138,118" fill="#f4a261"/>
+  <polygon points="113,118 122,96 136,118" fill="#ffb3ba"/>
+  <polygon points="152,118 165,90 178,118" fill="#f4a261"/>
+  <polygon points="155,118 165,96 175,118" fill="#ffb3ba"/>
+  <!-- Left cat face -->
+  <circle cx="133" cy="152" r="7" fill="#2d2d2d"/>
+  <circle cx="157" cy="152" r="7" fill="#2d2d2d"/>
+  <circle cx="135" cy="150" r="2.5" fill="white"/>
+  <circle cx="159" cy="150" r="2.5" fill="white"/>
+  <!-- Left cat blush -->
+  <ellipse cx="120" cy="166" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <ellipse cx="170" cy="166" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <!-- Left cat nose & mouth -->
+  <ellipse cx="145" cy="165" rx="5" ry="3" fill="#e76f51"/>
+  <path d="M 140 169 Q 145 175 150 169" stroke="#e76f51" stroke-width="2" fill="none"/>
+  <!-- Left cat whiskers -->
+  <line x1="100" y1="163" x2="135" y2="167" stroke="#888" stroke-width="1.5"/>
+  <line x1="100" y1="170" x2="135" y2="170" stroke="#888" stroke-width="1.5"/>
+  <line x1="155" y1="167" x2="190" y2="163" stroke="#888" stroke-width="1.5"/>
+  <line x1="155" y1="170" x2="190" y2="170" stroke="#888" stroke-width="1.5"/>
+  <!-- Left cat tail -->
+  <path d="M 95 275 Q 60 240 75 200" stroke="#f4a261" stroke-width="14" fill="none" stroke-linecap="round"/>
+
+  <!-- Right cat body -->
+  <ellipse cx="255" cy="230" rx="55" ry="60" fill="#a8dadc"/>
+  <!-- Right cat head -->
+  <circle cx="255" cy="155" r="48" fill="#a8dadc"/>
+  <!-- Right cat ears -->
+  <polygon points="218,118 230,90 248,118" fill="#a8dadc"/>
+  <polygon points="223,118 232,96 246,118" fill="#ffb3ba"/>
+  <polygon points="262,118 275,90 288,118" fill="#a8dadc"/>
+  <polygon points="265,118 275,96 285,118" fill="#ffb3ba"/>
+  <!-- Right cat face -->
+  <circle cx="243" cy="152" r="7" fill="#2d2d2d"/>
+  <circle cx="267" cy="152" r="7" fill="#2d2d2d"/>
+  <circle cx="245" cy="150" r="2.5" fill="white"/>
+  <circle cx="269" cy="150" r="2.5" fill="white"/>
+  <!-- Right cat blush -->
+  <ellipse cx="230" cy="166" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <ellipse cx="280" cy="166" rx="12" ry="7" fill="#ffb3ba" opacity="0.6"/>
+  <!-- Right cat nose & mouth -->
+  <ellipse cx="255" cy="165" rx="5" ry="3" fill="#457b9d"/>
+  <path d="M 250 169 Q 255 175 260 169" stroke="#457b9d" stroke-width="2" fill="none"/>
+  <!-- Right cat whiskers -->
+  <line x1="210" y1="163" x2="245" y2="167" stroke="#888" stroke-width="1.5"/>
+  <line x1="210" y1="170" x2="245" y2="170" stroke="#888" stroke-width="1.5"/>
+  <line x1="265" y1="167" x2="300" y2="163" stroke="#888" stroke-width="1.5"/>
+  <line x1="265" y1="170" x2="300" y2="170" stroke="#888" stroke-width="1.5"/>
+  <!-- Right cat tail -->
+  <path d="M 305 275 Q 340 240 325 200" stroke="#a8dadc" stroke-width="14" fill="none" stroke-linecap="round"/>
+
+  <!-- Cats touching noses / nuzzling -->
+  <ellipse cx="200" cy="168" rx="10" ry="6" fill="#ffb3ba" opacity="0.4"/>
+
+  <!-- Paws holding -->
+  <ellipse cx="178" cy="268" rx="22" ry="14" fill="#f4a261"/>
+  <ellipse cx="222" cy="268" rx="22" ry="14" fill="#a8dadc"/>
+  <ellipse cx="178" cy="285" rx="20" ry="10" fill="#f4a261"/>
+  <ellipse cx="222" cy="285" rx="20" ry="10" fill="#a8dadc"/>
+
+  <!-- Label -->
+  <text x="200" y="312" font-size="13" text-anchor="middle" fill="#c77dff" font-family="Arial" font-weight="bold">Love is in the air 🐾</text>
+</svg>
