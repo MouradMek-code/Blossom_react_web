@@ -3,8 +3,10 @@ import styles from "./FormSignUp.module.css";
 import styles2 from "./VerifyPhone.module.css";
 import { BASE_URL } from "../api/config";
 import { saveSignupDraft, clearSignupDraft } from "../api/signupDraft";
+import { useTranslation } from "react-i18next";
 
 function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefill }) {
+  const { t } = useTranslation();
   const [username, setUsername] = useState(prefill?.username || "");
   const [email, setEmail] = useState(prefill?.email || "");
   const [password, setPassword] = useState("");
@@ -63,14 +65,14 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
 
   return (
     <div>
-      <h1 className={styles.title}>REGISTER HERE</h1>
+      <h1 className={styles.title}>{t("signup.title")}</h1>
       {verify === false && (
         <form className={styles.container} onSubmit={(e) => FormHandler(e)}>
           {error !== "" && (
             <span className={styles.error}>{error.toString()}</span>
           )}
           <div className={styles.group}>
-            <label>Name</label>
+            <label>{t("signup.name")}</label>
             <input
               type="text"
               value={username}
@@ -78,7 +80,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
             ></input>
           </div>
           <div className={styles.group}>
-            <label>Email</label>
+            <label>{t("signup.email")}</label>
             <input
               type="email"
               value={email}
@@ -86,7 +88,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
             ></input>
           </div>
           <div className={styles.group}>
-            <label>Password</label>
+            <label>{t("signup.password")}</label>
             <input
               type="password"
               value={password}
@@ -94,7 +96,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
             ></input>
           </div>
           <div className={styles.group}>
-            <label>Phone Number</label>
+            <label>{t("signup.phoneNumber")}</label>
             <input
               type="phonenumber"
               value={phoneNumber}
@@ -103,7 +105,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
             ></input>
           </div>
           <div className={styles.group}>
-            <label>Date of Birth</label>
+            <label>{t("signup.dateOfBirth")}</label>
             <input
               type="date"
               value={dateOfBirth}
@@ -111,12 +113,12 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
             ></input>
           </div>
           <div className={styles.registerform}>
-            <button onClick={(e) => FormHandler(e)}> Register </button>
+            <button onClick={(e) => FormHandler(e)}>{t("signup.button")}</button>
           </div>
           <p style={{ textAlign: "center", fontSize: "12px", color: "#888", marginTop: "12px" }}>
-            By creating an account, you agree to our{" "}
+            {t("signup.privacyPolicy")}{" "}
             <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
-              Privacy Policy
+              {t("signup.privacyPolicyLink")}
             </a>
             .
           </p>
@@ -146,6 +148,7 @@ function VerificationForm({
   setError,
   setRegistered,
 }) {
+  const { t } = useTranslation();
   const [code, setCode] = useState("");
   // Resuming after a reload means the password was never persisted (by
   // design - we don't store it locally), so it has to be re-entered here
@@ -199,11 +202,9 @@ function VerificationForm({
       <div className={styles2.card}>
         <div className={styles2.icon}>🔐</div>
 
-        <h1 className={styles2.title}>Verify your email/phone</h1>
+        <h1 className={styles2.title}>{t("verify.title")}</h1>
 
-        <p className={styles2.subtitle}>
-          Enter the 6-digit verification code sent to your phone/email
-        </p>
+        <p className={styles2.subtitle}>{t("verify.subtitle")}</p>
 
         <input
           className={styles2.input}
@@ -217,18 +218,18 @@ function VerificationForm({
           <input
             className={styles2.input}
             type="password"
-            placeholder="Re-enter your password"
+            placeholder={t("verify.reenterPassword")}
             value={passwordInput}
             onChange={(e) => setPasswordInput(e.target.value)}
           />
         )}
 
         <button className={styles2.button} onClick={SignUp}>
-          Continue
+          {t("verify.button")}
         </button>
 
         <p className={styles2.footerText}>
-          Didn’t receive the code? <span style={styles.link}>Resend</span>
+          {t("verify.resend")} <span style={styles.link}>{t("verify.resendLink")}</span>
         </p>
       </div>
     </div>

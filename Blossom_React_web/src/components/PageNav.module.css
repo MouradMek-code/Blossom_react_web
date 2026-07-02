@@ -205,6 +205,11 @@
     width: 100%;
   }
 
+  .langSwitcher {
+    width: 100%;
+    justify-content: center;
+  }
+
   .nav a {
     width: 100%;
     justify-content: center;
@@ -218,4 +223,31 @@
     padding: 7px 10px;
     font-size: 14px;
   }
+}
+
+.langSwitcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.langBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.langBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.langBtnActive {
+  background: #d6336c;
+  border-color: #d6336c;
+  font-weight: 600;
 }

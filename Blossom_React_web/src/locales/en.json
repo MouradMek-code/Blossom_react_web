@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "yourProfile": "Your Profile",
+    "browse": "Browse",
+    "matched": "Matched",
+    "likesYou": "Likes You",
+    "admin": "🛡️ Admin",
+    "logout": "Logout",
+    "homePage": "HomePage",
+    "signUp": "Sign Up",
+    "login": "Login"
+  },
+  "home": {
+    "title": "Meet your dating soul TODAY !!",
+    "subtitle": "Free Fast Account",
+    "tagline": "swipe → chat → maybe meet",
+    "cta": "Start Dating Now ❤️",
+    "trustLine": "Where she always makes the first move 💌",
+    "carousel": "Love finds everyone 🌸"
+  },
+  "login": {
+    "title": "LOGIN HERE",
+    "usernamePlaceholder": "Username or Email",
+    "password": "Password",
+    "button": "Login",
+    "forgotPassword": "Forgot password?"
+  },
+  "signup": {
+    "title": "REGISTER HERE",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "phoneNumber": "Phone Number",
+    "dateOfBirth": "Date of Birth",
+    "button": "Register",
+    "privacyPolicy": "By creating an account, you agree to our",
+    "privacyPolicyLink": "Privacy Policy"
+  },
+  "verify": {
+    "title": "Verify your email/phone",
+    "subtitle": "Enter the 6-digit verification code sent to your phone/email",
+    "button": "Continue",
+    "resend": "Didn't receive the code?",
+    "resendLink": "Resend",
+    "reenterPassword": "Re-enter your password"
+  },
+  "forgotPassword": {
+    "titleRequest": "FORGOT PASSWORD",
+    "titleReset": "RESET PASSWORD",
+    "description": "Enter your account email and we'll send you a reset code.",
+    "email": "Email",
+    "sendCode": "Send Reset Code",
+    "backToLogin": "Back to login",
+    "resetCode": "Reset Code",
+    "newPassword": "New Password",
+    "updatePassword": "Update Password",
+    "tryAgain": "Didn't get a code? Try again"
+  },
+  "lang": {
+    "label": "Language"
+  }
+}

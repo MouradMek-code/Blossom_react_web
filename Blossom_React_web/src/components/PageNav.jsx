@@ -3,7 +3,24 @@ import styles from "./PageNav.module.css";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../api/config";
+import { useTranslation } from "react-i18next";
+import i18n from "../i18n";
+
+const LANGUAGES = [
+  { code: "en", label: "EN" },
+  { code: "fr", label: "FR" },
+  { code: "zh", label: "中文" },
+  { code: "ar", label: "عربي" },
+];
+
 function PageNav() {
+  const { t } = useTranslation();
+  const [lang, setLang] = useState(i18n.language?.slice(0, 2) || "en");
+
+  function switchLang(code) {
+    i18n.changeLanguage(code);
+    setLang(code);
+  }
   const navigate = useNavigate();
   const [token, setToken] = useState(sessionStorage.getItem("token"));
   const [menuOpen, setMenuOpen] = useState(false);
@@ -98,7 +115,7 @@ function PageNav() {
                 style={{ textDecoration: "none" }}
                 onClick={closeMenu}
               >
-                Your Profile
+                {t("nav.yourProfile")}
               </NavLink>
             </span>
             <span>
@@ -107,7 +124,7 @@ function PageNav() {
                 style={{ textDecoration: "none" }}
                 onClick={closeMenu}
               >
-                Browse
+                {t("nav.browse")}
               </NavLink>
             </span>
             <span className={styles.navItemWithBadge}>
@@ -116,7 +133,7 @@ function PageNav() {
                 style={{ textDecoration: "none" }}
                 onClick={closeMenu}
               >
-                Matched
+                {t("nav.matched")}
               </NavLink>
               {matchCount > 0 && (
                 <span className={styles.badge}>
@@ -130,7 +147,7 @@ function PageNav() {
                 style={{ textDecoration: "none" }}
                 onClick={closeMenu}
               >
-                Likes You
+                {t("nav.likesYou")}
               </NavLink>
               {likeCount > 0 && (
                 <span className={styles.badge}>
@@ -141,13 +158,13 @@ function PageNav() {
             {isAdmin && (
               <span>
                 <NavLink to="/admin" style={{ textDecoration: "none" }} onClick={closeMenu}>
-                  🛡️ Admin
+                  {t("nav.admin")}
                 </NavLink>
               </span>
             )}
             <span>
               <button className={styles.logout} onClick={HandleLogOut}>
-                Logout
+                {t("nav.logout")}
               </button>
             </span>
           </>
@@ -159,7 +176,7 @@ function PageNav() {
               style={{ textDecoration: "none" }}
               onClick={closeMenu}
             >
-              HomePage
+              {t("nav.homePage")}
             </NavLink>
           </span>
         )}
@@ -170,7 +187,7 @@ function PageNav() {
               style={{ textDecoration: "none" }}
               onClick={closeMenu}
             >
-              Sign Up
+              {t("nav.signUp")}
             </NavLink>
           </span>
         )}
@@ -182,10 +199,22 @@ function PageNav() {
               style={{ textDecoration: "none" }}
               onClick={closeMenu}
             >
-              Login
+              {t("nav.login")}
             </NavLink>
           </span>
         )}
+
+        <span className={styles.langSwitcher}>
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => { switchLang(l.code); closeMenu(); }}
+              className={`${styles.langBtn} ${lang === l.code ? styles.langBtnActive : ""}`}
+            >
+              {l.label}
+            </button>
+          ))}
+        </span>
       </ul>
     </nav>
   );

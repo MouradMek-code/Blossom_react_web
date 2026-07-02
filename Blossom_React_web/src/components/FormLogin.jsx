@@ -3,7 +3,9 @@ import styles from "./FormSignUp.module.css";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../api/config";
+import { useTranslation } from "react-i18next";
 function FormLogin() {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -41,13 +43,13 @@ function FormLogin() {
   }
   return (
     <div>
-      <h1 className={styles.title}>LOGIN HERE</h1>
+      <h1 className={styles.title}>{t("login.title")}</h1>
       <form className={styles.container} onSubmit={(e) => HandleLogin(e)}>
         {error !== "" && (
           <span className={styles.error}>{error.toString()}</span>
         )}
         <div className={styles.group}>
-          <label>Username or Email</label>
+          <label>{t("login.usernamePlaceholder")}</label>
           <input
             type="text"
             value={username}
@@ -56,7 +58,7 @@ function FormLogin() {
           ></input>
         </div>
         <div className={styles.group}>
-          <label>Password</label>
+          <label>{t("login.password")}</label>
           <input
             type="password"
             onChange={(e) => setPassword(e.target.value)}
@@ -64,10 +66,10 @@ function FormLogin() {
           ></input>
         </div>
         <div className={styles.registerform}>
-          <button onClick={(e) => HandleLogin(e)}> Login </button>
+          <button onClick={(e) => HandleLogin(e)}>{t("login.button")}</button>
         </div>
         <p style={{ textAlign: "center", marginTop: "12px" }}>
-          <Link to="/forgot_password">Forgot password?</Link>
+          <Link to="/forgot_password">{t("login.forgotPassword")}</Link>
         </p>
       </form>
     </div>

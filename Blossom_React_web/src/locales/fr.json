@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "yourProfile": "Mon Profil",
+    "browse": "Explorer",
+    "matched": "Matchés",
+    "likesYou": "Vous aiment",
+    "admin": "🛡️ Admin",
+    "logout": "Déconnexion",
+    "homePage": "Accueil",
+    "signUp": "S'inscrire",
+    "login": "Connexion"
+  },
+  "home": {
+    "title": "Rencontrez votre âme sœur AUJOURD'HUI !!",
+    "subtitle": "Compte Gratuit et Rapide",
+    "tagline": "swipez → chattez → rencontrez peut-être",
+    "cta": "Commencer à Draguer ❤️",
+    "trustLine": "Où elle fait toujours le premier pas 💌",
+    "carousel": "L'amour touche tout le monde 🌸"
+  },
+  "login": {
+    "title": "CONNEXION",
+    "usernamePlaceholder": "Nom d'utilisateur ou Email",
+    "password": "Mot de passe",
+    "button": "Connexion",
+    "forgotPassword": "Mot de passe oublié ?"
+  },
+  "signup": {
+    "title": "S'INSCRIRE",
+    "name": "Prénom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "phoneNumber": "Numéro de téléphone",
+    "dateOfBirth": "Date de naissance",
+    "button": "S'inscrire",
+    "privacyPolicy": "En créant un compte, vous acceptez notre",
+    "privacyPolicyLink": "Politique de confidentialité"
+  },
+  "verify": {
+    "title": "Vérifiez votre email/téléphone",
+    "subtitle": "Entrez le code de vérification à 6 chiffres envoyé à votre téléphone/email",
+    "button": "Continuer",
+    "resend": "Vous n'avez pas reçu le code ?",
+    "resendLink": "Renvoyer",
+    "reenterPassword": "Ressaisissez votre mot de passe"
+  },
+  "forgotPassword": {
+    "titleRequest": "MOT DE PASSE OUBLIÉ",
+    "titleReset": "RÉINITIALISER LE MOT DE PASSE",
+    "description": "Entrez l'email de votre compte et nous vous enverrons un code de réinitialisation.",
+    "email": "Email",
+    "sendCode": "Envoyer le code",
+    "backToLogin": "Retour à la connexion",
+    "resetCode": "Code de réinitialisation",
+    "newPassword": "Nouveau mot de passe",
+    "updatePassword": "Mettre à jour le mot de passe",
+    "tryAgain": "Vous n'avez pas reçu le code ? Réessayez"
+  },
+  "lang": {
+    "label": "Langue"
+  }
+}

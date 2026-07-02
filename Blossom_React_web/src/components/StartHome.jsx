@@ -1,22 +1,22 @@
 import { Link } from "react-router-dom";
 import styles from "./StartHome.module.css";
+import { useTranslation } from "react-i18next";
 
 function StartHome() {
+  const { t } = useTranslation();
   const token = sessionStorage.getItem("token");
   const istokenundefined = token === "undefined" || token === null;
   return (
     <div className={styles.center}>
-      <h1 className={styles.title}>Meet your dating soul TODAY !!</h1>
-      <h1 className={styles.subtitle}>Free Fast Account</h1>
-      <h2 className={styles.tagline}>swipe → chat → maybe meet</h2>
+      <h1 className={styles.title}>{t("home.title")}</h1>
+      <h1 className={styles.subtitle}>{t("home.subtitle")}</h1>
+      <h2 className={styles.tagline}>{t("home.tagline")}</h2>
       {istokenundefined === true && (
         <Link to="sign_up" className={styles.cta}>
-          Start Dating Now ❤️
+          {t("home.cta")}
         </Link>
       )}
-      <p className={styles.trustLine}>
-        Where she always makes the first move 💌
-      </p>
+      <p className={styles.trustLine}>{t("home.trustLine")}</p>
     </div>
   );
 }

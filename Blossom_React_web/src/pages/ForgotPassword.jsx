@@ -4,8 +4,10 @@ import PageNav from "../components/PageNav";
 import styles from "../components/FormSignUp.module.css";
 import homeStyles from "./Homepage.module.css";
 import { BASE_URL } from "../api/config";
+import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState("request"); // "request" | "reset"
   const [email, setEmail] = useState("");
@@ -61,17 +63,17 @@ function ForgotPassword() {
 
       <div>
         <h1 className={styles.title}>
-          {step === "request" ? "FORGOT PASSWORD" : "RESET PASSWORD"}
+          {step === "request" ? t("forgotPassword.titleRequest") : t("forgotPassword.titleReset")}
         </h1>
 
         {step === "request" ? (
           <form className={styles.container} onSubmit={handleRequestCode}>
             {error !== "" && <span className={styles.error}>{error}</span>}
             <p style={{ color: "#fff", textAlign: "center" }}>
-              Enter your account email and we'll send you a reset code.
+              {t("forgotPassword.description")}
             </p>
             <div className={styles.group}>
-              <label>Email</label>
+              <label>{t("forgotPassword.email")}</label>
               <input
                 type="email"
                 value={email}
@@ -80,10 +82,10 @@ function ForgotPassword() {
               />
             </div>
             <div className={styles.registerform}>
-              <button type="submit">Send Reset Code</button>
+              <button type="submit">{t("forgotPassword.sendCode")}</button>
             </div>
             <p style={{ textAlign: "center" }}>
-              <Link to="/login">Back to login</Link>
+              <Link to="/login">{t("forgotPassword.backToLogin")}</Link>
             </p>
           </form>
         ) : (
@@ -93,7 +95,7 @@ function ForgotPassword() {
               <p style={{ color: "#fff", textAlign: "center" }}>{info}</p>
             )}
             <div className={styles.group}>
-              <label>Reset Code</label>
+              <label>{t("forgotPassword.resetCode")}</label>
               <input
                 type="text"
                 value={otp}
@@ -103,7 +105,7 @@ function ForgotPassword() {
               />
             </div>
             <div className={styles.group}>
-              <label>New Password</label>
+              <label>{t("forgotPassword.newPassword")}</label>
               <input
                 type="password"
                 value={newPassword}
@@ -113,7 +115,7 @@ function ForgotPassword() {
               />
             </div>
             <div className={styles.registerform}>
-              <button type="submit">Update Password</button>
+              <button type="submit">{t("forgotPassword.updatePassword")}</button>
             </div>
             <p style={{ textAlign: "center" }}>
               <button
@@ -127,7 +129,7 @@ function ForgotPassword() {
                   cursor: "pointer",
                 }}
               >
-                Didn't get a code? Try again
+                {t("forgotPassword.tryAgain")}
               </button>
             </p>
           </form>

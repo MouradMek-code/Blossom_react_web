@@ -1,4 +1,5 @@
 import styles from "./LoveCarousel.module.css";
+import { useTranslation } from "react-i18next";
 
 const images = [
   { src: "/love-1.png", alt: "Hamsters in love" },
@@ -14,9 +15,10 @@ const images = [
 const track = [...images, ...images];
 
 function LoveCarousel() {
+  const { t } = useTranslation();
   return (
     <div className={styles.section}>
-      <p className={styles.label}>Love finds everyone 🌸</p>
+      <p className={styles.label}>{t("home.carousel")}</p>
       <div className={styles.mask}>
         <div className={styles.track}>
           {track.map((img, i) => (
