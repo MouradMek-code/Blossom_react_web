@@ -14,6 +14,7 @@ function Profiles() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [draftFilters, setDraftFilters] = useState({});
   const [appliedFilters, setAppliedFilters] = useState({});
+  const [loading, setLoading] = useState(true);
 
   async function handleLike(e, profile) {
     e.stopPropagation();
@@ -45,47 +46,37 @@ function Profiles() {
       return;
     }
 
-    async function fetchProfiles() {
+    async function fetchAll() {
       try {
-        const resp = await fetch(`${BASE_URL}/profile/all_profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await resp.json();
-        if (resp.status !== 200)
-          throw new Error(
-            `error happeneded on login : ${data.detail?.[0]?.msg}`,
-          );
+        const [profilesResp, ownResp] = await Promise.all([
+          fetch(`${BASE_URL}/profile/all_profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${BASE_URL}/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+        const data = await profilesResp.json();
+        if (profilesResp.status !== 200)
+          throw new Error(`error happened on login : ${data.detail?.[0]?.msg}`);
         setProfiles(data);
+
+        if (ownResp.ok) {
+          const ownData = await ownResp.json();
+          const defaults = getDefaultFilters(ownData);
+          setDraftFilters(defaults);
+          setAppliedFilters(defaults);
+        }
       } catch (err) {
         sessionStorage.setItem("token", null);
         navigate("/login");
+      } finally {
+        setLoading(false);
       }
     }
 
-    fetchProfiles();
+    fetchAll();
   }, [token, navigate, matchedProfile]);
-
-  useEffect(() => {
-    if (!token) return;
-
-    async function fetchOwnProfile() {
-      try {
-        const resp = await fetch(`${BASE_URL}/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!resp.ok) return;
-        const data = await resp.json();
-        const defaults = getDefaultFilters(data);
-        setDraftFilters(defaults);
-        setAppliedFilters(defaults);
-      } catch (err) {
-        // Default opposite-gender filter is a convenience, not a
-        // requirement - silently skip it if the profile fetch fails.
-      }
-    }
-
-    fetchOwnProfile();
-  }, [token]);
 
   const filteredProfiles = useMemo(
     () => profiles.filter((p) => matchesFilters(p, appliedFilters)),
@@ -102,6 +93,15 @@ function Profiles() {
   function applyFilters() {
     setAppliedFilters(draftFilters);
     setFilterOpen(false);
+  }
+
+  if (loading) {
+    return (
+      <div className="profile-page">
+        <PageNav />
+        <p className={styles.empty} style={{ marginTop: "4rem" }}>Loading profiles...</p>
+      </div>
+    );
   }
 
   return (
