@@ -16,27 +16,11 @@ const LANGUAGES = [
 function PageNav() {
   const { t } = useTranslation();
   const [lang, setLang] = useState(i18n.language?.slice(0, 2) || "en");
-  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
 
   function switchLang(code) {
     i18n.changeLanguage(code);
     setLang(code);
   }
-
-  function toggleDark() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
-    localStorage.setItem("theme", next ? "dark" : "light");
-  }
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = saved ? saved === "dark" : prefersDark;
-    setDark(isDark);
-    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-  }, []);
 
   const navigate = useNavigate();
   const [token, setToken] = useState(sessionStorage.getItem("token"));
@@ -99,15 +83,6 @@ function PageNav() {
     <nav className={styles.head}>
       <div className={styles.bar}>
         <Logo />
-
-        <button
-          type="button"
-          className={styles.themeToggle}
-          onClick={toggleDark}
-          aria-label="Toggle dark mode"
-        >
-          {dark ? "☀️" : "🌙"}
-        </button>
 
         <button
           type="button"
