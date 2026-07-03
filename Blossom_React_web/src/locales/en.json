@@ -56,7 +56,49 @@
     "updatePassword": "Update Password",
     "tryAgain": "Didn't get a code? Try again"
   },
-  "lang": {
-    "label": "Language"
+  "lang": { "label": "Language" },
+  "trust": {
+    "encrypted": "End-to-end encrypted",
+    "gdpr": "GDPR compliant",
+    "noFake": "No fake profiles",
+    "noAds": "Zero ads, ever",
+    "delete": "Delete anytime"
+  },
+  "testimonials": {
+    "heading": "Real people. Real stories. 💌",
+    "0": {
+      "quote": "I wasn't expecting much, but within two weeks I matched with someone who actually reads. We've been together 8 months.",
+      "name": "Layla & Marcus",
+      "detail": "London · met on Blossom"
+    },
+    "1": {
+      "quote": "The fact that women make the first move changed everything. It felt respectful from day one.",
+      "name": "Camille & Théo",
+      "detail": "Paris · met on Blossom"
+    },
+    "2": {
+      "quote": "We matched on a Friday, had coffee on Sunday, and never stopped talking since. Simple as that.",
+      "name": "Aisha & Daniel",
+      "detail": "Dubai · met on Blossom"
+    }
+  },
+  "appBanner": {
+    "heading": "Take Blossom everywhere 📱",
+    "sub": "Our mobile app lets you browse, match and chat on the go — available on Android, coming soon on iOS.",
+    "getItOn": "Get it on",
+    "googlePlay": "Google Play",
+    "comingSoon": "Coming soon",
+    "appStore": "App Store",
+    "matchTitle": "It's a Match!",
+    "matchSub": "You both liked each other"
+  },
+  "faq": {
+    "heading": "Frequently asked questions",
+    "0": { "q": "Is Blossom free to use?", "a": "Yes — creating a profile, browsing, and matching are completely free. We'll never charge you to send a like." },
+    "1": { "q": "Who makes the first move?", "a": "Women always send the first message. This keeps the experience respectful and intentional for everyone." },
+    "2": { "q": "How does matching work?", "a": "When you like someone and they like you back, it's a match! You'll get a notification and can start chatting straight away." },
+    "3": { "q": "Is my data safe?", "a": "Absolutely. We never sell your data. Your profile is only visible to registered members, and you can delete your account any time." },
+    "4": { "q": "Can I use Blossom on my phone?", "a": "Yes! Our Android app is available on Google Play. An iOS version is coming soon." },
+    "5": { "q": "How do I delete my account?", "a": "Go to your profile settings and tap 'Delete Account'. Your data is permanently removed within 24 hours." }
   }
 }

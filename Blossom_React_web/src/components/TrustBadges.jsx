@@ -1,14 +1,17 @@
+import { useTranslation } from "react-i18next";
 import styles from "./TrustBadges.module.css";
 
-const BADGES = [
-  { icon: "🔒", label: "End-to-end encrypted" },
-  { icon: "🇪🇺", label: "GDPR compliant" },
-  { icon: "🚫", label: "No fake profiles" },
-  { icon: "❌", label: "Zero ads, ever" },
-  { icon: "🗑️", label: "Delete anytime" },
-];
-
 export default function TrustBadges() {
+  const { t } = useTranslation();
+
+  const BADGES = [
+    { icon: "🔒", label: t("trust.encrypted") },
+    { icon: "🇪🇺", label: t("trust.gdpr") },
+    { icon: "🚫", label: t("trust.noFake") },
+    { icon: "❌", label: t("trust.noAds") },
+    { icon: "🗑️", label: t("trust.delete") },
+  ];
+
   return (
     <div className={styles.bar}>
       {BADGES.map((b) => (

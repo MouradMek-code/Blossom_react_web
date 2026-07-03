@@ -56,7 +56,49 @@
     "updatePassword": "Mettre à jour le mot de passe",
     "tryAgain": "Vous n'avez pas reçu le code ? Réessayez"
   },
-  "lang": {
-    "label": "Langue"
+  "lang": { "label": "Langue" },
+  "trust": {
+    "encrypted": "Chiffrement bout en bout",
+    "gdpr": "Conforme au RGPD",
+    "noFake": "Aucun faux profil",
+    "noAds": "Zéro publicité",
+    "delete": "Suppression à tout moment"
+  },
+  "testimonials": {
+    "heading": "Des vraies personnes. De vraies histoires. 💌",
+    "0": {
+      "quote": "Je n'espérais pas grand-chose, mais en deux semaines j'ai matché avec quelqu'un qui lit vraiment. On est ensemble depuis 8 mois.",
+      "name": "Layla & Marcus",
+      "detail": "Londres · rencontrés sur Blossom"
+    },
+    "1": {
+      "quote": "Le fait que ce sont les femmes qui font le premier pas a tout changé. C'était respectueux dès le début.",
+      "name": "Camille & Théo",
+      "detail": "Paris · rencontrés sur Blossom"
+    },
+    "2": {
+      "quote": "On a matché un vendredi, pris un café dimanche, et on n'a plus arrêté de parler depuis. Simple comme bonjour.",
+      "name": "Aisha & Daniel",
+      "detail": "Dubaï · rencontrés sur Blossom"
+    }
+  },
+  "appBanner": {
+    "heading": "Emportez Blossom partout 📱",
+    "sub": "Notre appli mobile vous permet de parcourir, matcher et chatter où que vous soyez — disponible sur Android, bientôt sur iOS.",
+    "getItOn": "Disponible sur",
+    "googlePlay": "Google Play",
+    "comingSoon": "Bientôt",
+    "appStore": "App Store",
+    "matchTitle": "C'est un Match !",
+    "matchSub": "Vous vous aimez mutuellement"
+  },
+  "faq": {
+    "heading": "Questions fréquentes",
+    "0": { "q": "Blossom est-il gratuit ?", "a": "Oui — créer un profil, parcourir et matcher sont totalement gratuits. Nous ne vous facturerons jamais un like." },
+    "1": { "q": "Qui fait le premier pas ?", "a": "Ce sont toujours les femmes qui envoient le premier message. Cela rend l'expérience respectueuse et intentionnelle pour tout le monde." },
+    "2": { "q": "Comment fonctionne le matching ?", "a": "Quand vous aimez quelqu'un et qu'il vous aime en retour, c'est un match ! Vous recevrez une notification et pourrez commencer à chatter." },
+    "3": { "q": "Mes données sont-elles en sécurité ?", "a": "Absolument. Nous ne vendons jamais vos données. Votre profil n'est visible que par les membres inscrits, et vous pouvez supprimer votre compte à tout moment." },
+    "4": { "q": "Puis-je utiliser Blossom sur mon téléphone ?", "a": "Oui ! Notre application Android est disponible sur Google Play. Une version iOS arrive bientôt." },
+    "5": { "q": "Comment supprimer mon compte ?", "a": "Allez dans les paramètres de votre profil et appuyez sur 'Supprimer le compte'. Vos données sont supprimées définitivement sous 24 heures." }
   }
 }

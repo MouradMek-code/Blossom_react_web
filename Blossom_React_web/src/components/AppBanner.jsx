@@ -1,14 +1,14 @@
-import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./AppBanner.module.css";
 
 export default function AppBanner() {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.section}>
       <div className={styles.text}>
-        <h2 className={styles.heading}>Take Blossom everywhere 📱</h2>
-        <p className={styles.sub}>
-          Our mobile app lets you browse, match and chat on the go — available on Android, coming soon on iOS.
-        </p>
+        <h2 className={styles.heading}>{t("appBanner.heading")}</h2>
+        <p className={styles.sub}>{t("appBanner.sub")}</p>
         <div className={styles.badges}>
           <a
             href="https://play.google.com/store"
@@ -18,15 +18,15 @@ export default function AppBanner() {
           >
             <span className={styles.badgeIcon}>▶</span>
             <span className={styles.badgeText}>
-              <small>Get it on</small>
-              Google Play
+              <small>{t("appBanner.getItOn")}</small>
+              {t("appBanner.googlePlay")}
             </span>
           </a>
           <span className={styles.badgeSoon}>
             <span className={styles.badgeIcon}></span>
             <span className={styles.badgeText}>
-              <small>Coming soon</small>
-              App Store
+              <small>{t("appBanner.comingSoon")}</small>
+              {t("appBanner.appStore")}
             </span>
           </span>
         </div>
@@ -36,8 +36,8 @@ export default function AppBanner() {
           <div className={styles.phoneScreen}>
             <div className={styles.phoneCard}>
               <div className={styles.phoneAvatar}>🌸</div>
-              <div className={styles.phoneMatch}>It's a Match!</div>
-              <div className={styles.phoneSub}>You both liked each other</div>
+              <div className={styles.phoneMatch}>{t("appBanner.matchTitle")}</div>
+              <div className={styles.phoneSub}>{t("appBanner.matchSub")}</div>
             </div>
           </div>
         </div>
