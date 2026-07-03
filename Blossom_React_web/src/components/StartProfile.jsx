@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import styles from "./StartProfile.module.css";
 import { saveSignupDraft } from "../api/signupDraft";
 import questions from "../data/questions.json";
+import ProfileFlowerProgress from "./ProfileFlowerProgress";
 
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(
@@ -56,10 +57,7 @@ function StartProfile({ setQuestionEnded, answer, setAnswer, initialIndex = 0, a
         <span className={styles.title}>Create Your Profile Here</span>
       </header>
       {started ? (
-        <StartQuizProgressBar
-          indiceQuestion={indiceQuestion}
-          length={questions.length}
-        />
+        <ProfileFlowerProgress current={indiceQuestion + 1} total={questions.length} />
       ) : (
         <ButtonLetsStart
           length={questions.length}
