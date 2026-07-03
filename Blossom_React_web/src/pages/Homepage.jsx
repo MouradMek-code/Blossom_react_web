@@ -2,7 +2,6 @@ import PageNav from "../components/PageNav";
 import StartHome from "../components/StartHome";
 import LoveCarousel from "../components/LoveCarousel";
 import HowItWorks from "../components/HowItWorks";
-import StatsCounter from "../components/StatsCounter";
 import Testimonials from "../components/Testimonials";
 import AppBanner from "../components/AppBanner";
 import TrustBadges from "../components/TrustBadges";
@@ -15,7 +14,6 @@ function Homepage() {
       <div className={`${styles.head} ${styles.animatedBg}`}>
         <PageNav />
         <StartHome />
-        <StatsCounter />
         <LoveCarousel />
       </div>
       <HowItWorks />
