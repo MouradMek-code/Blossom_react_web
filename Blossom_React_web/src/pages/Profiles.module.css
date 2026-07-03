@@ -5,18 +5,19 @@
 }
 
 .filterButton {
-  border: 1px solid #d6336c;
+  border: 1px solid var(--primary);
   border-radius: 20px;
   padding: 8px 16px;
-  background: white;
-  color: #d6336c;
+  background: var(--surface);
+  color: var(--primary);
   font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: background 0.15s ease;
 }
 
 .filterButton:hover {
-  background: #fbe4ec;
+  background: var(--primary-soft);
 }
 
 .container {
@@ -28,10 +29,44 @@
 
 .empty {
   grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
   text-align: center;
-  color: #777;
-  font-size: 1.1rem;
-  padding: 40px;
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+.emptyTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.emptyText {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 0 0 24px;
+  max-width: 340px;
+  line-height: 1.6;
+}
+
+.emptyHint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .card {

@@ -145,11 +145,23 @@ function Profiles() {
 
       <div className={styles.container}>
         {filteredProfiles.length === 0 && (
-          <p className={styles.empty}>
-            {activeFilterCount > 0
-              ? "No profiles match your filters"
-              : "profiles available ...."}
-          </p>
+          <div className={styles.empty}>
+            {activeFilterCount > 0 ? (
+              <>
+                <div className={styles.emptyIcon}>🔍</div>
+                <p className={styles.emptyTitle}>No matches for your filters</p>
+                <p className={styles.emptyText}>Try widening your search — more people may appear with fewer filters applied.</p>
+                <p className={styles.emptyHint}>Click ⚙️ Filters to adjust</p>
+              </>
+            ) : (
+              <>
+                <div className={styles.emptyIcon}>🌸</div>
+                <p className={styles.emptyTitle}>You've seen everyone!</p>
+                <p className={styles.emptyText}>No more profiles right now — check back later as new members join every day.</p>
+                <p className={styles.emptyHint}>New people bloom every day 💌</p>
+              </>
+            )}
+          </div>
         )}
 
         {filteredProfiles.map((profile) => (

@@ -1,6 +1,6 @@
 .nav :global(.active) {
-  background-color: #d6336c;
-  border-color: #d6336c;
+  background-color: var(--primary);
+  border-color: var(--primary);
   font-weight: 600;
 }
 
@@ -8,6 +8,10 @@
   position: sticky;
   top: 0;
   z-index: 999;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s ease;
 }
 
 .bar {
@@ -53,19 +57,14 @@
   border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Profile/Browse/Matches/Likes You/Logout sit on the light page
-   backgrounds (not the homepage's dark photo hero), so their text needs
-   to be dark instead of white to stay visible. The active pill and
-   Logout button keep white text since they have their own solid pink
-   fill regardless of the page behind them. */
 .navLoggedIn a {
-  color: #1a1a1a;
-  border-color: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  border-color: var(--border);
 }
 
 .navLoggedIn a:hover {
-  background-color: rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.45);
+  background-color: var(--surface-muted);
+  border-color: var(--text-muted);
 }
 
 .navLoggedIn a:global(.active) {
@@ -95,24 +94,6 @@
   line-height: 1;
 }
 
-.title {
-  font-size: 30px;
-  padding: 30px;
-  margin: 20px;
-  border: 20px;
-}
-
-.login {
-  background: green;
-  color: white;
-  padding: 4px 15px;
-  border-radius: 3px;
-}
-.login:hover {
-  color: black;
-  background-color: red;
-}
-
 .logout {
   display: inline-flex;
   align-items: center;
@@ -121,8 +102,8 @@
   font-weight: 600;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: white;
-  background-color: #d6336c;
-  border: 1.5px solid #d6336c;
+  background-color: var(--primary);
+  border: 1.5px solid var(--primary);
   border-radius: 999px;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -131,6 +112,27 @@
 .logout:hover {
   background-color: #b32859;
   border-color: #b32859;
+}
+
+.themeToggle {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text);
+  transition: background 0.15s ease, border-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.themeToggle:hover {
+  background: var(--surface-muted);
+  border-color: var(--text-muted);
 }
 
 .menuToggle {
@@ -143,7 +145,7 @@
   height: 42px;
   border: none;
   border-radius: 999px;
-  background: #d6336c;
+  background: var(--primary);
   cursor: pointer;
   flex-shrink: 0;
   transition: background-color 0.15s ease;
@@ -247,7 +249,7 @@
 }
 
 .langBtnActive {
-  background: #d6336c;
-  border-color: #d6336c;
+  background: var(--primary);
+  border-color: var(--primary);
   font-weight: 600;
 }
