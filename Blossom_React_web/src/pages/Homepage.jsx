@@ -1,6 +1,5 @@
 import PageNav from "../components/PageNav";
 import StartHome from "../components/StartHome";
-import LoveCarousel from "../components/LoveCarousel";
 import HowItWorks from "../components/HowItWorks";
 import Testimonials from "../components/Testimonials";
 import AppBanner from "../components/AppBanner";
@@ -14,7 +13,6 @@ function Homepage() {
       <div className={`${styles.head} ${styles.animatedBg}`}>
         <PageNav />
         <StartHome />
-        <LoveCarousel />
       </div>
       <HowItWorks />
       <TrustBadges />
