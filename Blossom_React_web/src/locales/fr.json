@@ -42,7 +42,8 @@
     "button": "Continuer",
     "resend": "Vous n'avez pas reçu le code ?",
     "resendLink": "Renvoyer",
-    "reenterPassword": "Ressaisissez votre mot de passe"
+    "reenterPassword": "Ressaisissez votre mot de passe",
+    "spamHint": "Vous ne le trouvez pas ? Vérifiez vos spams ou courriers indésirables."
   },
   "forgotPassword": {
     "titleRequest": "MOT DE PASSE OUBLIÉ",

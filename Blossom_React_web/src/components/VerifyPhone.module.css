@@ -75,6 +75,13 @@
   color: #777;
 }
 
+.spamHint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #aaa;
+  text-align: center;
+}
+
 .link {
   color: #6c5ce7;
   cursor: pointer;

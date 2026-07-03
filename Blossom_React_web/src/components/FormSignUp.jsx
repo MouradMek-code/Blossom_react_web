@@ -235,6 +235,9 @@ function VerificationForm({
         <p className={styles2.footerText}>
           {t("verify.resend")} <span style={styles.link}>{t("verify.resendLink")}</span>
         </p>
+        <p className={styles2.spamHint}>
+          📬 {t("verify.spamHint")}
+        </p>
       </div>
     </div>
   );
