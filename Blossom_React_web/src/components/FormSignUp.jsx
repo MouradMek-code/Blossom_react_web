@@ -4,6 +4,7 @@ import styles2 from "./VerifyPhone.module.css";
 import { BASE_URL } from "../api/config";
 import { saveSignupDraft, clearSignupDraft } from "../api/signupDraft";
 import { useTranslation } from "react-i18next";
+import FlowerProgress from "./FlowerProgress";
 
 function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefill }) {
   const { t } = useTranslation();
@@ -63,8 +64,11 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
     SignUp();
   }
 
+  const filledCount = [username, email, password, phoneNumber, dateOfBirth].filter(Boolean).length;
+
   return (
     <div>
+      <FlowerProgress filled={filledCount} verified={verify === true} />
       <h1 className={styles.title}>{t("signup.title")}</h1>
       {verify === false && (
         <form className={styles.container} onSubmit={(e) => FormHandler(e)}>

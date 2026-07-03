@@ -1,0 +1,88 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0 8px;
+}
+
+.flowerWrap {
+  transition: filter 0.5s ease;
+}
+
+.glow {
+  filter: drop-shadow(0 0 10px rgba(214, 51, 108, 0.55));
+}
+
+.svg {
+  overflow: visible;
+}
+
+.petal {
+  fill: #e8e0ec;
+  transition: fill 0.4s ease;
+}
+
+.petalActive {
+  fill: #e8649a;
+}
+
+.center {
+  fill: #f5eef8;
+  transition: fill 0.4s ease;
+}
+
+.centerActive {
+  fill: #d6336c;
+}
+
+.centerText {
+  font-size: 13px;
+  user-select: none;
+}
+
+/* Step dots */
+.dots {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.dotWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e0d0e8;
+  transition: background 0.35s ease, transform 0.25s ease;
+}
+
+.dotActive {
+  background: #d6336c;
+  transform: scale(1.25);
+}
+
+.dotLabel {
+  font-size: 10px;
+  color: #bbb;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.dotLabelActive {
+  color: #d6336c;
+  font-weight: 600;
+}
+
+.hint {
+  font-size: 0.82rem;
+  color: #999;
+  margin: 0;
+  text-align: center;
+}
