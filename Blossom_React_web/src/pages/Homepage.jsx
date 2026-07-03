@@ -1,6 +1,5 @@
 import PageNav from "../components/PageNav";
 import StartHome from "../components/StartHome";
-import HowItWorks from "../components/HowItWorks";
 import Testimonials from "../components/Testimonials";
 import AppBanner from "../components/AppBanner";
 import TrustBadges from "../components/TrustBadges";
@@ -14,7 +13,6 @@ function Homepage() {
         <PageNav />
         <StartHome />
       </div>
-      <HowItWorks />
       <TrustBadges />
       <Testimonials />
       <AppBanner />
