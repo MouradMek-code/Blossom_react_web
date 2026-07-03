@@ -91,21 +91,6 @@ function ButtonLetsStart({ length, onclick }) {
   );
 }
 
-function StartQuizProgressBar({ indiceQuestion, point, length }) {
-  return (
-    <div className={styles.progressbar}>
-      <progress
-        className={styles.progress}
-        max={length}
-        value={indiceQuestion + 1}
-      />
-
-      <div className={styles.spanning}>
-        <span>{`${indiceQuestion + 1}/${length}`} Question</span>
-      </div>
-    </div>
-  );
-}
 
 function QuestionOption({
   question,
