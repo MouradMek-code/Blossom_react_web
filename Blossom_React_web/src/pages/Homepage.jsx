@@ -11,17 +11,19 @@ import styles from "./Homepage.module.css";
 
 function Homepage() {
   return (
-    <div className={`${styles.head} ${styles.animatedBg}`}>
-      <PageNav />
-      <StartHome />
-      <StatsCounter />
-      <LoveCarousel />
+    <>
+      <div className={`${styles.head} ${styles.animatedBg}`}>
+        <PageNav />
+        <StartHome />
+        <StatsCounter />
+        <LoveCarousel />
+      </div>
       <HowItWorks />
       <TrustBadges />
       <Testimonials />
       <AppBanner />
       <FAQ />
-    </div>
+    </>
   );
 }
 
