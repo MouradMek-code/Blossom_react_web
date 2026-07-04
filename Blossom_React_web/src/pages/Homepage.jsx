@@ -4,6 +4,7 @@ import Testimonials from "../components/Testimonials";
 import AppBanner from "../components/AppBanner";
 import TrustBadges from "../components/TrustBadges";
 import FAQ from "../components/FAQ";
+import LanguageDating from "../components/LanguageDating";
 import styles from "./Homepage.module.css";
 
 function Homepage() {
@@ -14,6 +15,7 @@ function Homepage() {
         <StartHome />
       </div>
       <TrustBadges />
+      <LanguageDating />
       <Testimonials />
       <AppBanner />
       <FAQ />

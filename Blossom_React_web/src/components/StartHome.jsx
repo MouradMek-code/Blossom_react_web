@@ -9,6 +9,10 @@ function StartHome() {
   return (
     <div className={styles.center}>
       <h1 className={styles.title}>{t("home.title")}</h1>
+      <div className={styles.floatingBadge}>
+        <span className={styles.badgeDot} />
+        {t("home.langBadge")}
+      </div>
       <h1 className={styles.subtitle}>{t("home.subtitle")}</h1>
       <h2 className={styles.tagline}>{t("home.tagline")}</h2>
       {istokenundefined === true && (

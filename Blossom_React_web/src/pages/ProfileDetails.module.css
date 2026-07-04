@@ -185,6 +185,16 @@
   border-radius: 999px;
 }
 
+.learningCard {
+  background: linear-gradient(135deg, #f3e8ff 0%, #fde6ed 100%);
+  border-color: #d8b4fe;
+}
+
+.learningTag {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
 /* SAFETY ROW */
 .safetyRow {
   display: flex;

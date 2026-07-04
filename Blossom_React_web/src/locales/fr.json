@@ -16,7 +16,8 @@
     "tagline": "swipez → chattez → rencontrez peut-être",
     "cta": "Commencer à Draguer ❤️",
     "trustLine": "Où elle fait toujours le premier pas 💌",
-    "carousel": "L'amour touche tout le monde 🌸"
+    "carousel": "L'amour touche tout le monde 🌸",
+    "langBadge": "🌍 NOUVEAU · Rencontres par langue"
   },
   "login": {
     "title": "CONNEXION",
@@ -57,7 +58,9 @@
     "updatePassword": "Mettre à jour le mot de passe",
     "tryAgain": "Vous n'avez pas reçu le code ? Réessayez"
   },
-  "lang": { "label": "Langue" },
+  "lang": {
+    "label": "Langue"
+  },
   "trust": {
     "encrypted": "Chiffrement bout en bout",
     "gdpr": "Conforme au RGPD",
@@ -66,7 +69,6 @@
     "delete": "Suppression à tout moment"
   },
   "testimonials": {
-    "heading": "Des vraies personnes. De vraies histoires. 💌",
     "0": {
       "quote": "Je n'espérais pas grand-chose, mais en deux semaines j'ai matché avec quelqu'un qui lit vraiment. On est ensemble depuis 8 mois.",
       "name": "Layla & Marcus",
@@ -81,7 +83,8 @@
       "quote": "On a matché un vendredi, pris un café dimanche, et on n'a plus arrêté de parler depuis. Simple comme bonjour.",
       "name": "Aisha & Daniel",
       "detail": "Dubaï · rencontrés sur Blossom"
-    }
+    },
+    "heading": "Des vraies personnes. De vraies histoires. 💌"
   },
   "appBanner": {
     "heading": "Emportez Blossom partout 📱",
@@ -94,12 +97,36 @@
     "matchSub": "Vous vous aimez mutuellement"
   },
   "faq": {
-    "heading": "Questions fréquentes",
-    "0": { "q": "Blossom est-il gratuit ?", "a": "Oui — créer un profil, parcourir et matcher sont totalement gratuits. Nous ne vous facturerons jamais un like." },
-    "1": { "q": "Qui fait le premier pas ?", "a": "Ce sont toujours les femmes qui envoient le premier message. Cela rend l'expérience respectueuse et intentionnelle pour tout le monde." },
-    "2": { "q": "Comment fonctionne le matching ?", "a": "Quand vous aimez quelqu'un et qu'il vous aime en retour, c'est un match ! Vous recevrez une notification et pourrez commencer à chatter." },
-    "3": { "q": "Mes données sont-elles en sécurité ?", "a": "Absolument. Nous ne vendons jamais vos données. Votre profil n'est visible que par les membres inscrits, et vous pouvez supprimer votre compte à tout moment." },
-    "4": { "q": "Puis-je utiliser Blossom sur mon téléphone ?", "a": "Oui ! Notre application Android est disponible sur Google Play. Une version iOS arrive bientôt." },
-    "5": { "q": "Comment supprimer mon compte ?", "a": "Allez dans les paramètres de votre profil et appuyez sur 'Supprimer le compte'. Vos données sont supprimées définitivement sous 24 heures." }
+    "0": {
+      "q": "Blossom est-il gratuit ?",
+      "a": "Oui — créer un profil, parcourir et matcher sont totalement gratuits. Nous ne vous facturerons jamais un like."
+    },
+    "1": {
+      "q": "Qui fait le premier pas ?",
+      "a": "Ce sont toujours les femmes qui envoient le premier message. Cela rend l'expérience respectueuse et intentionnelle pour tout le monde."
+    },
+    "2": {
+      "q": "Comment fonctionne le matching ?",
+      "a": "Quand vous aimez quelqu'un et qu'il vous aime en retour, c'est un match ! Vous recevrez une notification et pourrez commencer à chatter."
+    },
+    "3": {
+      "q": "Mes données sont-elles en sécurité ?",
+      "a": "Absolument. Nous ne vendons jamais vos données. Votre profil n'est visible que par les membres inscrits, et vous pouvez supprimer votre compte à tout moment."
+    },
+    "4": {
+      "q": "Puis-je utiliser Blossom sur mon téléphone ?",
+      "a": "Oui ! Notre application Android est disponible sur Google Play. Une version iOS arrive bientôt."
+    },
+    "5": {
+      "q": "Comment supprimer mon compte ?",
+      "a": "Allez dans les paramètres de votre profil et appuyez sur 'Supprimer le compte'. Vos données sont supprimées définitivement sous 24 heures."
+    },
+    "heading": "Questions fréquentes"
+  },
+  "languageDating": {
+    "badge": "NOUVEAU",
+    "heading": "Rencontrez en apprenant 🌍",
+    "sub": "Matchez avec des personnes qui parlent — ou apprennent — les mêmes langues que vous. Transformez chaque conversation en échange linguistique.",
+    "cta": "🗣️ Ajoutez vos langues en apprentissage à votre profil pour de meilleurs matchs !"
   }
 }

@@ -98,6 +98,23 @@ function SignUp() {
     );
   }, [answer, token]);
 
+  const CreateLearningLanguage = useCallback(async () => {
+    const langs = answer?.learning_language_name || [];
+    if (langs.length === 0) return;
+    await Promise.all(
+      langs.map((ln) =>
+        fetch(`${BASE_URL}/profile_learning_language`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ language_name: ln }),
+        }),
+      ),
+    );
+  }, [answer, token]);
+
   const CreateProfile = useCallback(async () => {
     const resp = await fetch(`${BASE_URL}/profile`, {
       method: "POST",
@@ -137,6 +154,7 @@ function SignUp() {
       if (questionEnded && !istokenundefined) {
         await CreateProfile();
         await CreateLanguage();
+        await CreateLearningLanguage();
         clearSignupDraft();
         setQuestionEnded(false);
         setPhoto(true);
@@ -147,6 +165,7 @@ function SignUp() {
     questionEnded,
     setPhoto,
     CreateProfile,
+    CreateLearningLanguage,
     CreateLanguage,
     istokenundefined,
   ]);

@@ -26,12 +26,9 @@ function StartProfile({ setQuestionEnded, answer, setAnswer, initialIndex = 0, a
 
   function Handleclicked(question, values) {
     setClicked(true);
-    if (question.field === "language_name" && "language_name" in answer) {
-      const { language_name } = answer;
-      setAnswer((c) => ({
-        ...c,
-        [question.field]: [...language_name, ...values],
-      }));
+    if ((question.field === "language_name" || question.field === "learning_language_name") && question.field in answer) {
+      const prev = answer[question.field];
+      setAnswer((c) => ({ ...c, [question.field]: [...prev, ...values] }));
       return;
     }
     setAnswer((c) => ({ ...c, [question.field]: values }));
