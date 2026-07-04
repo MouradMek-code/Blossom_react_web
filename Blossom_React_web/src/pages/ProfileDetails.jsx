@@ -211,7 +211,7 @@ function ProfileDetails() {
         {/* Learning Languages */}
         {profile.learning_languages?.length > 0 && (
           <div className={`${styles.card} ${styles.learningCard}`}>
-            <p className={styles.cardTitle}>📚 Learning</p>
+            <p className={`${styles.cardTitle} ${styles.learningCardTitle}`}>📚 Learning</p>
             <div className={styles.tags}>
               {profile.learning_languages.map((l, i) => (
                 <span key={i} className={`${styles.tag} ${styles.learningTag}`}>{l.language_name || l}</span>

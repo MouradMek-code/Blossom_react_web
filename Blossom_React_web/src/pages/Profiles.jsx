@@ -12,8 +12,12 @@ function Profiles() {
   const [profiles, setProfiles] = useState([]);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [draftFilters, setDraftFilters] = useState({});
-  const [appliedFilters, setAppliedFilters] = useState({});
+  const [draftFilters, setDraftFilters] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem("blossom_filters") || "{}"); } catch { return {}; }
+  });
+  const [appliedFilters, setAppliedFilters] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem("blossom_filters") || "{}"); } catch { return {}; }
+  });
   const [loading, setLoading] = useState(true);
 
   async function handleLike(e, profile) {
@@ -63,9 +67,11 @@ function Profiles() {
 
         if (ownResp.ok) {
           const ownData = await ownResp.json();
+          const saved = (() => { try { return JSON.parse(sessionStorage.getItem("blossom_filters") || "null"); } catch { return null; } })();
           const defaults = getDefaultFilters(ownData);
-          setDraftFilters(defaults);
-          setAppliedFilters(defaults);
+          const initial = saved !== null ? saved : defaults;
+          setDraftFilters(initial);
+          setAppliedFilters(initial);
         }
       } catch (err) {
         sessionStorage.setItem("token", null);
@@ -92,6 +98,7 @@ function Profiles() {
 
   function applyFilters() {
     setAppliedFilters(draftFilters);
+    sessionStorage.setItem("blossom_filters", JSON.stringify(draftFilters));
     setFilterOpen(false);
   }
 

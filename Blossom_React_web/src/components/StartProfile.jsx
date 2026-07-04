@@ -140,6 +140,22 @@ function Question({ question, Handleclicked, answer, setAnswer, setClicked }) {
     );
   }
 
+  // Height picker — single select with search
+  if (question.field === "height_cm") {
+    return (
+      <HeightPicker
+        field={question.field}
+        options={question.options}
+        answer={answer}
+        setAnswer={setAnswer}
+        setClicked={setClicked}
+        Handleclicked={Handleclicked}
+        question={question}
+        styles={styles}
+      />
+    );
+  }
+
   // Regular options (single select cards)
   if (question.options) {
     return (
@@ -198,6 +214,62 @@ function Question({ question, Handleclicked, answer, setAnswer, setClicked }) {
   }
 
   return null;
+}
+
+function HeightPicker({ field, options, answer, setAnswer, setClicked, Handleclicked, question, styles }) {
+  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+  const selected = answer[field] || null;
+  const filtered = search.trim()
+    ? options.filter((o) => o.toLowerCase().includes(search.toLowerCase()))
+    : options;
+
+  function pick(opt) {
+    setAnswer((prev) => ({ ...prev, [field]: opt }));
+    setClicked(true);
+    setOpen(false);
+    setSearch("");
+  }
+
+  return (
+    <div className={styles.langPickerWrap}>
+      {selected && (
+        <div className={styles.langSelected}>
+          <button type="button" className={styles.langChip} onClick={() => { setAnswer((prev) => { const n = { ...prev }; delete n[field]; return n; }); setClicked(false); }}>
+            📏 {selected} ✕
+          </button>
+        </div>
+      )}
+      <button type="button" className={styles.langTrigger} onClick={() => setOpen((o) => !o)}>
+        <span>{selected ? `📏 ${selected}` : "📏 Select your height…"}</span>
+        <span className={styles.langTriggerArrow}>{open ? "▲" : "▼"}</span>
+      </button>
+      {open && (
+        <div className={styles.langDropdown}>
+          <input
+            className={styles.langSearch}
+            type="text"
+            placeholder="🔍 e.g. 170 cm"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            autoFocus
+          />
+          <div className={styles.langList}>
+            {filtered.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                className={`${styles.langOption} ${selected === opt ? styles.langOptionSelected : ""}`}
+                onClick={() => pick(opt)}
+              >
+                {selected === opt ? "✓ " : ""}{opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function LanguagePicker({ field, options, answer, setAnswer, setClicked, styles }) {

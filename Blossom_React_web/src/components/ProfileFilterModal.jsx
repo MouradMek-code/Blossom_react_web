@@ -92,7 +92,7 @@ export default function ProfileFilterModal({ open, filters, onChange, onApply, o
         </div>
 
         <div className={styles.footer}>
-          <button className={styles.resetButton} onClick={() => onChange({})}>
+          <button className={styles.resetButton} onClick={() => { onChange({}); sessionStorage.removeItem("blossom_filters"); }}>
             Reset {activeCount > 0 ? `(${activeCount})` : ""}
           </button>
           <button className={styles.applyButton} onClick={onApply}>

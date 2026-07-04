@@ -186,13 +186,18 @@
 }
 
 .learningCard {
-  background: linear-gradient(135deg, #f3e8ff 0%, #fde6ed 100%);
-  border-color: #d8b4fe;
+  background: linear-gradient(135deg, #f5f0ff 0%, #fce8f5 100%);
+  border: 1.5px solid #d8b4fe;
+}
+
+.learningCardTitle {
+  color: #7c3aed;
 }
 
 .learningTag {
   background: #ede9fe;
   color: #6d28d9;
+  border: 1px solid #c4b5fd;
 }
 
 /* SAFETY ROW */
