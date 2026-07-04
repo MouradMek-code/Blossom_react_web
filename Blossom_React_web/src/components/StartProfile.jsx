@@ -126,40 +126,17 @@ function QuestionOption({
   );
 }
 function Question({ question, Handleclicked, answer, setAnswer, setClicked }) {
-  // Languages (multi-select cards)
-  if (question.field === "language_name") {
+  // Multi-select language pickers (spoken + learning)
+  if (question.field === "language_name" || question.field === "learning_language_name") {
     return (
-      <div className={styles.optionGrid}>
-        {question.options.map((lang) => {
-          const selected = answer.language_name?.includes(lang) || false;
-
-          return (
-            <button
-              type="button"
-              key={lang}
-              className={`${styles.optionCard} ${
-                selected ? styles.selected : ""
-              }`}
-              onClick={() => {
-                const current = answer.language_name || [];
-
-                const updated = selected
-                  ? current.filter((item) => item !== lang)
-                  : [...current, lang];
-
-                setAnswer((prev) => ({
-                  ...prev,
-                  language_name: updated,
-                }));
-
-                setClicked(updated.length > 0);
-              }}
-            >
-              {lang}
-            </button>
-          );
-        })}
-      </div>
+      <LanguagePicker
+        field={question.field}
+        options={question.options}
+        answer={answer}
+        setAnswer={setAnswer}
+        setClicked={setClicked}
+        styles={styles}
+      />
     );
   }
 
@@ -221,6 +198,78 @@ function Question({ question, Handleclicked, answer, setAnswer, setClicked }) {
   }
 
   return null;
+}
+
+function LanguagePicker({ field, options, answer, setAnswer, setClicked, styles }) {
+  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+  const selected = answer[field] || [];
+  const filtered = search.trim()
+    ? options.filter((l) => l.toLowerCase().includes(search.toLowerCase()))
+    : options;
+
+  function toggle(lang) {
+    const updated = selected.includes(lang)
+      ? selected.filter((x) => x !== lang)
+      : [...selected, lang];
+    setAnswer((prev) => ({ ...prev, [field]: updated }));
+    setClicked(updated.length > 0);
+  }
+
+  return (
+    <div className={styles.langPickerWrap}>
+      {/* Selected chips */}
+      {selected.length > 0 && (
+        <div className={styles.langSelected}>
+          {selected.map((lang) => (
+            <button key={lang} type="button" className={styles.langChip} onClick={() => toggle(lang)}>
+              {lang} ✕
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Trigger */}
+      <button
+        type="button"
+        className={styles.langTrigger}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span>
+          {selected.length === 0
+            ? "🌍 Select languages…"
+            : `🌍 ${selected.length} selected — tap to change`}
+        </span>
+        <span className={styles.langTriggerArrow}>{open ? "▲" : "▼"}</span>
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className={styles.langDropdown}>
+          <input
+            className={styles.langSearch}
+            type="text"
+            placeholder="🔍 Search…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            autoFocus
+          />
+          <div className={styles.langList}>
+            {filtered.map((lang) => (
+              <button
+                key={lang}
+                type="button"
+                className={`${styles.langOption} ${selected.includes(lang) ? styles.langOptionSelected : ""}`}
+                onClick={() => toggle(lang)}
+              >
+                {selected.includes(lang) ? "✓ " : ""}{lang}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default StartProfile;

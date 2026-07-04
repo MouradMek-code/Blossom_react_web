@@ -154,12 +154,32 @@ function VerificationForm({
 }) {
   const { t } = useTranslation();
   const [code, setCode] = useState("");
-  // Resuming after a reload means the password was never persisted (by
-  // design - we don't store it locally), so it has to be re-entered here
-  // to finish account creation. On a fresh, uninterrupted signup it's
-  // already known from the previous step and this field stays hidden.
   const [passwordInput, setPasswordInput] = useState("");
   const needsPassword = !password;
+  const [resendState, setResendState] = useState("idle");
+  const [cooldown, setCooldown] = useState(0);
+
+  async function handleResend() {
+    if (resendState === "sending" || cooldown > 0) return;
+    setResendState("sending");
+    try {
+      const resp = await fetch(
+        `${BASE_URL}/user/resend_email?email=${encodeURIComponent(email)}&phone_number=${encodeURIComponent(phoneNumber)}`,
+        { method: "POST" }
+      );
+      if (!resp.ok) throw new Error();
+      setResendState("sent");
+      let s = 60;
+      setCooldown(s);
+      const timer = setInterval(() => {
+        s -= 1;
+        setCooldown(s);
+        if (s <= 0) clearInterval(timer);
+      }, 1000);
+    } catch {
+      setResendState("error");
+    }
+  }
 
   const SignUp = async () => {
     setError("");
@@ -232,9 +252,20 @@ function VerificationForm({
           {t("verify.button")}
         </button>
 
-        <p className={styles2.footerText}>
-          {t("verify.resend")} <span style={styles.link}>{t("verify.resendLink")}</span>
-        </p>
+        <div className={styles2.footerText}>
+          {t("verify.resend")}{" "}
+          {cooldown > 0 ? (
+            <span className={styles2.resendCooldown}>{cooldown}s</span>
+          ) : (
+            <button
+              className={styles2.resendBtn}
+              onClick={handleResend}
+              disabled={resendState === "sending"}
+            >
+              {resendState === "sending" ? "..." : resendState === "sent" ? t("verify.resendSent") : t("verify.resendLink")}
+            </button>
+          )}
+        </div>
         <p className={styles2.spamHint}>
           📬 {t("verify.spamHint")}
         </p>

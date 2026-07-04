@@ -288,6 +288,104 @@
   box-shadow: 0 10px 25px rgba(99, 102, 241, 0.35);
 }
 
+/* Language Picker */
+.langPickerWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.langSelected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #f5f3ff;
+  border-radius: 14px;
+  border: 1.5px solid #c4b5fd;
+}
+
+.langChip {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.langChip:hover { opacity: 0.8; }
+
+.langTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.langTrigger:hover { border-color: #6366f1; }
+
+.langTriggerArrow { font-size: 11px; color: #9ca3af; }
+
+.langDropdown {
+  background: #fff;
+  border: 2px solid #6366f1;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(99,102,241,0.15);
+}
+
+.langSearch {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-bottom: 1.5px solid #e5e7eb;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.langList {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+}
+
+.langOption {
+  padding: 8px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.langOption:hover { border-color: #6366f1; color: #6366f1; }
+
+.langOptionSelected {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border-color: transparent;
+}
+
 /* Text Inputs */
 .textInput,
 .bio {

@@ -44,7 +44,8 @@
     "resend": "Didn't receive the code?",
     "resendLink": "Resend",
     "reenterPassword": "Re-enter your password",
-    "spamHint": "Can't find it? Check your spam or junk folder."
+    "spamHint": "Can't find it? Check your spam or junk folder.",
+    "resendSent": "Sent!"
   },
   "forgotPassword": {
     "titleRequest": "FORGOT PASSWORD",

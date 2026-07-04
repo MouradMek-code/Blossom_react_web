@@ -87,3 +87,17 @@
   cursor: pointer;
   font-weight: 500;
 }
+
+.resendBtn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+.resendBtn:hover { opacity: 0.75; }
+.resendBtn:disabled { opacity: 0.4; cursor: default; }
+.resendCooldown { color: #aaa; font-size: 0.85em; }

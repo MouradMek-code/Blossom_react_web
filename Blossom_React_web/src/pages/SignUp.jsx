@@ -153,11 +153,11 @@ function SignUp() {
     async function submit() {
       if (questionEnded && !istokenundefined) {
         await CreateProfile();
-        await CreateLanguage();
-        await CreateLearningLanguage();
-        clearSignupDraft();
-        setQuestionEnded(false);
         setPhoto(true);
+        setQuestionEnded(false);
+        clearSignupDraft();
+        CreateLanguage();
+        CreateLearningLanguage();
       }
     }
     submit();
