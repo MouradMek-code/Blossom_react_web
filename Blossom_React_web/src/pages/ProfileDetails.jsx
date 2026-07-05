@@ -15,6 +15,7 @@ function ProfileDetails() {
 
   const [blockModalOpen, setBlockModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [lightboxPhoto, setLightboxPhoto] = useState(null);
   const [reportReason, setReportReason] = useState("");
   const [blocking, setBlocking] = useState(false);
   const [reporting, setReporting] = useState(false);
@@ -147,7 +148,7 @@ function ProfileDetails() {
             <p className={styles.cardTitle}>Photos</p>
             <div className={styles.photoGrid}>
               {profile.photos.map((p) => (
-                <img key={p.id} src={p.image_url} alt={profile.first_name} />
+                <img key={p.id} src={p.image_url} alt={profile.first_name} onClick={() => setLightboxPhoto(p.image_url)} />
               ))}
             </div>
           </div>
@@ -254,6 +255,14 @@ function ProfileDetails() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* LIGHTBOX */}
+      {lightboxPhoto && (
+        <div className={styles.lightboxOverlay} onClick={() => setLightboxPhoto(null)}>
+          <img src={lightboxPhoto} alt="Full size" className={styles.lightboxImage} onClick={(e) => e.stopPropagation()} />
+          <button className={styles.lightboxClose} onClick={() => setLightboxPhoto(null)}>✕</button>
         </div>
       )}
 
