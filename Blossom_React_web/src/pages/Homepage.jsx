@@ -19,6 +19,9 @@ function Homepage() {
       <Testimonials />
       <AppBanner />
       <FAQ />
+      <footer className={styles.footer}>
+        <p className={styles.copyright}>© {new Date().getFullYear()} Blossom. All rights reserved.</p>
+      </footer>
     </>
   );
 }

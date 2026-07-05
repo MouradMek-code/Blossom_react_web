@@ -41,3 +41,15 @@
     transform: scale(1.15);
   }
 }
+
+.footer {
+  background: #1a1a2a;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.copyright {
+  color: #888;
+  font-size: 0.875rem;
+  margin: 0;
+}
