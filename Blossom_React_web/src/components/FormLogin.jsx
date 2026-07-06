@@ -8,6 +8,7 @@ function FormLogin() {
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   function HandleLogin(e) {
@@ -59,11 +60,16 @@ function FormLogin() {
         </div>
         <div className={styles.group}>
           <label>{t("login.password")}</label>
-          <input
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          ></input>
+          <div className={styles.passwordWrap}>
+            <input
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
+            <button type="button" className={styles.eyeBtn} onClick={() => setShowPassword((v) => !v)}>
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
         </div>
         <div className={styles.registerform}>
           <button onClick={(e) => HandleLogin(e)}>{t("login.button")}</button>

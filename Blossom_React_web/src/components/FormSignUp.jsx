@@ -11,6 +11,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
   const [username, setUsername] = useState(prefill?.username || "");
   const [email, setEmail] = useState(prefill?.email || "");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(prefill?.phoneNumber || "");
   const [dateOfBirth, setDateOfBirth] = useState(prefill?.dateOfBirth || "");
 
@@ -93,11 +94,16 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
           </div>
           <div className={styles.group}>
             <label>{t("signup.password")}</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
+            <div className={styles.passwordWrap}>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button type="button" className={styles.eyeBtn} onClick={() => setShowPassword((v) => !v)}>
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
           <div className={styles.group}>
             <label>{t("signup.phoneNumber")}</label>
