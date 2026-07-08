@@ -126,6 +126,32 @@ function QuestionOption({
   );
 }
 function Question({ question, Handleclicked, answer, setAnswer, setClicked }) {
+  // Multi-select personality
+  if (question.field === "personality_type") {
+    const selected = answer.personality_type ? answer.personality_type.split(", ") : [];
+    function toggle(option) {
+      const updated = selected.includes(option)
+        ? selected.filter((x) => x !== option)
+        : [...selected, option];
+      setAnswer((prev) => ({ ...prev, personality_type: updated.join(", ") }));
+      setClicked(updated.length > 0);
+    }
+    return (
+      <div className={styles.optionGrid}>
+        {question.options.map((option) => (
+          <button
+            type="button"
+            key={option}
+            className={`${styles.optionCard} ${selected.includes(option) ? styles.selected : ""}`}
+            onClick={() => toggle(option)}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
   // Multi-select language pickers (spoken + learning)
   if (question.field === "language_name" || question.field === "learning_language_name") {
     return (
