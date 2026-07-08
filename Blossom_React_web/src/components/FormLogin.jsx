@@ -28,11 +28,15 @@ function FormLogin() {
       try {
         const resp = await fetch(`${BASE_URL}/login`, requestOptionsLogin);
         const data = await resp.json();
-        sessionStorage.setItem("token", data.access_token);
-        sessionStorage.setItem("profilecreated", "yes");
         if (resp.status !== 200)
           throw new Error(`error happeneded on login : ${data.detail}`);
-        navigate("/profile");
+        sessionStorage.setItem("token", data.access_token);
+        sessionStorage.setItem("profilecreated", "yes");
+        // Check if user has completed profile setup
+        const profileResp = await fetch(`${BASE_URL}/profile`, {
+          headers: { Authorization: `Bearer ${data.access_token}` },
+        });
+        navigate(profileResp.status === 200 ? "/profile" : "/signup");
       } catch (err) {
         setError(err);
       } finally {

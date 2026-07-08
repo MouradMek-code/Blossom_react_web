@@ -29,10 +29,17 @@ function Profile() {
         const resp = await fetch(`${BASE_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        if (resp.status === 401) {
+          sessionStorage.setItem("token", null);
+          navigate("/login");
+          return;
+        }
+        if (resp.status !== 200) {
+          // Token valid but no profile yet — resume signup flow
+          navigate("/signup");
+          return;
+        }
         const data = await resp.json();
-        if (resp.status !== 200)
-          throw new Error(`error happeneded on login : ${data.detail[0].msg}`);
-
         setProfile(data);
         sessionStorage.setItem("profile_id", data.id);
       } catch (err) {
