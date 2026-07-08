@@ -94,7 +94,6 @@ function ProfileDetails() {
   if (!profile) {
     return (
       <div className={styles.loadingPage}>
-        <PageNav />
         <div className={styles.spinner} />
         <p style={{ color: "#d6336c", fontWeight: 600 }}>Loading profile…</p>
       </div>
