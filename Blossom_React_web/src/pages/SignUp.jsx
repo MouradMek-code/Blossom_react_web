@@ -5,6 +5,7 @@ import styles from "./Homepage.module.css";
 import StartProfile from "../components/StartProfile";
 import MultiImageUpload from "../components/MultiImageUpload";
 import Localisation from "../components/Localisation";
+import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
 import { getSignupDraft, clearSignupDraft } from "../api/signupDraft";
 function SignUp() {
@@ -182,6 +183,7 @@ function SignUp() {
   }
 
   return (
+    <>
     <div className={styles.head}>
       <PageNav />
       {isregistered === false && (
@@ -215,6 +217,8 @@ function SignUp() {
         )}
       {photos === true && <MultiImageUpload />}
     </div>
+    <Footer />
+    </>
   );
 }
 

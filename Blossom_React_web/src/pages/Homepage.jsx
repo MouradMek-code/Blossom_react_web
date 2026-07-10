@@ -5,6 +5,7 @@ import AppBanner from "../components/AppBanner";
 import TrustBadges from "../components/TrustBadges";
 import FAQ from "../components/FAQ";
 import LanguageDating from "../components/LanguageDating";
+import Footer from "../components/Footer";
 import styles from "./Homepage.module.css";
 
 function Homepage() {
@@ -19,9 +20,7 @@ function Homepage() {
       <Testimonials />
       <AppBanner />
       <FAQ />
-      <footer className={styles.footer}>
-        <p className={styles.copyright}>© {new Date().getFullYear()} Blossom. All rights reserved.</p>
-      </footer>
+      <Footer />
     </>
   );
 }

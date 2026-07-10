@@ -12,6 +12,7 @@ import ChatPage from "./pages/ChatPage";
 import LikedYou from "./pages/LikedYou";
 import ForgotPassword from "./pages/ForgotPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/Terms";
 import DeleteAccount from "./pages/DeleteAccount";
 import Admin from "./pages/Admin";
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/forgot_password" element={<ForgotPassword />} />
         <Route path="/profile/:id" element={<ProfileDetails />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
