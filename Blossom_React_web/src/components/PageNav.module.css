@@ -1,13 +1,12 @@
-.nav :global(.active) {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  font-weight: 600;
-}
-
 .head {
   position: sticky;
   top: 0;
   z-index: 999;
+  padding: 14px 28px;
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border-bottom: 1px solid rgba(236, 226, 218, 0.7);
 }
 
 .bar {
@@ -15,6 +14,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .nav {
@@ -25,46 +26,46 @@
   flex: 1;
   margin: 0;
   padding: 0;
+  gap: 4px;
 }
 
 .nav span {
-  margin: 0 6px;
+  margin: 0 2px;
   white-space: nowrap;
 }
 
 .nav a {
   display: inline-flex;
   align-items: center;
-  padding: 8px 18px;
-  font-size: 15px;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
   font-weight: 500;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: white;
+  letter-spacing: -0.01em;
+  color: var(--text-soft);
   background-color: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
   white-space: nowrap;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
 }
 
 .nav a:hover {
-  background-color: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.6);
+  color: var(--primary);
+  background-color: var(--primary-tint);
 }
 
+.nav :global(.active) {
+  color: var(--primary-deep);
+  background-color: var(--primary-soft);
+  font-weight: 600;
+}
+
+/* Logged-in and logged-out states now share the same refined light nav,
+   since the nav sits on a solid ivory bar rather than over the hero photo. */
 .navLoggedIn a {
-  color: #1a1a1a;
-  border-color: rgba(0, 0, 0, 0.25);
-}
-
-.navLoggedIn a:hover {
-  background-color: rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.45);
-}
-
-.navLoggedIn a:global(.active) {
-  color: #fff;
+  color: var(--text-soft);
 }
 
 .navItemWithBadge {
@@ -75,41 +76,49 @@
 }
 
 .badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 20px;
+  min-width: 18px;
+  height: 18px;
   padding: 0 5px;
-  margin: 0;
-  border-radius: 999px;
-  background: #ff2d55;
+  border-radius: var(--r-pill);
+  background: var(--primary);
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1;
+  box-shadow: 0 0 0 2px var(--surface);
 }
 
 .logout {
   display: inline-flex;
   align-items: center;
   padding: 8px 18px;
-  font-size: 15px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
   font-weight: 600;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: -0.01em;
   color: white;
-  background-color: var(--primary);
-  border: 1.5px solid var(--primary);
-  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: none;
+  border-radius: var(--r-pill);
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  box-shadow: var(--shadow-primary);
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
 }
 
 .logout:hover {
-  background-color: #b32859;
-  border-color: #b32859;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(193, 70, 107, 0.34);
 }
 
+.logout:active {
+  transform: translateY(0);
+}
 
 .menuToggle {
   display: none;
@@ -117,26 +126,27 @@
   justify-content: center;
   align-items: center;
   gap: 5px;
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 999px;
-  background: var(--primary);
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
   cursor: pointer;
   flex-shrink: 0;
-  transition: background-color 0.15s ease;
+  box-shadow: var(--shadow-xs);
+  transition: border-color 0.18s var(--ease);
 }
 
 .menuToggle:hover {
-  background: #b32859;
+  border-color: var(--primary);
 }
 
 .menuToggleBar {
   width: 20px;
   height: 2px;
-  background: #fff;
+  background: var(--primary);
   border-radius: 2px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.22s var(--ease), opacity 0.22s var(--ease);
 }
 
 .menuToggleBarTopOpen {
@@ -153,7 +163,7 @@
 
 @media (max-width: 768px) {
   .head {
-    padding: 8px 0;
+    padding: 10px 16px;
   }
 
   .menuToggle {
@@ -166,12 +176,24 @@
     flex-wrap: wrap;
     align-items: stretch;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 12px;
     gap: 8px;
   }
 
   .navOpen {
     display: flex;
+    animation: navDrop 0.28s var(--ease);
+  }
+
+  @keyframes navDrop {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .nav span {
@@ -191,41 +213,46 @@
   .nav a {
     width: 100%;
     justify-content: center;
-    padding: 7px 10px;
-    font-size: 14px;
+    padding: 11px 10px;
+    font-size: 14.5px;
+    border: 1px solid var(--border);
   }
 
   .logout {
     width: 100%;
     justify-content: center;
-    padding: 7px 10px;
-    font-size: 14px;
+    padding: 11px 10px;
   }
 }
 
 .langSwitcher {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  margin-left: 8px;
+  padding: 3px;
+  background: var(--surface-muted);
+  border-radius: var(--r-pill);
 }
 
 .langBtn {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
-  border-radius: 4px;
-  padding: 3px 8px;
+  border: none;
+  color: var(--text-muted);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
   font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
 }
 
 .langBtn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  color: var(--primary);
 }
 
 .langBtnActive {
-  background: var(--primary);
-  border-color: var(--primary);
-  font-weight: 600;
+  background: var(--surface);
+  color: var(--primary-deep);
+  box-shadow: var(--shadow-xs);
 }

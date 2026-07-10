@@ -5,18 +5,66 @@
 }
 
 :root {
-  --bg: #ffffff;
+  /* ---- Editorial palette: warm ivory + deep rose ---- */
+  --bg: #fbf8f6;
+  --bg-warm: #f6efe9;
   --surface: #ffffff;
-  --surface-muted: #faf7f9;
-  --text: #1a1a2a;
-  --text-muted: #6b7280;
-  --border: #e5e7eb;
-  --primary: #d6336c;
-  --primary-soft: #fbe4ec;
-  --nav-bg: rgba(255, 255, 255, 0.97);
+  --surface-muted: #f7f1ec;
+  --surface-sunk: #f1e9e2;
+
+  --text: #2a2420;
+  --text-soft: #574d46;
+  --text-muted: #8a7e76;
+
+  --border: #ece2da;
+  --border-strong: #dccec3;
+
+  --primary: #c1466b;
+  --primary-dark: #a3395a;
+  --primary-deep: #7e2a44;
+  --primary-soft: #f7e6ec;
+  --primary-tint: #fbf1f4;
+
+  --gold: #b08d57;
+  --gold-soft: #f3ebdd;
+
+  --nav-bg: rgba(255, 255, 255, 0.72);
   --card-bg: #ffffff;
-  --input-bg: rgba(255, 255, 255, 0.9);
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --input-bg: #ffffff;
+
+  /* ---- Type ---- */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* ---- Radii ---- */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+
+  /* ---- Shadows: soft, warm-tinted ---- */
+  --shadow-xs: 0 1px 2px rgba(63, 44, 38, 0.06);
+  --shadow-sm: 0 2px 10px rgba(63, 44, 38, 0.07);
+  --shadow-md: 0 10px 30px rgba(63, 44, 38, 0.09);
+  --shadow-lg: 0 24px 60px rgba(63, 44, 38, 0.14);
+  --shadow-primary: 0 14px 34px rgba(193, 70, 107, 0.28);
+
+  /* ---- Spacing scale ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* ---- Legacy aliases (kept so existing rules keep working) ---- */
+  --shadow: var(--shadow-md);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html,
@@ -26,14 +74,76 @@ body {
   overflow-x: hidden;
   background-color: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 0.5em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.18s var(--ease);
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+}
+
+/* Refined focus ring for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Warm, slim scrollbar */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--r-pill);
+  border: 3px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cbb9ac;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }

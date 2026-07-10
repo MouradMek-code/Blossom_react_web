@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  background: #f7f0f4;
+  background: var(--bg);
 }
 
 /* HERO */
@@ -51,16 +51,22 @@
 }
 
 .heroName {
-  font-size: 2.4rem;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin: 0 0 6px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
 }
 
 .heroAge {
   font-size: 1.6rem;
   font-weight: 400;
   opacity: 0.9;
+}
+
+.card {
+  border: 1px solid var(--border);
 }
 
 .heroMeta {
@@ -128,7 +134,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.8rem;
-  color: #d6336c;
+  color: var(--primary);
 }
 
 .bio {
@@ -178,7 +184,7 @@
 
 .tag {
   background: #fbe4ec;
-  color: #d6336c;
+  color: var(--primary);
   font-size: 13px;
   font-weight: 600;
   padding: 6px 14px;
@@ -292,7 +298,7 @@
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #d6336c, #ff6b9d);
+  background: linear-gradient(135deg, var(--primary), #ff6b9d);
   color: #fff;
   padding: 14px 28px;
   border-radius: 999px;
@@ -357,7 +363,7 @@
   transition: border-color 0.15s;
 }
 
-.modalTextarea:focus { border-color: #d6336c; }
+.modalTextarea:focus { border-color: var(--primary); }
 
 .modalActions {
   display: flex;
@@ -380,7 +386,7 @@
 .modalCancelBtn:hover { background: #f5f5f5; }
 
 .modalSubmitBtn {
-  background: #d6336c;
+  background: var(--primary);
   color: #fff;
   border: none;
   border-radius: 999px;
@@ -422,7 +428,7 @@
   width: 44px;
   height: 44px;
   border: 4px solid #fde4ef;
-  border-top-color: #d6336c;
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

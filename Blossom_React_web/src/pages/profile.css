@@ -1,14 +1,14 @@
 :root {
-  --rose-primary: #e11d48;
-  --rose-light: #fb7185;
-  --rose-soft: #fff1f4;
+  --rose-primary: #c1466b;
+  --rose-light: #d6547b;
+  --rose-soft: #fbf1f4;
 
-  --text-main: #111827;
-  --text-muted: #6b7280;
+  --text-main: #2a2420;
+  --text-muted: #8a7e76;
 
   --card-bg: rgba(255, 255, 255, 0.85);
 
-  --shadow: 0 12px 40px rgba(225, 29, 72, 0.08);
+  --shadow: 0 12px 40px rgba(63, 44, 38, 0.09);
 
   --radius: 24px;
 }
@@ -22,15 +22,15 @@
   background:
     radial-gradient(
       circle at top left,
-      rgba(251, 113, 133, 0.12),
-      transparent 30%
+      rgba(193, 70, 107, 0.08),
+      transparent 32%
     ),
     radial-gradient(
       circle at top right,
-      rgba(225, 29, 72, 0.08),
-      transparent 35%
+      rgba(176, 141, 87, 0.07),
+      transparent 36%
     ),
-    #fff8fa;
+    var(--bg);
 }
 
 .profile-container {
