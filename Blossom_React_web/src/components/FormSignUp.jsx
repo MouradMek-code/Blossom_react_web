@@ -3,6 +3,7 @@ import styles from "./FormSignUp.module.css";
 import styles2 from "./VerifyPhone.module.css";
 import { BASE_URL } from "../api/config";
 import { saveSignupDraft, clearSignupDraft } from "../api/signupDraft";
+import { postJson } from "../api/errors";
 import { useTranslation } from "react-i18next";
 import FlowerProgress from "./FlowerProgress";
 
@@ -14,11 +15,21 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
   const [showPassword, setShowPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(prefill?.phoneNumber || "");
   const [dateOfBirth, setDateOfBirth] = useState(prefill?.dateOfBirth || "");
+  const [submitting, setSubmitting] = useState(false);
 
   function FormHandler(e) {
     e.preventDefault();
     async function SignUp() {
       setError("");
+
+      // Clear, instant client-side validation before hitting the server.
+      if (!username.trim()) return setError("Please enter a username.");
+      if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+        return setError("Please enter a valid email address.");
+      if (!password || password.length < 6)
+        return setError("Password must be at least 6 characters.");
+      if (!phoneNumber.trim() || !/^\+?[0-9\s-]{7,}$/.test(phoneNumber.trim()))
+        return setError("Please enter a valid phone number, including country code (e.g. +33…).");
 
       const today = new Date();
       const birth = new Date(dateOfBirth);
@@ -29,38 +40,37 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
         (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
           ? 1
           : 0);
-      if (!dateOfBirth || isNaN(birth.getTime()) || age < 18) {
-        setError(new Error("You must be at least 18 years old to sign up"));
-        return;
+      if (!dateOfBirth || isNaN(birth.getTime())) {
+        return setError("Please enter your date of birth.");
+      }
+      if (age < 18) {
+        return setError("You must be at least 18 years old to sign up.");
       }
 
-      const requestOptions = {
+      setSubmitting(true);
+      const result = await postJson(`${BASE_URL}/user/send_email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: username,
-          email: email,
+          username: username.trim(),
+          email: email.trim(),
           password: password,
-          phone_number: phoneNumber,
+          phone_number: phoneNumber.trim(),
           date_of_birth: dateOfBirth,
         }),
-      };
-      try {
-        const resp = await fetch(`${BASE_URL}/user/send_email`, requestOptions);
-        const data = await resp.json();
+      });
+      setSubmitting(false);
 
-        if (resp.status !== 200) {
-          throw new Error(`error happeneded on sign up : ${data.detail}`);
-        }
-        // The account doesn't exist yet and there's no token until the
-        // OTP is verified - save just enough (no password) to resume
-        // straight at the verification screen if the user leaves now.
-        saveSignupDraft({ stage: "verify_otp", username, email, phoneNumber, dateOfBirth });
-        setVerified((c) => !c);
-        sessionStorage.setItem("token", data.access_token);
-      } catch (err) {
-        setError(err);
+      if (!result.ok) {
+        setError(result.message);
+        return;
       }
+      // The account doesn't exist yet and there's no token until the
+      // OTP is verified - save just enough (no password) to resume
+      // straight at the verification screen if the user leaves now.
+      saveSignupDraft({ stage: "verify_otp", username, email, phoneNumber, dateOfBirth });
+      setVerified((c) => !c);
+      sessionStorage.setItem("token", result.data.access_token);
     }
     SignUp();
   }
@@ -76,28 +86,37 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
           {error !== "" && (
             <span className={styles.error}>{error.toString()}</span>
           )}
+          <p className={styles.requiredNote}>All fields are required.</p>
           <div className={styles.group}>
-            <label>{t("signup.name")}</label>
+            <label>{t("signup.name")} <span className={styles.req}>*</span></label>
             <input
               type="text"
               value={username}
+              required
+              autoCapitalize="none"
+              placeholder="e.g. sofia_martin"
               onChange={(e) => setUsername(e.target.value)}
             ></input>
           </div>
           <div className={styles.group}>
-            <label>{t("signup.email")}</label>
+            <label>{t("signup.email")} <span className={styles.req}>*</span></label>
             <input
               type="email"
               value={email}
+              required
+              placeholder="you@example.com"
               onChange={(e) => setEmail(e.target.value)}
             ></input>
           </div>
           <div className={styles.group}>
-            <label>{t("signup.password")}</label>
+            <label>{t("signup.password")} <span className={styles.req}>*</span></label>
             <div className={styles.passwordWrap}>
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
+                required
+                minLength={6}
+                placeholder="At least 6 characters"
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button type="button" className={styles.eyeBtn} onClick={() => setShowPassword((v) => !v)}>
@@ -106,24 +125,30 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
             </div>
           </div>
           <div className={styles.group}>
-            <label>{t("signup.phoneNumber")}</label>
+            <label>{t("signup.phoneNumber")} <span className={styles.req}>*</span></label>
             <input
-              type="phonenumber"
+              type="tel"
               value={phoneNumber}
-              placeholder="+381690156360"
+              required
+              placeholder="+33 6 12 34 56 78 (with country code)"
               onChange={(e) => setPhoneNumber(e.target.value)}
             ></input>
           </div>
           <div className={styles.group}>
-            <label>{t("signup.dateOfBirth")}</label>
+            <label>{t("signup.dateOfBirth")} <span className={styles.req}>*</span></label>
             <input
               type="date"
               value={dateOfBirth}
+              required
+              placeholder="YYYY-MM-DD"
               onChange={(e) => setDateOfBirth(e.target.value)}
             ></input>
+            <small className={styles.hint}>You must be 18 or older.</small>
           </div>
           <div className={styles.registerform}>
-            <button onClick={(e) => FormHandler(e)}>{t("signup.button")}</button>
+            <button onClick={(e) => FormHandler(e)} disabled={submitting}>
+              {submitting ? "Sending code…" : t("signup.button")}
+            </button>
           </div>
           <p style={{ textAlign: "center", fontSize: "12px", color: "#888", marginTop: "12px" }}>
             {t("signup.privacyPolicy")}{" "}
@@ -164,6 +189,7 @@ function VerificationForm({
   const needsPassword = !password;
   const [resendState, setResendState] = useState("idle");
   const [cooldown, setCooldown] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   async function handleResend() {
     if (resendState === "sending" || cooldown > 0) return;
@@ -193,41 +219,46 @@ function VerificationForm({
     setError("");
     const effectivePassword = password || passwordInput;
 
-    const requestPin = {
+    if (!code.trim() || code.trim().length < 6) {
+      return setError("Please enter the 6-digit code we sent you.");
+    }
+    if (needsPassword && (!passwordInput || passwordInput.length < 6)) {
+      return setError("Please re-enter your password (at least 6 characters).");
+    }
+
+    setSubmitting(true);
+
+    // Step 1 — confirm the emailed OTP.
+    const verifyResult = await postJson(`${BASE_URL}/user/verify-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone_number: phoneNumber, otp: code.trim(), email }),
+    });
+    if (!verifyResult.ok) {
+      setSubmitting(false);
+      return setError(verifyResult.message);
+    }
+
+    // Step 2 — create the account now that the email is verified.
+    const createResult = await postJson(`${BASE_URL}/user`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        phone_number: phoneNumber,
-        otp: code,
-        email: email,
-      }),
-    };
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username,
-        email: email,
+        username,
+        email,
         password: effectivePassword,
         phone_number: phoneNumber,
         date_of_birth: dateOfBirth,
       }),
-    };
-    try {
-      const resp1 = await fetch(`${BASE_URL}/user/verify-email`, requestPin);
-      const data1 = await resp1.json();
-      if (resp1.status !== 200)
-        throw new Error(`error happeneded on sign up : ${data1.detail}`);
-      const resp = await fetch(`${BASE_URL}/user`, requestOptions);
-      const data = await resp.json();
-      if (resp.status !== 200)
-        throw new Error(`error happeneded on sign up : ${data.detail}`);
-      clearSignupDraft();
-      setRegistered((c) => !c);
-      sessionStorage.setItem("token", data.access_token);
-    } catch (err) {
-      setError(err);
+    });
+    setSubmitting(false);
+    if (!createResult.ok) {
+      return setError(createResult.message);
     }
+
+    clearSignupDraft();
+    setRegistered((c) => !c);
+    sessionStorage.setItem("token", createResult.data.access_token);
   };
   return (
     <div className={styles2.container}>
@@ -256,8 +287,8 @@ function VerificationForm({
           />
         )}
 
-        <button className={styles2.button} onClick={SignUp}>
-          {t("verify.button")}
+        <button className={styles2.button} onClick={SignUp} disabled={submitting}>
+          {submitting ? "Verifying…" : t("verify.button")}
         </button>
 
         <div className={styles2.footerText}>

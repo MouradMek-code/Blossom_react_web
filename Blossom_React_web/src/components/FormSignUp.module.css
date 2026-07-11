@@ -37,6 +37,23 @@
   margin: 32px 16px 4px;
 }
 
+.requiredNote {
+  margin: 0 0 2px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.req {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
 .group {
   display: flex;
   flex-direction: column;
