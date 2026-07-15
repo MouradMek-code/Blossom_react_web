@@ -167,7 +167,7 @@ function ProfileDetails() {
           <div className={styles.grid}>
             <Fact label="Gender" value={profile.gender} />
             <Fact label="Orientation" value={profile.sexual_orientation} />
-            <Fact label="Height" value={profile.height_cm ? `${profile.height_cm} cm` : null} />
+            <Fact label="Height" value={formatHeight(profile.height_cm)} />
             <Fact label="Occupation" value={profile.occupation} />
             <Fact label="Education" value={profile.education} />
             <Fact label="Personality" value={profile.personality_type} />
@@ -302,6 +302,13 @@ function Fact({ label, value }) {
       <span className={styles.factValue}>{value || "—"}</span>
     </div>
   );
+}
+
+// Height is stored as a string that already includes the unit (e.g. "170 cm"),
+// so strip any trailing "cm" before re-adding exactly one to avoid "170 cm cm".
+function formatHeight(value) {
+  if (!value) return null;
+  return `${String(value).replace(/\s*cm\s*$/i, "").trim()} cm`;
 }
 
 export default ProfileDetails;
