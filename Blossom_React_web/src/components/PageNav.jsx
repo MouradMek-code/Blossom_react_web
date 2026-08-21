@@ -13,7 +13,10 @@ const LANGUAGES = [
   { code: "ar", label: "عربي" },
 ];
 
-function PageNav() {
+// `minimal` renders just the logo + language switcher with no navigation
+// links - used during profile creation, where the user should complete the
+// flow rather than be offered Home/Login/Sign-up escape hatches.
+function PageNav({ minimal = false }) {
   const { t } = useTranslation();
   const [lang, setLang] = useState(i18n.language?.slice(0, 2) || "en");
 
@@ -30,7 +33,11 @@ function PageNav() {
   const [isAdmin, setIsAdmin] = useState(false);
   const istokenundefined = token === "undefined" || token === null;
   const profileCreated = sessionStorage.getItem("profilecreated");
-  const isLoggedInNav = istokenundefined !== true && profileCreated === "yes";
+  const isLoggedInNav = !minimal && istokenundefined !== true && profileCreated === "yes";
+  // Only offer Home/Sign-up/Login when there's no session at all. A token
+  // without a finished profile means the user is mid-signup, so we show no
+  // links rather than a misleading "Login".
+  const isLoggedOutNav = !minimal && istokenundefined === true;
 
   function HandleLogOut() {
     sessionStorage.removeItem("token");
@@ -90,6 +97,7 @@ function PageNav() {
           aria-label="Toggle navigation"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
+          style={minimal ? { display: "none" } : undefined}
         >
           <span
             className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarTopOpen : ""}`}
@@ -170,7 +178,7 @@ function PageNav() {
             </span>
           </>
         )}
-        {profileCreated === null && (
+        {isLoggedOutNav && (
           <span>
             <NavLink
               to="/"
@@ -181,7 +189,7 @@ function PageNav() {
             </NavLink>
           </span>
         )}
-        {profileCreated === null && (
+        {isLoggedOutNav && (
           <span>
             <NavLink
               to="/sign_up"
@@ -193,7 +201,7 @@ function PageNav() {
           </span>
         )}
 
-        {profileCreated === null && (
+        {isLoggedOutNav && (
           <span>
             <NavLink
               to="/login"

@@ -155,6 +155,10 @@ function SignUp() {
     async function submit() {
       if (questionEnded && !istokenundefined) {
         await CreateProfile();
+        // The profile now exists, so the nav should switch to the logged-in
+        // links. Set it here rather than only when a photo is picked, so a
+        // user who skips photos doesn't end up seeing "Login" afterwards.
+        sessionStorage.setItem("profilecreated", "yes");
         setPhoto(true);
         setQuestionEnded(false);
         clearSignupDraft();
@@ -186,7 +190,11 @@ function SignUp() {
   return (
     <>
     <div className={styles.head}>
-      <PageNav />
+      {/* Hide the nav links only while the profile is actually being built
+          (location -> questions). Once the profile exists and we're on the
+          photo step, show the full logged-in nav so the user can head to
+          Browse / Matches / Likes / Profile. */}
+      <PageNav minimal={isregistered === true && photos === false} />
       {isregistered === false && (
         <FormSignUp
           setRegistered={setRegistered}

@@ -164,6 +164,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
         <VerificationForm
           username={username}
           email={email}
+          setEmail={setEmail}
           password={password}
           phoneNumber={phoneNumber}
           dateOfBirth={dateOfBirth}
@@ -177,6 +178,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
 function VerificationForm({
   username,
   email,
+  setEmail,
   password,
   phoneNumber,
   dateOfBirth,
@@ -190,6 +192,45 @@ function VerificationForm({
   const [resendState, setResendState] = useState("idle");
   const [cooldown, setCooldown] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  // Lets the user correct a mistyped address without restarting signup.
+  const [editingEmail, setEditingEmail] = useState(false);
+  const [emailDraft, setEmailDraft] = useState(email);
+  const [savingEmail, setSavingEmail] = useState(false);
+
+  async function handleChangeEmail() {
+    if (savingEmail) return;
+    setError("");
+    const next = emailDraft.trim();
+    if (!next || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(next)) {
+      return setError("Please enter a valid email address.");
+    }
+    if (next.toLowerCase() === email.trim().toLowerCase()) {
+      setEditingEmail(false);
+      return;
+    }
+
+    setSavingEmail(true);
+    const url =
+      BASE_URL +
+      "/user/resend_email?email=" +
+      encodeURIComponent(next) +
+      "&phone_number=" +
+      encodeURIComponent(phoneNumber);
+    const result = await postJson(url, { method: "POST" });
+    setSavingEmail(false);
+
+    if (!result.ok) {
+      return setError(result.message);
+    }
+
+    // Point the rest of the flow (verify + account creation) at the new
+    // address, and keep the resume draft in sync.
+    setEmail(next);
+    saveSignupDraft({ stage: "verify_otp", username, email: next, phoneNumber, dateOfBirth });
+    setEditingEmail(false);
+    setCode("");
+    setResendState("sent");
+  }
 
   async function handleResend() {
     if (resendState === "sending" || cooldown > 0) return;
@@ -268,6 +309,48 @@ function VerificationForm({
         <h1 className={styles2.title}>{t("verify.title")}</h1>
 
         <p className={styles2.subtitle}>{t("verify.subtitle")}</p>
+
+        {editingEmail ? (
+          <div className={styles.emailEditBox}>
+            <label className={styles.emailEditLabel}>Send the code to</label>
+            <input
+              className={styles.emailInput}
+              type="email"
+              value={emailDraft}
+              placeholder="you@example.com"
+              onChange={(e) => setEmailDraft(e.target.value)}
+              autoFocus
+            />
+            <div className={styles.emailEditActions}>
+              <button
+                type="button"
+                className={styles.emailCancelBtn}
+                onClick={() => { setEmailDraft(email); setEditingEmail(false); }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={styles.emailSaveBtn}
+                onClick={handleChangeEmail}
+                disabled={savingEmail}
+              >
+                {savingEmail ? "Sending…" : "Send new code"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className={styles.emailRow}>
+            <span className={styles.emailValue}>{email}</span>
+            <button
+              type="button"
+              className={styles.emailChangeLink}
+              onClick={() => { setEmailDraft(email); setEditingEmail(true); }}
+            >
+              Change
+            </button>
+          </p>
+        )}
 
         <input
           className={styles2.input}

@@ -37,6 +37,121 @@
   margin: 32px 16px 4px;
 }
 
+/* Verification: email display + inline editor */
+.emailRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+}
+
+.emailValue {
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-all;
+}
+
+.emailChangeLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.emailChangeLink:hover {
+  color: var(--primary-dark);
+}
+
+.emailEditBox {
+  text-align: left;
+  background: var(--surface-muted);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.emailEditLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.emailInput {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.emailInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-tint);
+}
+
+.emailEditActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.emailCancelBtn {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-pill);
+  background: none;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.emailCancelBtn:hover {
+  border-color: var(--border-strong);
+}
+
+.emailSaveBtn {
+  flex: 2;
+  padding: 10px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s var(--ease);
+}
+
+.emailSaveBtn:hover {
+  background: var(--primary-dark);
+}
+
+.emailSaveBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
 .requiredNote {
   margin: 0 0 2px;
   font-size: 0.82rem;
