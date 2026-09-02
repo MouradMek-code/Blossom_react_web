@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import styles from "./LikedYou.module.css";
 import { BASE_URL } from "../api/config";
+import { IMG } from "../api/images";
 
 // /likes/profile_likes only returns the ids of profiles that liked the
 // current user, so each id has to be resolved via /profile/{id} to get the
@@ -22,27 +23,34 @@ function LikedYou() {
 
   const fetchLikedBy = useCallback(async () => {
     try {
-      const resp = await fetch(`${BASE_URL}/likes/profile_likes`, {
+      // One request for the full profiles. Falls back to the older
+      // ids-then-fetch-each path if the backend hasn't been deployed yet.
+      const resp = await fetch(`${BASE_URL}/likes/profile_likes/profiles`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const data = await resp.json();
-      if (resp.status !== 200)
-        throw new Error(
-          `error happeneded on likes service : ${data.detail?.[0]?.msg}`,
-        );
 
-      const ids = data
-        .map(extractId)
-        .filter((id) => id !== undefined && id !== null);
-      const profiles = await Promise.all(
-        ids.map(async (id) => {
-          const profileResp = await fetch(`${BASE_URL}/profile/${id}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          return profileResp.json();
-        }),
-      );
-      setLikedByProfiles(profiles);
+      if (resp.ok) {
+        setLikedByProfiles(await resp.json());
+      } else {
+        const legacyResp = await fetch(`${BASE_URL}/likes/profile_likes`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await legacyResp.json();
+        if (legacyResp.status !== 200)
+          throw new Error("Could not load the people who liked you.");
+        const ids = data
+          .map(extractId)
+          .filter((id) => id !== undefined && id !== null);
+        const profiles = await Promise.all(
+          ids.map(async (id) => {
+            const profileResp = await fetch(`${BASE_URL}/profile/${id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            return profileResp.json();
+          }),
+        );
+        setLikedByProfiles(profiles);
+      }
 
       fetch(`${BASE_URL}/likes/profile_likes/mark_seen`, {
         method: "POST",
@@ -95,7 +103,7 @@ function LikedYou() {
             <div className={styles.matchHeart}>❤️</div>
             <h1>It's a Match!</h1>
             <img
-              src={matchedProfile.photos?.[0]?.image_url}
+              src={IMG.card(matchedProfile.photos?.[0]?.image_url)}
               alt={matchedProfile.first_name}
               className={styles.matchImage}
             />
@@ -119,7 +127,7 @@ function LikedYou() {
               onClick={() => navigate(`/profile/${profile.id}`)}
             >
               <img
-                src={profile.photos?.[0]?.image_url}
+                src={IMG.thumb(profile.photos?.[0]?.image_url)}
                 alt={profile.first_name}
                 className={styles.image}
               />

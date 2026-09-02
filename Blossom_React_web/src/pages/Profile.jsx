@@ -4,6 +4,7 @@ import PageNav from "../components/PageNav";
 import "./profile.css";
 
 import { BASE_URL } from "../api/config";
+import { IMG } from "../api/images";
 
 function Profile() {
   const navigate = useNavigate();
@@ -214,7 +215,7 @@ function Profile() {
           <div className="photos-grid">
             {profile.photos?.map((p) => (
               <div key={p.id} style={{ position: "relative" }}>
-                <img src={p.image_url} alt={profile.first_name} />
+                <img src={IMG.card(p.image_url)} alt={profile.first_name} loading="lazy" />
                 <button
                   type="button"
                   onClick={() => handleDeletePhoto(p.id)}

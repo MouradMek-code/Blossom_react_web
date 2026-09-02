@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
+import { IMG } from "../api/images";
 import styles from "./ProfileDetails.module.css";
 
 function ProfileDetails() {
@@ -100,7 +101,7 @@ function ProfileDetails() {
     );
   }
 
-  const coverPhoto = profile.photos?.[0]?.image_url;
+  const coverPhoto = IMG.full(profile.photos?.[0]?.image_url);
 
   return (
     <div className={styles.page}>
@@ -147,7 +148,7 @@ function ProfileDetails() {
             <p className={styles.cardTitle}>Photos</p>
             <div className={styles.photoGrid}>
               {profile.photos.map((p) => (
-                <img key={p.id} src={p.image_url} alt={profile.first_name} onClick={() => setLightboxPhoto(p.image_url)} />
+                <img key={p.id} src={IMG.card(p.image_url)} alt={profile.first_name} loading="lazy" onClick={() => setLightboxPhoto(p.image_url)} />
               ))}
             </div>
           </div>

@@ -5,6 +5,7 @@ import ProfileFilterModal from "../components/ProfileFilterModal";
 import { matchesFilters, getDefaultFilters } from "../api/profileFilters";
 import styles from "./Profiles.module.css";
 import { BASE_URL } from "../api/config";
+import { IMG } from "../api/images";
 
 function Profiles() {
   const navigate = useNavigate();
@@ -119,7 +120,7 @@ function Profiles() {
             <div className={styles.matchHeart}>❤️</div>
             <h1>It's a Match!</h1>
             <img
-              src={matchedProfile.photos?.[0]?.image_url}
+              src={IMG.card(matchedProfile.photos?.[0]?.image_url)}
               alt={matchedProfile.first_name}
               className={styles.matchImage}
             />
@@ -182,7 +183,7 @@ function Profiles() {
             </button>
 
             <img
-              src={profile.photos?.[0]?.image_url}
+              src={IMG.card(profile.photos?.[0]?.image_url)}
               alt={profile.first_name}
               className={styles.image}
             />

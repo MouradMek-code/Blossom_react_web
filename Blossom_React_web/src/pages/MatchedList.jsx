@@ -3,6 +3,7 @@ import PageNav from "../components/PageNav";
 import styles from "./MatchedList.module.css";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../api/config";
+import { IMG } from "../api/images";
 function MatchedList() {
   const [listMatchedProfiles, setListMatchedProfiles] = useState(null);
   const token = sessionStorage.getItem("token");
@@ -78,7 +79,7 @@ function MatchedList() {
               onClick={() => navigate(`/profile/${profile.id}`)}
             >
               <img
-                src={profile.photos?.[0]?.image_url}
+                src={IMG.thumb(profile.photos?.[0]?.image_url)}
                 alt={profile.first_name}
                 className={styles.image}
               />
