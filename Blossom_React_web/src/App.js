@@ -13,6 +13,7 @@ import LikedYou from "./pages/LikedYou";
 import ForgotPassword from "./pages/ForgotPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Terms from "./pages/Terms";
+import DateSpots from "./pages/DateSpots";
 import DeleteAccount from "./pages/DeleteAccount";
 import Admin from "./pages/Admin";
 function App() {
@@ -32,6 +33,7 @@ function App() {
         <Route path="/profile/:id" element={<ProfileDetails />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/date-spots" element={<DateSpots />} />
         <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

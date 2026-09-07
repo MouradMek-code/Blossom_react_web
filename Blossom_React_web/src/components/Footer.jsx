@@ -35,6 +35,7 @@ function Footer() {
         <nav className={styles.col}>
           <h4>Product</h4>
           <Link to="/profiles">Browse</Link>
+          <Link to="/date-spots">Date spots</Link>
           <Link to="/sign_up">Sign up</Link>
           <Link to="/login">Log in</Link>
         </nav>
