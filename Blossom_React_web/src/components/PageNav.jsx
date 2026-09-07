@@ -136,6 +136,15 @@ function PageNav({ minimal = false }) {
                 {t("nav.browse")}
               </NavLink>
             </span>
+            <span>
+              <NavLink
+                to="/date-spots"
+                style={{ textDecoration: "none" }}
+                onClick={closeMenu}
+              >
+                Date spots
+              </NavLink>
+            </span>
             <span className={styles.navItemWithBadge}>
               <NavLink
                 to="/MatchedList"
@@ -186,6 +195,17 @@ function PageNav({ minimal = false }) {
               onClick={closeMenu}
             >
               {t("nav.homePage")}
+            </NavLink>
+          </span>
+        )}
+        {isLoggedOutNav && (
+          <span>
+            <NavLink
+              to="/date-spots"
+              style={{ textDecoration: "none" }}
+              onClick={closeMenu}
+            >
+              Date spots
             </NavLink>
           </span>
         )}
