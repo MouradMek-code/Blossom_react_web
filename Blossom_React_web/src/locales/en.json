@@ -163,6 +163,10 @@
     "submitting": "Sharing…",
     "errName": "Please give the place a name.",
     "errPlace": "Please say which city and country it's in.",
-    "errDesc": "Please add a short description (at least 10 characters)."
+    "errDesc": "Please add a short description (at least 10 characters).",
+    "readMore": "Read more",
+    "shareLink": "Share",
+    "linkCopied": "Link copied",
+    "shareText": "Check out this date spot on Blossom"
   }
 }

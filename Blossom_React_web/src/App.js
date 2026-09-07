@@ -34,6 +34,7 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/date-spots" element={<DateSpots />} />
+        <Route path="/date-spots/:id" element={<DateSpots />} />
         <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>

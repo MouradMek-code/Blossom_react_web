@@ -163,6 +163,10 @@
     "submitting": "正在分享…",
     "errName": "请填写地点名称。",
     "errPlace": "请填写城市和国家。",
-    "errDesc": "请添加简短描述（至少 10 个字符）。"
+    "errDesc": "请添加简短描述（至少 10 个字符）。",
+    "readMore": "阅读更多",
+    "shareLink": "分享",
+    "linkCopied": "链接已复制",
+    "shareText": "看看 Blossom 上的这个约会地点"
   }
 }

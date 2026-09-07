@@ -163,6 +163,10 @@
     "submitting": "Partage en cours…",
     "errName": "Veuillez donner un nom au lieu.",
     "errPlace": "Veuillez indiquer la ville et le pays.",
-    "errDesc": "Veuillez ajouter une courte description (au moins 10 caractères)."
+    "errDesc": "Veuillez ajouter une courte description (au moins 10 caractères).",
+    "readMore": "Lire la suite",
+    "shareLink": "Partager",
+    "linkCopied": "Lien copié",
+    "shareText": "Découvre ce lieu de rendez-vous sur Blossom"
   }
 }

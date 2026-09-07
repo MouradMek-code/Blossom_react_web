@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
@@ -16,6 +17,10 @@ function DateSpots() {
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [error, setError] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const { id: routeId } = useParams();
+  const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
   const isLoggedIn = token && token !== "undefined" && token !== "null";
@@ -43,6 +48,44 @@ function DateSpots() {
   useEffect(() => {
     load();
   }, [load]);
+
+  // Deep link: /date-spots/:id opens that spot's detail straight away.
+  useEffect(() => {
+    if (!routeId || spots.length === 0) return;
+    const match = spots.find((s) => String(s.id) === String(routeId));
+    if (match) setSelected(match);
+  }, [routeId, spots]);
+
+  function openSpot(spot) {
+    setCopied(false);
+    setSelected(spot);
+  }
+
+  function closeSpot() {
+    setSelected(null);
+    setCopied(false);
+    if (routeId) navigate("/date-spots", { replace: true });
+  }
+
+  async function shareSpot(spot) {
+    const url = `${window.location.origin}/date-spots/${spot.id}`;
+    const payload = { title: spot.name, text: t("dateSpots.shareText"), url };
+    if (navigator.share) {
+      try {
+        await navigator.share(payload);
+        return;
+      } catch {
+        // user dismissed the share sheet - fall through to copying
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable - nothing useful to do */
+    }
+  }
 
   const citiesForCountry = useMemo(() => {
     const entry = locations.find((l) => l.country === country);
@@ -152,6 +195,7 @@ function DateSpots() {
                       src={IMG.card(spot.image_url)}
                       alt={spot.name}
                       loading="lazy"
+                      onClick={() => openSpot(spot)}
                     />
                   )}
                   <div className={styles.cardBody}>
@@ -159,7 +203,16 @@ function DateSpots() {
                     <p className={styles.cardPlace}>
                       📍 {spot.city}, {spot.country}
                     </p>
-                    <p className={styles.cardText}>{spot.description}</p>
+                    <p
+                      className={styles.cardText}
+                      onClick={() => openSpot(spot)}
+                      title={t("dateSpots.readMore")}
+                    >
+                      {spot.description}
+                    </p>
+                    <button className={styles.readMore} onClick={() => openSpot(spot)}>
+                      {t("dateSpots.readMore")}
+                    </button>
                     {spot.profile?.first_name && (
                       <p className={styles.cardAuthor}>
 {t("dateSpots.sharedBy", { name: spot.profile.first_name })}
@@ -172,6 +225,38 @@ function DateSpots() {
           )}
         </div>
       </div>
+
+      {selected && (
+        <div className={styles.detailOverlay} onClick={closeSpot}>
+          <div className={styles.detailCard} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.detailClose} onClick={closeSpot} aria-label="Close">
+              ✕
+            </button>
+            {selected.image_url && (
+              <img
+                className={styles.detailImage}
+                src={IMG.full(selected.image_url)}
+                alt={selected.name}
+              />
+            )}
+            <div className={styles.detailBody}>
+              <h2 className={styles.detailTitle}>{selected.name}</h2>
+              <p className={styles.detailPlace}>
+                📍 {selected.city}, {selected.country}
+              </p>
+              <p className={styles.detailText}>{selected.description}</p>
+              {selected.profile?.first_name && (
+                <p className={styles.detailAuthor}>
+                  {t("dateSpots.sharedBy", { name: selected.profile.first_name })}
+                </p>
+              )}
+              <button className={styles.shareBtn} onClick={() => shareSpot(selected)}>
+                🔗 {copied ? t("dateSpots.linkCopied") : t("dateSpots.shareLink")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Footer />
     </>
   );
