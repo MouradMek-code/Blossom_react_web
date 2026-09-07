@@ -489,3 +489,30 @@
   .detailTitle { font-size: 1.5rem; }
   .detailText { font-size: 1rem; }
 }
+
+.detailActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mapBtn {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  border-radius: var(--r-pill);
+  padding: 12px 22px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--shadow-primary);
+  transition: transform 0.18s var(--ease);
+}
+
+.mapBtn:hover {
+  transform: translateY(-2px);
+  color: #fff;
+}

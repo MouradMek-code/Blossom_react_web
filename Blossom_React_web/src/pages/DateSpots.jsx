@@ -250,9 +250,21 @@ function DateSpots() {
                   {t("dateSpots.sharedBy", { name: selected.profile.first_name })}
                 </p>
               )}
-              <button className={styles.shareBtn} onClick={() => shareSpot(selected)}>
-                🔗 {copied ? t("dateSpots.linkCopied") : t("dateSpots.shareLink")}
-              </button>
+              <div className={styles.detailActions}>
+                {selected.map_url && (
+                  <a
+                    className={styles.mapBtn}
+                    href={selected.map_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    🗺️ {t("dateSpots.openMap")}
+                  </a>
+                )}
+                <button className={styles.shareBtn} onClick={() => shareSpot(selected)}>
+                  🔗 {copied ? t("dateSpots.linkCopied") : t("dateSpots.shareLink")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -268,6 +280,7 @@ function AddSpotForm({ token, onCancel, onCreated }) {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
+  const [mapUrl, setMapUrl] = useState("");
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -287,13 +300,16 @@ function AddSpotForm({ token, onCancel, onCreated }) {
     if (!city.trim() || !country.trim())
 return setError(t("dateSpots.errPlace"));
     if (description.trim().length < 10)
-return setError(t("dateSpots.errDesc"));
+      return setError(t("dateSpots.errDesc"));
+    if (mapUrl.trim() && !/^https?:\/\/(www\.)?([a-z-]+\.)?(google\.[a-z.]+|goo\.gl|maps\.app\.goo\.gl)\//i.test(mapUrl.trim()))
+      return setError(t("dateSpots.errMapUrl"));
 
     const body = new FormData();
     body.append("name", name.trim());
     body.append("city", city.trim());
     body.append("country", country.trim());
     body.append("description", description.trim());
+    if (mapUrl.trim()) body.append("map_url", mapUrl.trim());
     if (file) body.append("image", file);
 
     setSubmitting(true);
@@ -366,6 +382,17 @@ return setError(t("dateSpots.errDesc"));
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           placeholder={t("dateSpots.whyPlaceholder")}
+        />
+      </label>
+
+      <label className={styles.label}>
+        {t("dateSpots.mapUrl")}
+        <input
+          className={styles.input}
+          type="url"
+          value={mapUrl}
+          onChange={(e) => setMapUrl(e.target.value)}
+          placeholder={t("dateSpots.mapUrlPlaceholder")}
         />
       </label>
 

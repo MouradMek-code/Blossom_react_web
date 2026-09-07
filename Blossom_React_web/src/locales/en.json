@@ -167,6 +167,10 @@
     "readMore": "Read more",
     "shareLink": "Share",
     "linkCopied": "Link copied",
-    "shareText": "Check out this date spot on Blossom"
+    "shareText": "Check out this date spot on Blossom",
+    "mapUrl": "Google Maps link (optional)",
+    "mapUrlPlaceholder": "https://maps.app.goo.gl/…",
+    "openMap": "Open in Google Maps",
+    "errMapUrl": "Please paste a valid Google Maps link, or leave it empty."
   }
 }

@@ -167,6 +167,10 @@
     "readMore": "阅读更多",
     "shareLink": "分享",
     "linkCopied": "链接已复制",
-    "shareText": "看看 Blossom 上的这个约会地点"
+    "shareText": "看看 Blossom 上的这个约会地点",
+    "mapUrl": "谷歌地图链接（可选）",
+    "mapUrlPlaceholder": "https://maps.app.goo.gl/…",
+    "openMap": "在谷歌地图中打开",
+    "errMapUrl": "请粘贴有效的谷歌地图链接，或留空。"
   }
 }

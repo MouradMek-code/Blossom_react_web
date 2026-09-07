@@ -167,6 +167,10 @@
     "readMore": "اقرأ المزيد",
     "shareLink": "مشاركة",
     "linkCopied": "تم نسخ الرابط",
-    "shareText": "اطّلع على مكان الموعد هذا على Blossom"
+    "shareText": "اطّلع على مكان الموعد هذا على Blossom",
+    "mapUrl": "رابط خرائط جوجل (اختياري)",
+    "mapUrlPlaceholder": "https://maps.app.goo.gl/…",
+    "openMap": "افتح في خرائط جوجل",
+    "errMapUrl": "يرجى لصق رابط صالح لخرائط جوجل، أو اتركه فارغًا."
   }
 }
