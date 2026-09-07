@@ -142,7 +142,7 @@ function PageNav({ minimal = false }) {
                 style={{ textDecoration: "none" }}
                 onClick={closeMenu}
               >
-                Date spots
+                {t("nav.dateSpots")}
               </NavLink>
             </span>
             <span className={styles.navItemWithBadge}>
@@ -205,7 +205,7 @@ function PageNav({ minimal = false }) {
               style={{ textDecoration: "none" }}
               onClick={closeMenu}
             >
-              Date spots
+              {t("nav.dateSpots")}
             </NavLink>
           </span>
         )}

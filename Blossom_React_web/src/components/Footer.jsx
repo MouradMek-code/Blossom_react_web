@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./Footer.module.css";
 
 const PLAY_STORE_URL =
@@ -6,6 +7,7 @@ const PLAY_STORE_URL =
 const SUPPORT_EMAIL = "mourad.meknioui@gmail.com";
 
 function Footer() {
+  const { t } = useTranslation();
   const year = new Date().getFullYear();
 
   return (
@@ -35,7 +37,7 @@ function Footer() {
         <nav className={styles.col}>
           <h4>Product</h4>
           <Link to="/profiles">Browse</Link>
-          <Link to="/date-spots">Date spots</Link>
+          <Link to="/date-spots">{t("nav.dateSpots")}</Link>
           <Link to="/sign_up">Sign up</Link>
           <Link to="/login">Log in</Link>
         </nav>

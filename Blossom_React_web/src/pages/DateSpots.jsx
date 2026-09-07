@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
@@ -7,6 +8,7 @@ import { friendlyError, NETWORK_ERROR } from "../api/errors";
 import styles from "./DateSpots.module.css";
 
 function DateSpots() {
+  const { t } = useTranslation();
   const [spots, setSpots] = useState([]);
   const [locations, setLocations] = useState([]);
   const [country, setCountry] = useState("");
@@ -53,19 +55,18 @@ function DateSpots() {
         <PageNav />
 
         <header className={styles.hero}>
-          <p className={styles.eyebrow}>Community picks</p>
-          <h1 className={styles.title}>Great places to go on a date</h1>
+          <p className={styles.eyebrow}>{t("dateSpots.eyebrow")}</p>
+          <h1 className={styles.title}>{t("dateSpots.title")}</h1>
           <p className={styles.subtitle}>
-            Real spots, shared by real people who had a good time there. Pick a
-            city and find your next date.
+{t("dateSpots.subtitle")}
           </p>
           {isLoggedIn ? (
             <button className={styles.addBtn} onClick={() => setFormOpen((o) => !o)}>
-              {formOpen ? "Close" : "＋ Share a place"}
+              {formOpen ? t("dateSpots.close") : `＋ ${t("dateSpots.share")}`}
             </button>
           ) : (
             <p className={styles.loginHint}>
-              <a href="/login">Log in</a> to share a place you loved.
+<a href="/login">{t("dateSpots.loginHint")}</a>
             </p>
           )}
         </header>
@@ -94,7 +95,7 @@ function DateSpots() {
                 setCity("");
               }}
             >
-              <option value="">All countries</option>
+              <option value="">{t("dateSpots.allCountries")}</option>
               {locations.map((l) => (
                 <option key={l.country} value={l.country}>
                   {l.country}
@@ -108,7 +109,7 @@ function DateSpots() {
               onChange={(e) => setCity(e.target.value)}
               disabled={!country}
             >
-              <option value="">{country ? "All cities" : "Pick a country first"}</option>
+              <option value="">{country ? t("dateSpots.allCities") : t("dateSpots.pickCountry")}</option>
               {citiesForCountry.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -124,21 +125,21 @@ function DateSpots() {
                   setCity("");
                 }}
               >
-                Clear
+                {t("dateSpots.clear")}
               </button>
             )}
           </div>
 
           {loading ? (
-            <p className={styles.muted}>Loading places…</p>
+            <p className={styles.muted}>{t("dateSpots.loading")}</p>
           ) : spots.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>📍</div>
-              <p className={styles.emptyTitle}>No places here yet</p>
+              <p className={styles.emptyTitle}>{t("dateSpots.emptyTitle")}</p>
               <p className={styles.emptyText}>
                 {country || city
-                  ? "Nothing shared for this place yet — be the first."
-                  : "Be the first to share somewhere you had a great date."}
+                  ? t("dateSpots.emptyFiltered")
+                  : t("dateSpots.emptyAll")}
               </p>
             </div>
           ) : (
@@ -161,7 +162,7 @@ function DateSpots() {
                     <p className={styles.cardText}>{spot.description}</p>
                     {spot.profile?.first_name && (
                       <p className={styles.cardAuthor}>
-                        Shared by {spot.profile.first_name}
+{t("dateSpots.sharedBy", { name: spot.profile.first_name })}
                       </p>
                     )}
                   </div>
@@ -177,6 +178,7 @@ function DateSpots() {
 }
 
 function AddSpotForm({ token, onCancel, onCreated }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
@@ -196,11 +198,11 @@ function AddSpotForm({ token, onCancel, onCreated }) {
     e.preventDefault();
     setError("");
 
-    if (!name.trim()) return setError("Please give the place a name.");
+    if (!name.trim()) return setError(t("dateSpots.errName"));
     if (!city.trim() || !country.trim())
-      return setError("Please say which city and country it's in.");
+return setError(t("dateSpots.errPlace"));
     if (description.trim().length < 10)
-      return setError("Please add a short description (at least 10 characters).");
+return setError(t("dateSpots.errDesc"));
 
     const body = new FormData();
     body.append("name", name.trim());
@@ -235,69 +237,69 @@ function AddSpotForm({ token, onCancel, onCreated }) {
 
   return (
     <form className={styles.form} onSubmit={submit}>
-      <h2 className={styles.formTitle}>Share a place</h2>
+      <h2 className={styles.formTitle}>{t("dateSpots.formTitle")}</h2>
       {error !== "" && <p className={styles.error}>{error}</p>}
 
       <div className={styles.formRow}>
         <label className={styles.label}>
-          Place name <span className={styles.req}>*</span>
+          {t("dateSpots.name")} <span className={styles.req}>*</span>
           <input
             className={styles.input}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Café de Flore"
+            placeholder={t("dateSpots.namePlaceholder")}
           />
         </label>
       </div>
 
       <div className={styles.formGrid}>
         <label className={styles.label}>
-          City <span className={styles.req}>*</span>
+          {t("dateSpots.city")} <span className={styles.req}>*</span>
           <input
             className={styles.input}
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            placeholder="e.g. Paris"
+            placeholder={t("dateSpots.cityPlaceholder")}
           />
         </label>
         <label className={styles.label}>
-          Country <span className={styles.req}>*</span>
+          {t("dateSpots.country")} <span className={styles.req}>*</span>
           <input
             className={styles.input}
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            placeholder="e.g. France"
+            placeholder={t("dateSpots.countryPlaceholder")}
           />
         </label>
       </div>
 
       <label className={styles.label}>
-        Why was it great? <span className={styles.req}>*</span>
+        {t("dateSpots.why")} <span className={styles.req}>*</span>
         <textarea
           className={styles.textarea}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          placeholder="Quiet corner tables, great coffee, and easy to talk for hours…"
+          placeholder={t("dateSpots.whyPlaceholder")}
         />
       </label>
 
       <label className={styles.label}>
-        Photo (optional)
+        {t("dateSpots.photo")}
         <input className={styles.file} type="file" accept="image/*" onChange={pickFile} />
       </label>
       {preview && <img className={styles.preview} src={preview} alt="Preview" />}
 
       <p className={styles.safety}>
-        Please only share public places, and keep it respectful.
+        {t("dateSpots.safety")}
       </p>
 
       <div className={styles.formActions}>
         <button type="button" className={styles.cancelBtn} onClick={onCancel}>
-          Cancel
+          {t("dateSpots.cancel")}
         </button>
         <button type="submit" className={styles.submitBtn} disabled={submitting}>
-          {submitting ? "Sharing…" : "Share place"}
+          {submitting ? t("dateSpots.submitting") : t("dateSpots.submit")}
         </button>
       </div>
     </form>

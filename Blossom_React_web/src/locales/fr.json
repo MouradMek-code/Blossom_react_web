@@ -8,7 +8,8 @@
     "logout": "Déconnexion",
     "homePage": "Accueil",
     "signUp": "S'inscrire",
-    "login": "Connexion"
+    "login": "Connexion",
+    "dateSpots": "Lieux de rendez-vous"
   },
   "home": {
     "title": "Rencontrez votre âme sœur AUJOURD'HUI !!",
@@ -129,5 +130,39 @@
     "heading": "Rencontrez en apprenant 🌍",
     "sub": "Matchez avec des personnes qui parlent — ou apprennent — les mêmes langues que vous. Transformez chaque conversation en échange linguistique.",
     "cta": "🗣️ Ajoutez vos langues en apprentissage à votre profil pour de meilleurs matchs !"
+  },
+  "dateSpots": {
+    "eyebrow": "Coups de cœur",
+    "title": "De superbes endroits pour un rendez-vous",
+    "subtitle": "Des lieux réels, partagés par des personnes qui y ont passé un bon moment. Choisissez une ville et trouvez votre prochain rendez-vous.",
+    "share": "Partager un lieu",
+    "close": "Fermer",
+    "loginHint": "Connectez-vous pour partager un lieu que vous avez aimé.",
+    "allCountries": "Tous les pays",
+    "allCities": "Toutes les villes",
+    "pickCountry": "Choisissez d'abord un pays",
+    "clear": "Effacer",
+    "loading": "Chargement des lieux…",
+    "emptyTitle": "Aucun lieu ici pour l'instant",
+    "emptyFiltered": "Rien n'a encore été partagé ici — soyez le premier.",
+    "emptyAll": "Soyez le premier à partager un endroit où vous avez passé un super rendez-vous.",
+    "sharedBy": "Partagé par {{name}}",
+    "formTitle": "Partager un lieu",
+    "name": "Nom du lieu",
+    "namePlaceholder": "ex. Café de Flore",
+    "city": "Ville",
+    "cityPlaceholder": "ex. Paris",
+    "country": "Pays",
+    "countryPlaceholder": "ex. France",
+    "why": "Pourquoi était-ce génial ?",
+    "whyPlaceholder": "Des tables tranquilles, un excellent café, et on peut parler pendant des heures…",
+    "photo": "Photo (facultatif)",
+    "safety": "Merci de ne partager que des lieux publics, et de rester respectueux.",
+    "cancel": "Annuler",
+    "submit": "Partager le lieu",
+    "submitting": "Partage en cours…",
+    "errName": "Veuillez donner un nom au lieu.",
+    "errPlace": "Veuillez indiquer la ville et le pays.",
+    "errDesc": "Veuillez ajouter une courte description (au moins 10 caractères)."
   }
 }
