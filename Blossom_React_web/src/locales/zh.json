@@ -171,6 +171,10 @@
     "mapUrl": "谷歌地图链接（可选）",
     "mapUrlPlaceholder": "https://maps.app.goo.gl/…",
     "openMap": "在谷歌地图中打开",
-    "errMapUrl": "请粘贴有效的谷歌地图链接，或留空。"
+    "errMapUrl": "请粘贴有效的谷歌地图链接，或留空。",
+    "category": "氛围",
+    "allCategories": "所有氛围",
+    "featured": "最新发现",
+    "viewSpot": "查看地点"
   }
 }

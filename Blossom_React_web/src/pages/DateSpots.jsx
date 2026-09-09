@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { friendlyError, NETWORK_ERROR } from "../api/errors";
+import { CATEGORIES, categoryEmoji } from "../api/categories";
 import styles from "./DateSpots.module.css";
 
 function DateSpots() {
@@ -14,6 +15,7 @@ function DateSpots() {
   const [locations, setLocations] = useState([]);
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+  const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [error, setError] = useState("");
@@ -30,6 +32,7 @@ function DateSpots() {
     const params = new URLSearchParams();
     if (country) params.set("country", country);
     if (city) params.set("city", city);
+    if (category) params.set("category", category);
     const qs = params.toString();
     try {
       const [spotsResp, locResp] = await Promise.all([
@@ -43,7 +46,7 @@ function DateSpots() {
     } finally {
       setLoading(false);
     }
-  }, [country, city]);
+  }, [country, city, category]);
 
   useEffect(() => {
     load();
@@ -83,7 +86,7 @@ function DateSpots() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      /* clipboard unavailable - nothing useful to do */
+      /* clipboard unavailable */
     }
   }
 
@@ -91,6 +94,10 @@ function DateSpots() {
     const entry = locations.find((l) => l.country === country);
     return entry ? entry.cities : [];
   }, [locations, country]);
+
+  const hasFilters = Boolean(country || city || category);
+  // The newest spot gets the full-width featured treatment; the rest tile below.
+  const [featured, ...rest] = spots;
 
   return (
     <>
@@ -100,16 +107,14 @@ function DateSpots() {
         <header className={styles.hero}>
           <p className={styles.eyebrow}>{t("dateSpots.eyebrow")}</p>
           <h1 className={styles.title}>{t("dateSpots.title")}</h1>
-          <p className={styles.subtitle}>
-{t("dateSpots.subtitle")}
-          </p>
+          <p className={styles.subtitle}>{t("dateSpots.subtitle")}</p>
           {isLoggedIn ? (
             <button className={styles.addBtn} onClick={() => setFormOpen((o) => !o)}>
               {formOpen ? t("dateSpots.close") : `＋ ${t("dateSpots.share")}`}
             </button>
           ) : (
             <p className={styles.loginHint}>
-<a href="/login">{t("dateSpots.loginHint")}</a>
+              <a href="/login">{t("dateSpots.loginHint")}</a>
             </p>
           )}
         </header>
@@ -128,100 +133,164 @@ function DateSpots() {
             />
           )}
 
-          {/* Filters */}
-          <div className={styles.filters}>
-            <select
-              className={styles.select}
-              value={country}
-              onChange={(e) => {
-                setCountry(e.target.value);
-                setCity("");
-              }}
-            >
-              <option value="">{t("dateSpots.allCountries")}</option>
-              {locations.map((l) => (
-                <option key={l.country} value={l.country}>
-                  {l.country}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className={styles.select}
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              disabled={!country}
-            >
-              <option value="">{country ? t("dateSpots.allCities") : t("dateSpots.pickCountry")}</option>
-              {citiesForCountry.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-
-            {(country || city) && (
+          {/* Filter chips */}
+          <div className={styles.filterBar}>
+            <div className={styles.chipRow}>
               <button
-                className={styles.clearBtn}
+                className={`${styles.chip} ${!country ? styles.chipActive : ""}`}
                 onClick={() => {
                   setCountry("");
                   setCity("");
                 }}
               >
-                {t("dateSpots.clear")}
+                🌍 {t("dateSpots.allCountries")}
               </button>
+              {locations.map((l) => (
+                <button
+                  key={l.country}
+                  className={`${styles.chip} ${country === l.country ? styles.chipActive : ""}`}
+                  onClick={() => {
+                    setCountry(l.country);
+                    setCity("");
+                  }}
+                >
+                  {l.country}
+                </button>
+              ))}
+            </div>
+
+            {country && citiesForCountry.length > 0 && (
+              <div className={styles.chipRow}>
+                <button
+                  className={`${styles.chip} ${styles.chipSmall} ${!city ? styles.chipActive : ""}`}
+                  onClick={() => setCity("")}
+                >
+                  {t("dateSpots.allCities")}
+                </button>
+                {citiesForCountry.map((c) => (
+                  <button
+                    key={c}
+                    className={`${styles.chip} ${styles.chipSmall} ${city === c ? styles.chipActive : ""}`}
+                    onClick={() => setCity(c)}
+                  >
+                    📍 {c}
+                  </button>
+                ))}
+              </div>
             )}
+
+            <div className={styles.chipRow}>
+              <button
+                className={`${styles.chip} ${styles.chipSmall} ${!category ? styles.chipActive : ""}`}
+                onClick={() => setCategory("")}
+              >
+                {t("dateSpots.allCategories")}
+              </button>
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c}
+                  className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
+                  onClick={() => setCategory(category === c ? "" : c)}
+                >
+                  {categoryEmoji(c)} {c}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading ? (
-            <p className={styles.muted}>{t("dateSpots.loading")}</p>
+            <div className={styles.grid}>
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className={styles.skeleton}>
+                  <div className={styles.skelImage} />
+                  <div className={styles.skelLine} />
+                  <div className={`${styles.skelLine} ${styles.skelShort}`} />
+                </div>
+              ))}
+            </div>
           ) : spots.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>📍</div>
               <p className={styles.emptyTitle}>{t("dateSpots.emptyTitle")}</p>
               <p className={styles.emptyText}>
-                {country || city
-                  ? t("dateSpots.emptyFiltered")
-                  : t("dateSpots.emptyAll")}
+                {hasFilters ? t("dateSpots.emptyFiltered") : t("dateSpots.emptyAll")}
               </p>
+              {isLoggedIn && !formOpen && (
+                <button className={styles.emptyBtn} onClick={() => setFormOpen(true)}>
+                  ＋ {t("dateSpots.share")}
+                </button>
+              )}
             </div>
           ) : (
-            <div className={styles.grid}>
-              {spots.map((spot) => (
-                <article key={spot.id} className={styles.card}>
-                  {spot.image_url && (
-                    <img
-                      className={styles.cardImage}
-                      src={IMG.card(spot.image_url)}
-                      alt={spot.name}
-                      loading="lazy"
-                      onClick={() => openSpot(spot)}
-                    />
+            <>
+              {/* Featured */}
+              <article
+                className={styles.featured}
+                onClick={() => openSpot(featured)}
+                style={{ animationDelay: "0ms" }}
+              >
+                {featured.image_url ? (
+                  <img
+                    className={styles.featuredImage}
+                    src={IMG.full(featured.image_url)}
+                    alt={featured.name}
+                  />
+                ) : (
+                  <div className={styles.noImage} />
+                )}
+                <div className={styles.scrim} />
+                <span className={styles.featuredFlag}>★ {t("dateSpots.featured")}</span>
+                <div className={styles.featuredInfo}>
+                  {featured.category && (
+                    <span className={styles.tag}>
+                      {categoryEmoji(featured.category)} {featured.category}
+                    </span>
                   )}
-                  <div className={styles.cardBody}>
-                    <h2 className={styles.cardTitle}>{spot.name}</h2>
-                    <p className={styles.cardPlace}>
-                      📍 {spot.city}, {spot.country}
-                    </p>
-                    <p
-                      className={styles.cardText}
+                  <h2 className={styles.featuredTitle}>{featured.name}</h2>
+                  <p className={styles.overlayPlace}>
+                    📍 {featured.city}, {featured.country}
+                  </p>
+                  <p className={styles.featuredText}>{featured.description}</p>
+                </div>
+              </article>
+
+              {/* Grid */}
+              {rest.length > 0 && (
+                <div className={styles.grid}>
+                  {rest.map((spot, i) => (
+                    <article
+                      key={spot.id}
+                      className={styles.card}
                       onClick={() => openSpot(spot)}
-                      title={t("dateSpots.readMore")}
+                      style={{ animationDelay: `${(i + 1) * 60}ms` }}
                     >
-                      {spot.description}
-                    </p>
-                    <button className={styles.readMore} onClick={() => openSpot(spot)}>
-                      {t("dateSpots.readMore")}
-                    </button>
-                    {spot.profile?.first_name && (
-                      <p className={styles.cardAuthor}>
-{t("dateSpots.sharedBy", { name: spot.profile.first_name })}
-                      </p>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
+                      {spot.image_url ? (
+                        <img
+                          className={styles.cardImage}
+                          src={IMG.card(spot.image_url)}
+                          alt={spot.name}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className={styles.noImage} />
+                      )}
+                      <div className={styles.scrim} />
+                      <div className={styles.cardInfo}>
+                        {spot.category && (
+                          <span className={styles.tag}>
+                            {categoryEmoji(spot.category)} {spot.category}
+                          </span>
+                        )}
+                        <h3 className={styles.cardTitle}>{spot.name}</h3>
+                        <p className={styles.overlayPlace}>
+                          📍 {spot.city}, {spot.country}
+                        </p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -240,6 +309,11 @@ function DateSpots() {
               />
             )}
             <div className={styles.detailBody}>
+              {selected.category && (
+                <span className={styles.detailTag}>
+                  {categoryEmoji(selected.category)} {selected.category}
+                </span>
+              )}
               <h2 className={styles.detailTitle}>{selected.name}</h2>
               <p className={styles.detailPlace}>
                 📍 {selected.city}, {selected.country}
@@ -280,6 +354,7 @@ function AddSpotForm({ token, onCancel, onCreated }) {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [mapUrl, setMapUrl] = useState("");
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -297,11 +372,14 @@ function AddSpotForm({ token, onCancel, onCreated }) {
     setError("");
 
     if (!name.trim()) return setError(t("dateSpots.errName"));
-    if (!city.trim() || !country.trim())
-return setError(t("dateSpots.errPlace"));
-    if (description.trim().length < 10)
-      return setError(t("dateSpots.errDesc"));
-    if (mapUrl.trim() && !/^https?:\/\/(www\.)?([a-z-]+\.)?(google\.[a-z.]+|goo\.gl|maps\.app\.goo\.gl)\//i.test(mapUrl.trim()))
+    if (!city.trim() || !country.trim()) return setError(t("dateSpots.errPlace"));
+    if (description.trim().length < 10) return setError(t("dateSpots.errDesc"));
+    if (
+      mapUrl.trim() &&
+      !/^https?:\/\/(www\.)?([a-z-]+\.)?(google\.[a-z.]+|goo\.gl|maps\.app\.goo\.gl)\//i.test(
+        mapUrl.trim(),
+      )
+    )
       return setError(t("dateSpots.errMapUrl"));
 
     const body = new FormData();
@@ -309,6 +387,7 @@ return setError(t("dateSpots.errPlace"));
     body.append("city", city.trim());
     body.append("country", country.trim());
     body.append("description", description.trim());
+    if (category) body.append("category", category);
     if (mapUrl.trim()) body.append("map_url", mapUrl.trim());
     if (file) body.append("image", file);
 
@@ -374,6 +453,21 @@ return setError(t("dateSpots.errPlace"));
         </label>
       </div>
 
+      {/* Vibe picker */}
+      <p className={styles.label}>{t("dateSpots.category")}</p>
+      <div className={styles.pickRow}>
+        {CATEGORIES.map((c) => (
+          <button
+            type="button"
+            key={c}
+            className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
+            onClick={() => setCategory(category === c ? "" : c)}
+          >
+            {categoryEmoji(c)} {c}
+          </button>
+        ))}
+      </div>
+
       <label className={styles.label}>
         {t("dateSpots.why")} <span className={styles.req}>*</span>
         <textarea
@@ -402,9 +496,7 @@ return setError(t("dateSpots.errPlace"));
       </label>
       {preview && <img className={styles.preview} src={preview} alt="Preview" />}
 
-      <p className={styles.safety}>
-        {t("dateSpots.safety")}
-      </p>
+      <p className={styles.safety}>{t("dateSpots.safety")}</p>
 
       <div className={styles.formActions}>
         <button type="button" className={styles.cancelBtn} onClick={onCancel}>

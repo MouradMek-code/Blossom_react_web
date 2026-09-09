@@ -171,6 +171,10 @@
     "mapUrl": "Google Maps link (optional)",
     "mapUrlPlaceholder": "https://maps.app.goo.gl/…",
     "openMap": "Open in Google Maps",
-    "errMapUrl": "Please paste a valid Google Maps link, or leave it empty."
+    "errMapUrl": "Please paste a valid Google Maps link, or leave it empty.",
+    "category": "Vibe",
+    "allCategories": "All vibes",
+    "featured": "Latest find",
+    "viewSpot": "View place"
   }
 }

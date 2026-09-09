@@ -171,6 +171,10 @@
     "mapUrl": "Lien Google Maps (facultatif)",
     "mapUrlPlaceholder": "https://maps.app.goo.gl/…",
     "openMap": "Ouvrir dans Google Maps",
-    "errMapUrl": "Veuillez coller un lien Google Maps valide, ou laisser le champ vide."
+    "errMapUrl": "Veuillez coller un lien Google Maps valide, ou laisser le champ vide.",
+    "category": "Ambiance",
+    "allCategories": "Toutes les ambiances",
+    "featured": "Dernière trouvaille",
+    "viewSpot": "Voir le lieu"
   }
 }
