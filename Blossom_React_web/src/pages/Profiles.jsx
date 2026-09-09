@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import ProfileFilterModal from "../components/ProfileFilterModal";
 import { matchesFilters, getDefaultFilters } from "../api/profileFilters";
+import { seededShuffle } from "../api/shuffle";
 import styles from "./Profiles.module.css";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
@@ -20,6 +21,9 @@ function Profiles() {
     try { return JSON.parse(sessionStorage.getItem("blossom_filters") || "{}"); } catch { return {}; }
   });
   const [loading, setLoading] = useState(true);
+  // One seed per mount: the deck order is random each visit but stays put
+  // while browsing, even though a match triggers a re-fetch.
+  const [deckSeed] = useState(() => Math.random());
 
   async function handleLike(e, profile) {
     e.stopPropagation();
@@ -64,7 +68,8 @@ function Profiles() {
         const data = await profilesResp.json();
         if (profilesResp.status !== 200)
           throw new Error(`error happened on login : ${data.detail?.[0]?.msg}`);
-        setProfiles(data);
+        // Randomise the deck so the same faces aren't always first.
+        setProfiles(seededShuffle(data, deckSeed));
 
         if (ownResp.ok) {
           const ownData = await ownResp.json();
@@ -83,7 +88,7 @@ function Profiles() {
     }
 
     fetchAll();
-  }, [token, navigate, matchedProfile]);
+  }, [token, navigate, matchedProfile, deckSeed]);
 
   const filteredProfiles = useMemo(
     () => profiles.filter((p) => matchesFilters(p, appliedFilters)),
