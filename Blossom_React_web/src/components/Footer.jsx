@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./Footer.module.css";
 
-const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.mouradmek.blossom";
-const SUPPORT_EMAIL = "mourad.meknioui@gmail.com";
+import { PLAY_STORE_URL, SUPPORT_EMAIL } from "../api/links";
 
 function Footer() {
   const { t } = useTranslation();

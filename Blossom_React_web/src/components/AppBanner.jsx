@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./AppBanner.module.css";
+import { PLAY_STORE_URL } from "../api/links";
 
 export default function AppBanner() {
   const { t } = useTranslation();
@@ -11,7 +12,7 @@ export default function AppBanner() {
         <p className={styles.sub}>{t("appBanner.sub")}</p>
         <div className={styles.badges}>
           <a
-            href="https://play.google.com/store"
+            href={PLAY_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.badge}
