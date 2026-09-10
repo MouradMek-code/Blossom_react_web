@@ -686,3 +686,18 @@
   .featured { height: 340px; }
   .card { height: 260px; }
 }
+
+/* Social proof counts (hidden entirely when zero - see SpotStats) */
+.overlayStats {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.detailStats {
+  margin: 0 0 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}

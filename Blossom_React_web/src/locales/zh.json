@@ -189,6 +189,8 @@
       "museum": "博物馆 / 美术馆",
       "beach": "海滩",
       "concert": "演唱会 / 现场音乐"
-    }
+    },
+    "viewsCount": "{{count}} 次浏览",
+    "wentCount": "{{count}} 人去过"
   }
 }

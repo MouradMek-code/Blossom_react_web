@@ -15,6 +15,21 @@ function track(spotId, action) {
   fetch(`${BASE_URL}/date_spots/${spotId}/${action}`, { method: "POST" }).catch(() => {});
 }
 
+// Social proof line. Deliberately renders nothing for a zero count: an empty
+// spot shouldn't advertise "0 views".
+function SpotStats({ spot, t, className }) {
+  const views = spot?.view_count || 0;
+  const went = spot?.map_click_count || 0;
+  if (views < 1 && went < 1) return null;
+  return (
+    <p className={className}>
+      {views >= 1 && <span>👁 {t("dateSpots.viewsCount", { count: views })}</span>}
+      {views >= 1 && went >= 1 && <span> · </span>}
+      {went >= 1 && <span>🧭 {t("dateSpots.wentCount", { count: went })}</span>}
+    </p>
+  );
+}
+
 function DateSpots() {
   const { t } = useTranslation();
   const [spots, setSpots] = useState([]);
@@ -258,6 +273,7 @@ function DateSpots() {
                     📍 {featured.city}, {featured.country}
                   </p>
                   <p className={styles.featuredText}>{featured.description}</p>
+                  <SpotStats spot={featured} t={t} className={styles.overlayStats} />
                 </div>
               </article>
 
@@ -292,6 +308,7 @@ function DateSpots() {
                         <p className={styles.overlayPlace}>
                           📍 {spot.city}, {spot.country}
                         </p>
+                        <SpotStats spot={spot} t={t} className={styles.overlayStats} />
                       </div>
                     </article>
                   ))}
@@ -325,6 +342,7 @@ function DateSpots() {
               <p className={styles.detailPlace}>
                 📍 {selected.city}, {selected.country}
               </p>
+              <SpotStats spot={selected} t={t} className={styles.detailStats} />
               <p className={styles.detailText}>{selected.description}</p>
               {selected.profile?.first_name && (
                 <p className={styles.detailAuthor}>

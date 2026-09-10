@@ -189,6 +189,8 @@
       "museum": "Musée / Galerie d'art",
       "beach": "Plage",
       "concert": "Concert / Musique live"
-    }
+    },
+    "viewsCount": "{{count}} vues",
+    "wentCount": "{{count}} y sont allés"
   }
 }
