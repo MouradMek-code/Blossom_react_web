@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { friendlyError, NETWORK_ERROR } from "../api/errors";
-import { CATEGORIES, categoryEmoji } from "../api/categories";
+import { CATEGORIES, categoryLabel } from "../api/categories";
 import styles from "./DateSpots.module.css";
 
 // Fire-and-forget engagement tracking. Never block or surface errors: a missed
@@ -199,7 +199,7 @@ function DateSpots() {
                   className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
                   onClick={() => setCategory(category === c ? "" : c)}
                 >
-                  {categoryEmoji(c)} {c}
+                  {categoryLabel(c, t)}
                 </button>
               ))}
             </div>
@@ -250,7 +250,7 @@ function DateSpots() {
                 <div className={styles.featuredInfo}>
                   {featured.category && (
                     <span className={styles.tag}>
-                      {categoryEmoji(featured.category)} {featured.category}
+                      {categoryLabel(featured.category, t)}
                     </span>
                   )}
                   <h2 className={styles.featuredTitle}>{featured.name}</h2>
@@ -285,7 +285,7 @@ function DateSpots() {
                       <div className={styles.cardInfo}>
                         {spot.category && (
                           <span className={styles.tag}>
-                            {categoryEmoji(spot.category)} {spot.category}
+                            {categoryLabel(spot.category, t)}
                           </span>
                         )}
                         <h3 className={styles.cardTitle}>{spot.name}</h3>
@@ -318,7 +318,7 @@ function DateSpots() {
             <div className={styles.detailBody}>
               {selected.category && (
                 <span className={styles.detailTag}>
-                  {categoryEmoji(selected.category)} {selected.category}
+                  {categoryLabel(selected.category, t)}
                 </span>
               )}
               <h2 className={styles.detailTitle}>{selected.name}</h2>
@@ -471,7 +471,7 @@ function AddSpotForm({ token, onCancel, onCreated }) {
             className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
             onClick={() => setCategory(category === c ? "" : c)}
           >
-            {categoryEmoji(c)} {c}
+            {categoryLabel(c, t)}
           </button>
         ))}
       </div>
