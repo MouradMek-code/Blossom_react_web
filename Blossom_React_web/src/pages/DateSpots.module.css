@@ -407,13 +407,12 @@
 
 .chipRow {
   display: flex;
+  /* Wrap instead of scrolling sideways: there are 13 vibe chips, and a
+     horizontal scroller with a hidden scrollbar left most of them unreachable
+     on desktop, where you can't swipe. Wrapping shows every option. */
+  flex-wrap: wrap;
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: none;
 }
-
-.chipRow::-webkit-scrollbar { display: none; }
 
 .chip {
   flex-shrink: 0;
