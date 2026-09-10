@@ -191,6 +191,12 @@
       "concert": "演唱会 / 现场音乐"
     },
     "viewsCount": "{{count}} 次浏览",
-    "wentCount": "{{count}} 人去过"
+    "wentCount": "{{count}} 人去过",
+    "adminTitle": "管理员：编辑计数",
+    "adminViews": "浏览量",
+    "adminWent": "去过人数",
+    "adminSave": "保存",
+    "adminSaving": "保存中...",
+    "adminSaved": "计数已更新"
   }
 }

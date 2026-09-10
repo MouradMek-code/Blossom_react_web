@@ -191,6 +191,12 @@
       "concert": "Concert / Live Music"
     },
     "viewsCount": "{{count}} views",
-    "wentCount": "{{count}} went there"
+    "wentCount": "{{count}} went there",
+    "adminTitle": "Admin: edit counters",
+    "adminViews": "Views",
+    "adminWent": "Went there",
+    "adminSave": "Save",
+    "adminSaving": "Saving...",
+    "adminSaved": "Counters updated"
   }
 }

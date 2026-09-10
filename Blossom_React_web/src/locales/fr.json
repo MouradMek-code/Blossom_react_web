@@ -191,6 +191,12 @@
       "concert": "Concert / Musique live"
     },
     "viewsCount": "{{count}} vues",
-    "wentCount": "{{count}} y sont allés"
+    "wentCount": "{{count}} y sont allés",
+    "adminTitle": "Admin : modifier les compteurs",
+    "adminViews": "Vues",
+    "adminWent": "Y sont allés",
+    "adminSave": "Enregistrer",
+    "adminSaving": "Enregistrement...",
+    "adminSaved": "Compteurs mis à jour"
   }
 }

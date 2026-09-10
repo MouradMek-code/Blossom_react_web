@@ -701,3 +701,81 @@
   font-weight: 600;
   color: var(--text-muted);
 }
+
+/* Admin-only counter editor, sitting directly under the spot's photo in the
+   detail card. Visually separated with a tinted strip so it never reads as
+   part of the public listing. */
+.adminBox {
+  background: #FFF6F9;
+  border-top: 1px solid #F2D9E2;
+  border-bottom: 1px solid #F2D9E2;
+  padding: 14px 30px;
+}
+
+.adminTitle {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #C1466B;
+}
+
+.adminRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.adminField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.adminInput {
+  width: 110px;
+  padding: 9px 12px;
+  border: 1.5px solid #E8CCD7;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  outline: none;
+}
+
+.adminInput:focus {
+  border-color: #C1466B;
+}
+
+.adminSave {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: #C1466B;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.adminSave:hover:not(:disabled) { background: #A3395A; }
+.adminSave:disabled { opacity: 0.6; cursor: default; }
+
+.adminStatus {
+  margin: 9px 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #C1466B;
+}
+
+@media (max-width: 640px) {
+  .adminBox { padding: 14px 20px; }
+  .adminInput { width: 92px; }
+}

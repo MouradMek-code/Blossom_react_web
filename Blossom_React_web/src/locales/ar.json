@@ -191,6 +191,12 @@
       "concert": "حفلة / موسيقى حية"
     },
     "viewsCount": "{{count}} مشاهدة",
-    "wentCount": "{{count}} ذهبوا إلى هناك"
+    "wentCount": "{{count}} ذهبوا إلى هناك",
+    "adminTitle": "المشرف: تعديل العدّادات",
+    "adminViews": "المشاهدات",
+    "adminWent": "ذهبوا إلى هناك",
+    "adminSave": "حفظ",
+    "adminSaving": "جارٍ الحفظ...",
+    "adminSaved": "تم تحديث العدّادات"
   }
 }

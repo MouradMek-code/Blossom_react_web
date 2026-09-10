@@ -30,6 +30,85 @@ function SpotStats({ spot, t, className }) {
   );
 }
 
+// Admin-only editor for a spot's counters, shown right under its photo.
+// Used to seed a venue's numbers or correct them; everyone else never sees it.
+function AdminStatsEditor({ spot, token, t, onSaved }) {
+  const [views, setViews] = useState(String(spot.view_count || 0));
+  const [went, setWent] = useState(String(spot.map_click_count || 0));
+  const [saving, setSaving] = useState(false);
+  const [status, setStatus] = useState("");
+
+  // Switching to another spot must reload that spot's numbers, not keep the
+  // previous one's.
+  useEffect(() => {
+    setViews(String(spot.view_count || 0));
+    setWent(String(spot.map_click_count || 0));
+    setStatus("");
+  }, [spot.id, spot.view_count, spot.map_click_count]);
+
+  async function save() {
+    setSaving(true);
+    setStatus("");
+    try {
+      const resp = await fetch(`${BASE_URL}/date_spots/${spot.id}/stats`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          view_count: Math.max(0, parseInt(views, 10) || 0),
+          map_click_count: Math.max(0, parseInt(went, 10) || 0),
+        }),
+      });
+      const data = await resp.json().catch(() => null);
+      if (!resp.ok) {
+        setStatus(friendlyError(data, resp));
+      } else {
+        setStatus(t("dateSpots.adminSaved"));
+        onSaved(data);
+        setTimeout(() => setStatus(""), 2000);
+      }
+    } catch {
+      setStatus(NETWORK_ERROR);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className={styles.adminBox}>
+      <p className={styles.adminTitle}>🛠️ {t("dateSpots.adminTitle")}</p>
+      <div className={styles.adminRow}>
+        <label className={styles.adminField}>
+          <span>👁 {t("dateSpots.adminViews")}</span>
+          <input
+            className={styles.adminInput}
+            type="number"
+            min="0"
+            value={views}
+            onChange={(e) => setViews(e.target.value)}
+          />
+        </label>
+        <label className={styles.adminField}>
+          <span>🧭 {t("dateSpots.adminWent")}</span>
+          <input
+            className={styles.adminInput}
+            type="number"
+            min="0"
+            value={went}
+            onChange={(e) => setWent(e.target.value)}
+          />
+        </label>
+        <button className={styles.adminSave} onClick={save} disabled={saving}>
+          {saving ? t("dateSpots.adminSaving") : t("dateSpots.adminSave")}
+        </button>
+      </div>
+      {status !== "" && <p className={styles.adminStatus}>{status}</p>}
+    </div>
+  );
+}
+
 function DateSpots() {
   const { t } = useTranslation();
   const [spots, setSpots] = useState([]);
@@ -47,6 +126,31 @@ function DateSpots() {
 
   const token = sessionStorage.getItem("token");
   const isLoggedIn = token && token !== "undefined" && token !== "null";
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // The token only carries the username, so ask the backend whether this
+  // account is an admin - that gates the counter editor below each photo.
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    let alive = true;
+    fetch(`${BASE_URL}/user/me`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (alive) setIsAdmin(Boolean(data?.is_admin));
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [token, isLoggedIn]);
+
+  // Reflect an admin edit straight away, in the open detail card and in the
+  // list behind it, so the new numbers show without a refetch.
+  function applyStats(updated) {
+    if (!updated?.id) return;
+    setSpots((prev) => prev.map((s) => (s.id === updated.id ? { ...s, ...updated } : s)));
+    setSelected((cur) => (cur && cur.id === updated.id ? { ...cur, ...updated } : cur));
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -330,6 +434,14 @@ function DateSpots() {
                 className={styles.detailImage}
                 src={IMG.full(selected.image_url)}
                 alt={selected.name}
+              />
+            )}
+            {isAdmin && (
+              <AdminStatsEditor
+                spot={selected}
+                token={token}
+                t={t}
+                onSaved={applyStats}
               />
             )}
             <div className={styles.detailBody}>
