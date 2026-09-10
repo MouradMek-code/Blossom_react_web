@@ -9,6 +9,12 @@ import { friendlyError, NETWORK_ERROR } from "../api/errors";
 import { CATEGORIES, categoryEmoji } from "../api/categories";
 import styles from "./DateSpots.module.css";
 
+// Fire-and-forget engagement tracking. Never block or surface errors: a missed
+// count must never get in the way of the user opening a place.
+function track(spotId, action) {
+  fetch(`${BASE_URL}/date_spots/${spotId}/${action}`, { method: "POST" }).catch(() => {});
+}
+
 function DateSpots() {
   const { t } = useTranslation();
   const [spots, setSpots] = useState([]);
@@ -62,6 +68,7 @@ function DateSpots() {
   function openSpot(spot) {
     setCopied(false);
     setSelected(spot);
+    track(spot.id, "view");
   }
 
   function closeSpot() {
@@ -331,6 +338,7 @@ function DateSpots() {
                     href={selected.map_url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => track(selected.id, "map_click")}
                   >
                     🗺️ {t("dateSpots.openMap")}
                   </a>
