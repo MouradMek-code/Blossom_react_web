@@ -9,7 +9,8 @@
     "homePage": "Accueil",
     "signUp": "S'inscrire",
     "login": "Connexion",
-    "dateSpots": "Lieux de rendez-vous"
+    "dateSpots": "Lieux de rendez-vous",
+    "messages": "Messages"
   },
   "home": {
     "title": "Rencontrez votre âme sœur AUJOURD'HUI !!",
@@ -232,5 +233,17 @@
     "findreward": "Pour les animaux perdus : les aider à retrouver le chemin de la maison.",
     "helpreward": "Pour l'entraide entre voisins : des gens qui s'entraident près de chez eux.",
     "visit": "Visiter le site"
+  },
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Vos matchs et vos conversations.",
+    "you": "Vous",
+    "newMatch": "Nouveau match — dites bonjour 👋",
+    "waiting": "En attente du premier message de {{name}}",
+    "empty": "Pas encore de match. Quand vous matchez avec quelqu'un, vous pouvez discuter ici.",
+    "browse": "Explorer les profils",
+    "loading": "Chargement…",
+    "viewProfile": "Voir le profil",
+    "back": "Retour aux messages"
   }
 }

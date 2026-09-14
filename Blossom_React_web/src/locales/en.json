@@ -9,7 +9,8 @@
     "homePage": "HomePage",
     "signUp": "Sign Up",
     "login": "Login",
-    "dateSpots": "Date spots"
+    "dateSpots": "Date spots",
+    "messages": "Messages"
   },
   "home": {
     "title": "Meet your dating soul TODAY !!",
@@ -232,5 +233,17 @@
     "findreward": "For lost pets: helping them find their way home.",
     "helpreward": "For neighbor help: people helping people nearby.",
     "visit": "Visit site"
+  },
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Your matches and conversations.",
+    "you": "You",
+    "newMatch": "New match — say hi 👋",
+    "waiting": "Waiting for {{name}} to write first",
+    "empty": "No matches yet. When you match with someone, you can chat with them here.",
+    "browse": "Browse profiles",
+    "loading": "Loading…",
+    "viewProfile": "View profile",
+    "back": "Back to messages"
   }
 }

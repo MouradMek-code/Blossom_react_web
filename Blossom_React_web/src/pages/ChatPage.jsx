@@ -42,27 +42,52 @@ function InviteCard({ message, mine }) {
 }
 
 function ChatPage() {
+  const { t } = useTranslation();
   const { conversationId } = useParams();
 
   const token = sessionStorage.getItem("token");
-  const profileId = sessionStorage.getItem("profile_id");
 
   const [messages, setMessages] = useState([]);
+  const [details, setDetails] = useState(null);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
 
   const bottomRef = useRef(null);
 
-  const loadMessages = useCallback(async () => {
-    const resp = await fetch(
-      `${BASE_URL}/messages/conversation/${conversationId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+  // Who's on the other side (name + photo for the header), and our own
+  // profile id - more reliable than the locally stored one for deciding which
+  // bubbles are ours.
+  useEffect(() => {
+    let alive = true;
+    fetch(`${BASE_URL}/messages/conversation/${conversationId}/details`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (alive && data) setDetails(data);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [conversationId, token]);
 
-    const data = await resp.json();
-    setMessages(data);
+  const profileId = details?.me_profile_id ?? sessionStorage.getItem("profile_id");
+  const partner = details?.profile;
+
+  const loadMessages = useCallback(async () => {
+    try {
+      const resp = await fetch(
+        `${BASE_URL}/messages/conversation/${conversationId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      if (!resp.ok) return;
+      setMessages(await resp.json());
+    } catch {
+      // Keep showing what we have; the next poll will retry.
+    }
   }, [conversationId, token]);
 
   useEffect(() => {
@@ -105,10 +130,35 @@ function ChatPage() {
 
   return (
     <>
-      (
       <div className={styles.chatContainer}>
         <PageNav />
-        <div className={styles.header}>💬 Conversation</div>
+        <div className={styles.header}>
+          <Link to="/messages" className={styles.back} aria-label={t("messages.back")}>
+            ←
+          </Link>
+          {partner ? (
+            <Link to={`/profile/${partner.id}`} className={styles.partner}>
+              {partner.photo ? (
+                <img
+                  className={styles.partnerPhoto}
+                  src={IMG.thumb(partner.photo)}
+                  alt={partner.first_name}
+                />
+              ) : (
+                <span className={`${styles.partnerPhoto} ${styles.partnerPhotoEmpty}`}>🌸</span>
+              )}
+              <span className={styles.partnerText}>
+                <span className={styles.partnerName}>
+                  {partner.first_name}
+                  {partner.age ? `, ${partner.age}` : ""}
+                </span>
+                <span className={styles.partnerHint}>{t("messages.viewProfile")}</span>
+              </span>
+            </Link>
+          ) : (
+            <span className={styles.partnerName}>💬</span>
+          )}
+        </div>
 
         <div className={styles.messagesContainer}>
           {messages.map((message) => {
@@ -156,7 +206,6 @@ function ChatPage() {
           </button>
         </div>
       </div>
-      )
     </>
   );
 }

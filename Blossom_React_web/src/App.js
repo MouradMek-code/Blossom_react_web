@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import MatchedList from "./pages/MatchedList";
 import ProfileDetails from "./pages/ProfileDetails";
 import ChatPage from "./pages/ChatPage";
+import Messages from "./pages/Messages";
 import LikedYou from "./pages/LikedYou";
 import ForgotPassword from "./pages/ForgotPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -26,6 +27,7 @@ function App() {
         <Route path="liked_you" element={<LikedYou />} />
         <Route path="sign_up" element={<SignUp />} />
         <Route path="/chat/:conversationId" element={<ChatPage />} />
+        <Route path="/messages" element={<Messages />} />
         <Route index element={<Homepage />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/login" element={<Login />} />

@@ -9,7 +9,8 @@
     "homePage": "首页",
     "signUp": "注册",
     "login": "登录",
-    "dateSpots": "约会地点"
+    "dateSpots": "约会地点",
+    "messages": "消息"
   },
   "home": {
     "title": "今天就找到你的另一半！！",
@@ -232,5 +233,17 @@
     "findreward": "寻找走失宠物：帮助它们回家。",
     "helpreward": "邻里互助：身边的人互相帮助。",
     "visit": "访问网站"
+  },
+  "messages": {
+    "title": "消息",
+    "subtitle": "你的配对和聊天。",
+    "you": "你",
+    "newMatch": "新配对 — 打个招呼吧 👋",
+    "waiting": "等待{{name}}先发消息",
+    "empty": "还没有配对。和别人配对成功后，就可以在这里聊天。",
+    "browse": "浏览资料",
+    "loading": "加载中…",
+    "viewProfile": "查看资料",
+    "back": "返回消息"
   }
 }

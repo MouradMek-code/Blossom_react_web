@@ -30,6 +30,7 @@ function PageNav({ minimal = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [matchCount, setMatchCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
+  const [messageCount, setMessageCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
   const istokenundefined = token === "undefined" || token === null;
   const profileCreated = sessionStorage.getItem("profilecreated");
@@ -59,7 +60,7 @@ function PageNav({ minimal = false }) {
 
     async function fetchCounts() {
       try {
-        const [matchedResp, likedResp, userResp] = await Promise.all([
+        const [matchedResp, likedResp, userResp, messagesResp] = await Promise.all([
           fetch(`${BASE_URL}/matches/unseen_count`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           }),
@@ -69,11 +70,16 @@ function PageNav({ minimal = false }) {
           fetch(`${BASE_URL}/user/admin/users`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           }),
+          fetch(`${BASE_URL}/messages/unread_count`, {
+            headers: { Authorization: `Bearer ${storedToken}` },
+          }),
         ]);
         const matched = matchedResp.ok ? await matchedResp.json() : { count: 0 };
         const liked = likedResp.ok ? await likedResp.json() : { count: 0 };
+        const unread = messagesResp.ok ? await messagesResp.json() : { count: 0 };
         setMatchCount(matched.count || 0);
         setLikeCount(liked.count || 0);
+        setMessageCount(unread.count || 0);
         setIsAdmin(userResp.ok);
       } catch (err) {
         // Leave counts at 0 if the backend is unreachable - not worth
@@ -156,6 +162,20 @@ function PageNav({ minimal = false }) {
               {matchCount > 0 && (
                 <span className={styles.badge}>
                   {matchCount > 9 ? "9+" : matchCount}
+                </span>
+              )}
+            </span>
+            <span className={styles.navItemWithBadge}>
+              <NavLink
+                to="/messages"
+                style={{ textDecoration: "none" }}
+                onClick={closeMenu}
+              >
+                {t("nav.messages")}
+              </NavLink>
+              {messageCount > 0 && (
+                <span className={styles.badge}>
+                  {messageCount > 9 ? "9+" : messageCount}
                 </span>
               )}
             </span>
