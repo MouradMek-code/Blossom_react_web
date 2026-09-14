@@ -809,17 +809,22 @@
   .adminInput { width: 92px; }
 }
 
-/* ============ DATE TYPE + BUDGET ============ */
-/* Thin separator between the "best for" chips and the price chips, which
-   share one row. */
-.chipDivider {
-  align-self: center;
-  width: 1px;
-  height: 22px;
-  margin: 0 4px;
-  background: var(--border-strong);
+/* ============ FILTER ROW NAMES ============ */
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
+.filterLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ============ BEST FOR ============ */
 .detailTags {
   display: flex;
   flex-wrap: wrap;
@@ -840,18 +845,6 @@
   font-weight: 600;
   color: var(--text-soft);
   background: var(--surface);
-}
-
-.detailPrice {
-  display: inline-block;
-  margin-left: 10px;
-  padding: 2px 10px;
-  border-radius: var(--r-pill);
-  background: var(--surface-muted);
-  color: var(--text-soft);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
 }
 
 /* Header strip for a spot opened without a photo. */

@@ -9,13 +9,11 @@ import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
 import {
   BEST_FOR,
   CATEGORIES,
-  PRICES,
   bestForLabel,
   categoryEmoji,
   categoryGradient,
   categoryLabel,
   fullPlace,
-  priceLabel,
   shortPlace,
 } from "../api/categories";
 import styles from "./DateSpots.module.css";
@@ -68,10 +66,9 @@ function SpotBackdrop({ spot, imgClass, src, lazy }) {
   );
 }
 
-// "📍 Châtelet, Paris · €€"
-function placeLine(spot, t) {
-  const price = priceLabel(spot.price, t);
-  return `📍 ${shortPlace(spot)}${price ? ` · ${price}` : ""}`;
+// "📍 Châtelet, Paris"
+function placeLine(spot) {
+  return `📍 ${shortPlace(spot)}`;
 }
 
 // Admin-only editor for a spot's counters, shown right under its photo.
@@ -160,7 +157,6 @@ function DateSpots() {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [category, setCategory] = useState("");
-  const [price, setPrice] = useState("");
   const [bestFor, setBestFor] = useState("");
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
@@ -217,7 +213,6 @@ function DateSpots() {
     if (country) params.set("country", country);
     if (city) params.set("city", city);
     if (category) params.set("category", category);
-    if (price) params.set("price", price);
     if (bestFor) params.set("best_for", bestFor);
     const qs = params.toString();
     try {
@@ -232,7 +227,7 @@ function DateSpots() {
     } finally {
       setLoading(false);
     }
-  }, [country, city, category, price, bestFor]);
+  }, [country, city, category, bestFor]);
 
   useEffect(() => {
     load();
@@ -306,7 +301,7 @@ function DateSpots() {
     return entry ? entry.cities : [];
   }, [locations, country]);
 
-  const hasFilters = Boolean(country || city || category || price || bestFor);
+  const hasFilters = Boolean(country || city || category || bestFor);
   // The first spot gets the full-width featured treatment; the rest tile
   // below. The API lists spots with photos first, so the hero has one.
   const [featured, ...rest] = spots;
@@ -372,91 +367,93 @@ function DateSpots() {
             />
           )}
 
-          {/* Filter chips */}
+          {/* Filter chips - each row is named so it's clear what it filters. */}
           <div className={styles.filterBar}>
-            <div className={styles.chipRow}>
-              <button
-                className={`${styles.chip} ${!country ? styles.chipActive : ""}`}
-                onClick={() => {
-                  setCountry("");
-                  setCity("");
-                }}
-              >
-                🌍 {t("dateSpots.allCountries")}
-              </button>
-              {locations.map((l) => (
+            <div className={styles.filterGroup}>
+              <span className={styles.filterLabel}>{t("dateSpots.country")}</span>
+              <div className={styles.chipRow}>
                 <button
-                  key={l.country}
-                  className={`${styles.chip} ${country === l.country ? styles.chipActive : ""}`}
+                  className={`${styles.chip} ${!country ? styles.chipActive : ""}`}
                   onClick={() => {
-                    setCountry(l.country);
+                    setCountry("");
                     setCity("");
                   }}
                 >
-                  {l.country}
+                  🌍 {t("dateSpots.allCountries")}
                 </button>
-              ))}
-            </div>
-
-            {country && citiesForCountry.length > 0 && (
-              <div className={styles.chipRow}>
-                <button
-                  className={`${styles.chip} ${styles.chipSmall} ${!city ? styles.chipActive : ""}`}
-                  onClick={() => setCity("")}
-                >
-                  {t("dateSpots.allCities")}
-                </button>
-                {citiesForCountry.map((c) => (
+                {locations.map((l) => (
                   <button
-                    key={c}
-                    className={`${styles.chip} ${styles.chipSmall} ${city === c ? styles.chipActive : ""}`}
-                    onClick={() => setCity(c)}
+                    key={l.country}
+                    className={`${styles.chip} ${country === l.country ? styles.chipActive : ""}`}
+                    onClick={() => {
+                      setCountry(l.country);
+                      setCity("");
+                    }}
                   >
-                    📍 {c}
+                    {l.country}
                   </button>
                 ))}
               </div>
-            )}
-
-            <div className={styles.chipRow}>
-              <button
-                className={`${styles.chip} ${styles.chipSmall} ${!category ? styles.chipActive : ""}`}
-                onClick={() => setCategory("")}
-              >
-                {t("dateSpots.allCategories")}
-              </button>
-              {CATEGORIES.map((c) => (
-                <button
-                  key={c}
-                  className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
-                  onClick={() => setCategory(category === c ? "" : c)}
-                >
-                  {categoryLabel(c, t)}
-                </button>
-              ))}
             </div>
 
-            {/* Date type + budget. Tap a chip again to clear it. */}
-            <div className={styles.chipRow}>
-              {BEST_FOR.map((b) => (
+            {country && citiesForCountry.length > 0 && (
+              <div className={styles.filterGroup}>
+                <span className={styles.filterLabel}>{t("dateSpots.city")}</span>
+                <div className={styles.chipRow}>
+                  <button
+                    className={`${styles.chip} ${styles.chipSmall} ${!city ? styles.chipActive : ""}`}
+                    onClick={() => setCity("")}
+                  >
+                    {t("dateSpots.allCities")}
+                  </button>
+                  {citiesForCountry.map((c) => (
+                    <button
+                      key={c}
+                      className={`${styles.chip} ${styles.chipSmall} ${city === c ? styles.chipActive : ""}`}
+                      onClick={() => setCity(c)}
+                    >
+                      📍 {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className={styles.filterGroup}>
+              <span className={styles.filterLabel}>{t("dateSpots.category")}</span>
+              <div className={styles.chipRow}>
                 <button
-                  key={b}
-                  className={`${styles.chip} ${styles.chipSmall} ${bestFor === b ? styles.chipActive : ""}`}
-                  onClick={() => setBestFor(bestFor === b ? "" : b)}
+                  className={`${styles.chip} ${styles.chipSmall} ${!category ? styles.chipActive : ""}`}
+                  onClick={() => setCategory("")}
                 >
-                  {bestForLabel(b, t)}
+                  {t("dateSpots.allCategories")}
                 </button>
-              ))}
-              <span className={styles.chipDivider} aria-hidden="true" />
-              {PRICES.map((p) => (
-                <button
-                  key={p}
-                  className={`${styles.chip} ${styles.chipSmall} ${price === p ? styles.chipActive : ""}`}
-                  onClick={() => setPrice(price === p ? "" : p)}
-                >
-                  {priceLabel(p, t)}
-                </button>
-              ))}
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
+                    onClick={() => setCategory(category === c ? "" : c)}
+                  >
+                    {categoryLabel(c, t)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tap a chip again to clear it. */}
+            <div className={styles.filterGroup}>
+              <span className={styles.filterLabel}>{t("dateSpots.bestFor")}</span>
+              <div className={styles.chipRow}>
+                {BEST_FOR.map((b) => (
+                  <button
+                    key={b}
+                    className={`${styles.chip} ${styles.chipSmall} ${bestFor === b ? styles.chipActive : ""}`}
+                    onClick={() => setBestFor(bestFor === b ? "" : b)}
+                  >
+                    {bestForLabel(b, t)}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -505,7 +502,7 @@ function DateSpots() {
                     </span>
                   )}
                   <h2 className={styles.featuredTitle}>{featured.name}</h2>
-                  <p className={styles.overlayPlace}>{placeLine(featured, t)}</p>
+                  <p className={styles.overlayPlace}>{placeLine(featured)}</p>
                   <p className={styles.featuredText}>{featured.description}</p>
                   <SpotStats spot={featured} t={t} className={styles.overlayStats} />
                 </div>
@@ -535,7 +532,7 @@ function DateSpots() {
                           </span>
                         )}
                         <h3 className={styles.cardTitle}>{spot.name}</h3>
-                        <p className={styles.overlayPlace}>{placeLine(spot, t)}</p>
+                        <p className={styles.overlayPlace}>{placeLine(spot)}</p>
                         <SpotStats spot={spot} t={t} className={styles.overlayStats} />
                       </div>
                     </article>
@@ -595,12 +592,7 @@ function DateSpots() {
                 </div>
               )}
               <h2 className={styles.detailTitle}>{selected.name}</h2>
-              <p className={styles.detailPlace}>
-                📍 {fullPlace(selected)}
-                {selected.price && (
-                  <span className={styles.detailPrice}>{priceLabel(selected.price, t)}</span>
-                )}
-              </p>
+              <p className={styles.detailPlace}>📍 {fullPlace(selected)}</p>
               <SpotStats spot={selected} t={t} className={styles.detailStats} />
               <p className={styles.detailText}>{selected.description}</p>
               {selected.profile?.first_name && (
@@ -772,7 +764,6 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
   const [neighborhood, setNeighborhood] = useState(initial?.neighborhood || "");
   const [description, setDescription] = useState(initial?.description || "");
   const [category, setCategory] = useState(initial?.category || "");
-  const [price, setPrice] = useState(initial?.price || "");
   const [bestFor, setBestFor] = useState(initial?.best_for || []);
   const [mapUrl, setMapUrl] = useState(initial?.map_url || "");
   const [file, setFile] = useState(null);
@@ -800,7 +791,6 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
     body.append("description", description.trim());
     if (neighborhood.trim()) body.append("neighborhood", neighborhood.trim());
     if (category) body.append("category", category);
-    if (price) body.append("price", price);
     if (bestFor.length > 0) body.append("best_for", bestFor.join(","));
     if (mapUrl.trim()) body.append("map_url", mapUrl.trim());
     if (file) body.append("image", file);
@@ -827,7 +817,6 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
         neighborhood: neighborhood.trim(),
         description: description.trim(),
         category,
-        price,
         best_for: bestFor,
         map_url: mapUrl.trim(),
       }),
@@ -932,37 +921,18 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
         ))}
       </div>
 
-      <div className={styles.formGrid}>
-        <div>
-          <p className={styles.label}>{t("dateSpots.bestFor")}</p>
-          <div className={styles.pickRow}>
-            {BEST_FOR.map((b) => (
-              <button
-                type="button"
-                key={b}
-                className={`${styles.chip} ${styles.chipSmall} ${bestFor.includes(b) ? styles.chipActive : ""}`}
-                onClick={() => toggleBestFor(b)}
-              >
-                {bestForLabel(b, t)}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div>
-          <p className={styles.label}>{t("dateSpots.price")}</p>
-          <div className={styles.pickRow}>
-            {PRICES.map((p) => (
-              <button
-                type="button"
-                key={p}
-                className={`${styles.chip} ${styles.chipSmall} ${price === p ? styles.chipActive : ""}`}
-                onClick={() => setPrice(price === p ? "" : p)}
-              >
-                {priceLabel(p, t)}
-              </button>
-            ))}
-          </div>
-        </div>
+      <p className={styles.label}>{t("dateSpots.bestFor")}</p>
+      <div className={styles.pickRow}>
+        {BEST_FOR.map((b) => (
+          <button
+            type="button"
+            key={b}
+            className={`${styles.chip} ${styles.chipSmall} ${bestFor.includes(b) ? styles.chipActive : ""}`}
+            onClick={() => toggleBestFor(b)}
+          >
+            {bestForLabel(b, t)}
+          </button>
+        ))}
       </div>
 
       <label className={styles.label}>

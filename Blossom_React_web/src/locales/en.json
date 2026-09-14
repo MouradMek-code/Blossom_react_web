@@ -200,8 +200,6 @@
     "adminSaved": "Counters updated",
     "neighborhood": "Neighborhood (optional)",
     "neighborhoodPlaceholder": "e.g. Le Marais",
-    "price": "Price",
-    "priceFree": "Free",
     "bestFor": "Best for",
     "bestForOptions": {
       "firstDate": "First date",

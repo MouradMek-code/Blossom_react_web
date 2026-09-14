@@ -6,14 +6,13 @@ import PageNav from "../components/PageNav";
 
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
-import { categoryEmoji, categoryGradient, priceLabel, shortPlace } from "../api/categories";
+import { categoryEmoji, categoryGradient, shortPlace } from "../api/categories";
 
 // A date spot sent with "Invite a match": the message text plus a tappable
 // card for the place.
 function InviteCard({ message, mine }) {
   const { t } = useTranslation();
   const spot = message.date_spot;
-  const price = priceLabel(spot.price, t);
   return (
     <div className={styles.invite}>
       <p className={styles.inviteText}>{message.content}</p>
@@ -34,10 +33,7 @@ function InviteCard({ message, mine }) {
         <div className={styles.inviteInfo}>
           <span className={styles.inviteEyebrow}>💌 {t("dateSpots.dateIdea")}</span>
           <strong className={styles.inviteName}>{spot.name}</strong>
-          <span className={styles.invitePlace}>
-            📍 {shortPlace(spot)}
-            {price ? ` · ${price}` : ""}
-          </span>
+          <span className={styles.invitePlace}>📍 {shortPlace(spot)}</span>
           <span className={styles.inviteCta}>{t("dateSpots.viewSpot")} →</span>
         </div>
       </Link>

@@ -69,16 +69,6 @@ export function categoryLabel(category, t) {
   return `${categoryEmoji(category)} ${categoryName(category, t)}`;
 }
 
-// Rough cost per person. Same rule as CATEGORIES: these canonical values are
-// what the API stores and validates; only "Free" is translated for display.
-export const PRICES = ["Free", "€", "€€", "€€€"];
-
-export function priceLabel(price, t) {
-  if (!price) return "";
-  if (price !== "Free") return price;
-  return t ? t("dateSpots.priceFree", { defaultValue: "Free" }) : price;
-}
-
 // What kind of date a place suits. A spot can have several.
 export const BEST_FOR = ["First date", "Romantic", "Casual", "Adventurous"];
 
