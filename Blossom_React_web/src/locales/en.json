@@ -151,7 +151,7 @@
     "name": "Place name",
     "namePlaceholder": "e.g. Café de Flore",
     "city": "City",
-    "cityPlaceholder": "e.g. Paris",
+    "cityPlaceholder": "e.g. Paris (the city, not the neighborhood)",
     "country": "Country",
     "countryPlaceholder": "e.g. France",
     "why": "Why was it great?",
@@ -197,6 +197,42 @@
     "adminWent": "Went there",
     "adminSave": "Save",
     "adminSaving": "Saving...",
-    "adminSaved": "Counters updated"
+    "adminSaved": "Counters updated",
+    "neighborhood": "Neighborhood (optional)",
+    "neighborhoodPlaceholder": "e.g. Le Marais",
+    "price": "Price",
+    "priceFree": "Free",
+    "bestFor": "Best for",
+    "bestForOptions": {
+      "firstDate": "First date",
+      "romantic": "Romantic",
+      "casual": "Casual",
+      "adventurous": "Adventurous"
+    },
+    "invite": "Invite a match",
+    "inviteTitle": "Invite a match to {{name}}",
+    "inviteHint": "They'll get this place as a message in your chat.",
+    "inviteLoading": "Loading your matches…",
+    "inviteEmpty": "No matches yet. Once you match with someone, you can invite them here.",
+    "inviteMessage": "Want to go to {{name}} together? 💕",
+    "inviteSending": "Sending…",
+    "dateIdea": "Date idea",
+    "edit": "Edit",
+    "editTitle": "Edit this place",
+    "saveChanges": "Save changes",
+    "saving": "Saving…",
+    "photoReplace": "New photo (optional)",
+    "adminSeed": "Add starter spots",
+    "adminSeeding": "Adding…",
+    "adminSeedConfirm": "Add Blossom's curated starter spots for Paris? Places already listed are skipped.",
+    "adminSeedDone": "{{added}} added, {{skipped}} already listed."
+  },
+  "founder": {
+    "eyebrow": "From the founder",
+    "title": "More from Blossom's founder",
+    "subtitle": "The founder of Blossom also created two community projects.",
+    "findreward": "For lost pets: helping them find their way home.",
+    "helpreward": "For neighbor help: people helping people nearby.",
+    "visit": "Visit site"
   }
 }

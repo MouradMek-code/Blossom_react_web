@@ -151,7 +151,7 @@
     "name": "Nom du lieu",
     "namePlaceholder": "ex. Café de Flore",
     "city": "Ville",
-    "cityPlaceholder": "ex. Paris",
+    "cityPlaceholder": "ex. Paris (la ville, pas le quartier)",
     "country": "Pays",
     "countryPlaceholder": "ex. France",
     "why": "Pourquoi était-ce génial ?",
@@ -197,6 +197,42 @@
     "adminWent": "Y sont allés",
     "adminSave": "Enregistrer",
     "adminSaving": "Enregistrement...",
-    "adminSaved": "Compteurs mis à jour"
+    "adminSaved": "Compteurs mis à jour",
+    "neighborhood": "Quartier (facultatif)",
+    "neighborhoodPlaceholder": "ex. Le Marais",
+    "price": "Prix",
+    "priceFree": "Gratuit",
+    "bestFor": "Idéal pour",
+    "bestForOptions": {
+      "firstDate": "Premier rendez-vous",
+      "romantic": "Romantique",
+      "casual": "Décontracté",
+      "adventurous": "Aventureux"
+    },
+    "invite": "Inviter un match",
+    "inviteTitle": "Inviter un match à {{name}}",
+    "inviteHint": "Ce lieu lui sera envoyé en message dans votre conversation.",
+    "inviteLoading": "Chargement de vos matchs…",
+    "inviteEmpty": "Pas encore de match. Dès que vous matchez avec quelqu'un, vous pourrez l'inviter ici.",
+    "inviteMessage": "Et si on allait à {{name}} ensemble ? 💕",
+    "inviteSending": "Envoi…",
+    "dateIdea": "Idée de rendez-vous",
+    "edit": "Modifier",
+    "editTitle": "Modifier ce lieu",
+    "saveChanges": "Enregistrer",
+    "saving": "Enregistrement…",
+    "photoReplace": "Nouvelle photo (facultatif)",
+    "adminSeed": "Ajouter les lieux de départ",
+    "adminSeeding": "Ajout…",
+    "adminSeedConfirm": "Ajouter la sélection de lieux Blossom pour Paris ? Les lieux déjà présents sont ignorés.",
+    "adminSeedDone": "{{added}} ajoutés, {{skipped}} déjà présents."
+  },
+  "founder": {
+    "eyebrow": "Du même fondateur",
+    "title": "Les autres projets du fondateur de Blossom",
+    "subtitle": "Le fondateur de Blossom a aussi créé deux projets communautaires.",
+    "findreward": "Pour les animaux perdus : les aider à retrouver le chemin de la maison.",
+    "helpreward": "Pour l'entraide entre voisins : des gens qui s'entraident près de chez eux.",
+    "visit": "Visiter le site"
   }
 }

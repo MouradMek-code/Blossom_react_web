@@ -1,9 +1,49 @@
 import { useCallback, useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./ChatPage.module.css";
 import PageNav from "../components/PageNav";
 
 import { BASE_URL } from "../api/config";
+import { IMG } from "../api/images";
+import { categoryEmoji, categoryGradient, priceLabel, shortPlace } from "../api/categories";
+
+// A date spot sent with "Invite a match": the message text plus a tappable
+// card for the place.
+function InviteCard({ message, mine }) {
+  const { t } = useTranslation();
+  const spot = message.date_spot;
+  const price = priceLabel(spot.price, t);
+  return (
+    <div className={styles.invite}>
+      <p className={styles.inviteText}>{message.content}</p>
+      <Link
+        to={`/date-spots/${spot.id}`}
+        className={`${styles.inviteCard} ${mine ? styles.inviteCardMine : ""}`}
+      >
+        {spot.image_url ? (
+          <img className={styles.inviteImage} src={IMG.card(spot.image_url)} alt={spot.name} />
+        ) : (
+          <div
+            className={styles.inviteImage}
+            style={{ background: `linear-gradient(135deg, ${categoryGradient(spot.category).join(", ")})` }}
+          >
+            <span aria-hidden="true">{categoryEmoji(spot.category)}</span>
+          </div>
+        )}
+        <div className={styles.inviteInfo}>
+          <span className={styles.inviteEyebrow}>💌 {t("dateSpots.dateIdea")}</span>
+          <strong className={styles.inviteName}>{spot.name}</strong>
+          <span className={styles.invitePlace}>
+            📍 {shortPlace(spot)}
+            {price ? ` · ${price}` : ""}
+          </span>
+          <span className={styles.inviteCta}>{t("dateSpots.viewSpot")} →</span>
+        </div>
+      </Link>
+    </div>
+  );
+}
 
 function ChatPage() {
   const { conversationId } = useParams();
@@ -87,9 +127,13 @@ function ChatPage() {
                 <div
                   className={`${styles.bubble} ${
                     isMine ? styles.mine : styles.theirs
-                  }`}
+                  } ${message.date_spot ? styles.bubbleInvite : ""}`}
                 >
-                  {message.content}
+                  {message.date_spot ? (
+                    <InviteCard message={message} mine={isMine} />
+                  ) : (
+                    message.content
+                  )}
                 </div>
               </div>
             );

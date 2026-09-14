@@ -4,3 +4,7 @@
 export const ANDROID_PACKAGE = "com.mouradmek.blossom";
 export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`;
 export const SUPPORT_EMAIL = "mourad.meknioui@gmail.com";
+
+// Other projects by Blossom's founder, featured on the homepage.
+export const FINDREWARD_URL = "https://findreward.net";
+export const HELPREWARD_URL = "https://helpreward.com";

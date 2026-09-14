@@ -5,8 +5,19 @@ import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
-import { friendlyError, NETWORK_ERROR } from "../api/errors";
-import { CATEGORIES, categoryLabel } from "../api/categories";
+import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
+import {
+  BEST_FOR,
+  CATEGORIES,
+  PRICES,
+  bestForLabel,
+  categoryEmoji,
+  categoryGradient,
+  categoryLabel,
+  fullPlace,
+  priceLabel,
+  shortPlace,
+} from "../api/categories";
 import styles from "./DateSpots.module.css";
 
 // Fire-and-forget engagement tracking. Never block or surface errors: a missed
@@ -28,6 +39,39 @@ function SpotStats({ spot, t, className }) {
       {went >= 1 && <span>🧭 {t("dateSpots.wentCount", { count: went })}</span>}
     </p>
   );
+}
+
+// The spot's photo, or - for places without one, like the starter spots - a
+// backdrop tinted by vibe with the vibe's emoji, so the card still looks
+// intentional.
+function SpotBackdrop({ spot, imgClass, src, lazy }) {
+  if (spot.image_url) {
+    return (
+      <img
+        className={imgClass}
+        src={src}
+        alt={spot.name}
+        loading={lazy ? "lazy" : undefined}
+      />
+    );
+  }
+  const [from, to] = categoryGradient(spot.category);
+  return (
+    <div
+      className={styles.noImage}
+      style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
+    >
+      <span className={styles.noImageEmoji} aria-hidden="true">
+        {categoryEmoji(spot.category)}
+      </span>
+    </div>
+  );
+}
+
+// "📍 Châtelet, Paris · €€"
+function placeLine(spot, t) {
+  const price = priceLabel(spot.price, t);
+  return `📍 ${shortPlace(spot)}${price ? ` · ${price}` : ""}`;
 }
 
 // Admin-only editor for a spot's counters, shown right under its photo.
@@ -116,33 +160,48 @@ function DateSpots() {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [category, setCategory] = useState("");
+  const [price, setPrice] = useState("");
+  const [bestFor, setBestFor] = useState("");
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
+  const [inviteSpot, setInviteSpot] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+  const [seedStatus, setSeedStatus] = useState("");
   const { id: routeId } = useParams();
   const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
   const isLoggedIn = token && token !== "undefined" && token !== "null";
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [me, setMe] = useState(null);
+  const isAdmin = Boolean(me?.is_admin);
 
-  // The token only carries the username, so ask the backend whether this
-  // account is an admin - that gates the counter editor below each photo.
+  // The token only carries the username, so ask the backend who this is:
+  // admins get the counter editor and starter-spot import, authors get Edit.
   useEffect(() => {
     if (!isLoggedIn) return;
     let alive = true;
     fetch(`${BASE_URL}/user/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (alive) setIsAdmin(Boolean(data?.is_admin));
+        if (!alive || !data) return;
+        setMe(data);
+        // Chat works out which bubbles are "mine" from this. An invite sends
+        // the user straight into a conversation, so make sure it's set.
+        if (data.profile_id) sessionStorage.setItem("profile_id", data.profile_id);
       })
       .catch(() => {});
     return () => {
       alive = false;
     };
   }, [token, isLoggedIn]);
+
+  function canEdit(spot) {
+    return isAdmin || (me?.profile_id != null && spot?.profile?.id === me.profile_id);
+  }
 
   // Reflect an admin edit straight away, in the open detail card and in the
   // list behind it, so the new numbers show without a refetch.
@@ -158,6 +217,8 @@ function DateSpots() {
     if (country) params.set("country", country);
     if (city) params.set("city", city);
     if (category) params.set("category", category);
+    if (price) params.set("price", price);
+    if (bestFor) params.set("best_for", bestFor);
     const qs = params.toString();
     try {
       const [spotsResp, locResp] = await Promise.all([
@@ -171,7 +232,7 @@ function DateSpots() {
     } finally {
       setLoading(false);
     }
-  }, [country, city, category]);
+  }, [country, city, category, price, bestFor]);
 
   useEffect(() => {
     load();
@@ -196,6 +257,13 @@ function DateSpots() {
     if (routeId) navigate("/date-spots", { replace: true });
   }
 
+  function startEdit(spot) {
+    closeSpot();
+    setFormOpen(false);
+    setEditing(spot);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   async function shareSpot(spot) {
     const url = `${window.location.origin}/date-spots/${spot.id}`;
     const payload = { title: spot.name, text: t("dateSpots.shareText"), url };
@@ -216,13 +284,31 @@ function DateSpots() {
     }
   }
 
+  async function seedStarterSpots() {
+    if (!window.confirm(t("dateSpots.adminSeedConfirm"))) return;
+    setSeeding(true);
+    setSeedStatus("");
+    const result = await postJson(`${BASE_URL}/date_spots/admin/seed`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setSeeding(false);
+    if (!result.ok) {
+      setSeedStatus(result.message);
+      return;
+    }
+    setSeedStatus(t("dateSpots.adminSeedDone", result.data));
+    load();
+  }
+
   const citiesForCountry = useMemo(() => {
     const entry = locations.find((l) => l.country === country);
     return entry ? entry.cities : [];
   }, [locations, country]);
 
-  const hasFilters = Boolean(country || city || category);
-  // The newest spot gets the full-width featured treatment; the rest tile below.
+  const hasFilters = Boolean(country || city || category || price || bestFor);
+  // The first spot gets the full-width featured treatment; the rest tile
+  // below. The API lists spots with photos first, so the hero has one.
   const [featured, ...rest] = spots;
 
   return (
@@ -235,7 +321,13 @@ function DateSpots() {
           <h1 className={styles.title}>{t("dateSpots.title")}</h1>
           <p className={styles.subtitle}>{t("dateSpots.subtitle")}</p>
           {isLoggedIn ? (
-            <button className={styles.addBtn} onClick={() => setFormOpen((o) => !o)}>
+            <button
+              className={styles.addBtn}
+              onClick={() => {
+                setEditing(null);
+                setFormOpen((o) => !o);
+              }}
+            >
               {formOpen ? t("dateSpots.close") : `＋ ${t("dateSpots.share")}`}
             </button>
           ) : (
@@ -243,17 +335,38 @@ function DateSpots() {
               <a href="/login">{t("dateSpots.loginHint")}</a>
             </p>
           )}
+          {isAdmin && (
+            <div className={styles.seedRow}>
+              <button className={styles.seedBtn} onClick={seedStarterSpots} disabled={seeding}>
+                🛠️ {seeding ? t("dateSpots.adminSeeding") : t("dateSpots.adminSeed")}
+              </button>
+              {seedStatus !== "" && <p className={styles.adminStatus}>{seedStatus}</p>}
+            </div>
+          )}
         </header>
 
         <div className={styles.body}>
           {error !== "" && <p className={styles.error}>{error}</p>}
 
-          {formOpen && isLoggedIn && (
+          {formOpen && isLoggedIn && !editing && (
             <AddSpotForm
               token={token}
               onCancel={() => setFormOpen(false)}
-              onCreated={() => {
+              onSaved={() => {
                 setFormOpen(false);
+                load();
+              }}
+            />
+          )}
+
+          {editing && (
+            <AddSpotForm
+              key={editing.id}
+              token={token}
+              initial={editing}
+              onCancel={() => setEditing(null)}
+              onSaved={() => {
+                setEditing(null);
                 load();
               }}
             />
@@ -322,6 +435,29 @@ function DateSpots() {
                 </button>
               ))}
             </div>
+
+            {/* Date type + budget. Tap a chip again to clear it. */}
+            <div className={styles.chipRow}>
+              {BEST_FOR.map((b) => (
+                <button
+                  key={b}
+                  className={`${styles.chip} ${styles.chipSmall} ${bestFor === b ? styles.chipActive : ""}`}
+                  onClick={() => setBestFor(bestFor === b ? "" : b)}
+                >
+                  {bestForLabel(b, t)}
+                </button>
+              ))}
+              <span className={styles.chipDivider} aria-hidden="true" />
+              {PRICES.map((p) => (
+                <button
+                  key={p}
+                  className={`${styles.chip} ${styles.chipSmall} ${price === p ? styles.chipActive : ""}`}
+                  onClick={() => setPrice(price === p ? "" : p)}
+                >
+                  {priceLabel(p, t)}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading ? (
@@ -355,15 +491,11 @@ function DateSpots() {
                 onClick={() => openSpot(featured)}
                 style={{ animationDelay: "0ms" }}
               >
-                {featured.image_url ? (
-                  <img
-                    className={styles.featuredImage}
-                    src={IMG.full(featured.image_url)}
-                    alt={featured.name}
-                  />
-                ) : (
-                  <div className={styles.noImage} />
-                )}
+                <SpotBackdrop
+                  spot={featured}
+                  imgClass={styles.featuredImage}
+                  src={IMG.full(featured.image_url)}
+                />
                 <div className={styles.scrim} />
                 <span className={styles.featuredFlag}>★ {t("dateSpots.featured")}</span>
                 <div className={styles.featuredInfo}>
@@ -373,9 +505,7 @@ function DateSpots() {
                     </span>
                   )}
                   <h2 className={styles.featuredTitle}>{featured.name}</h2>
-                  <p className={styles.overlayPlace}>
-                    📍 {featured.city}, {featured.country}
-                  </p>
+                  <p className={styles.overlayPlace}>{placeLine(featured, t)}</p>
                   <p className={styles.featuredText}>{featured.description}</p>
                   <SpotStats spot={featured} t={t} className={styles.overlayStats} />
                 </div>
@@ -391,16 +521,12 @@ function DateSpots() {
                       onClick={() => openSpot(spot)}
                       style={{ animationDelay: `${(i + 1) * 60}ms` }}
                     >
-                      {spot.image_url ? (
-                        <img
-                          className={styles.cardImage}
-                          src={IMG.card(spot.image_url)}
-                          alt={spot.name}
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className={styles.noImage} />
-                      )}
+                      <SpotBackdrop
+                        spot={spot}
+                        imgClass={styles.cardImage}
+                        src={IMG.card(spot.image_url)}
+                        lazy
+                      />
                       <div className={styles.scrim} />
                       <div className={styles.cardInfo}>
                         {spot.category && (
@@ -409,9 +535,7 @@ function DateSpots() {
                           </span>
                         )}
                         <h3 className={styles.cardTitle}>{spot.name}</h3>
-                        <p className={styles.overlayPlace}>
-                          📍 {spot.city}, {spot.country}
-                        </p>
+                        <p className={styles.overlayPlace}>{placeLine(spot, t)}</p>
                         <SpotStats spot={spot} t={t} className={styles.overlayStats} />
                       </div>
                     </article>
@@ -429,12 +553,23 @@ function DateSpots() {
             <button className={styles.detailClose} onClick={closeSpot} aria-label="Close">
               ✕
             </button>
-            {selected.image_url && (
+            {selected.image_url ? (
               <img
                 className={styles.detailImage}
                 src={IMG.full(selected.image_url)}
                 alt={selected.name}
               />
+            ) : (
+              <div
+                className={styles.detailBanner}
+                style={{
+                  background: `linear-gradient(135deg, ${categoryGradient(selected.category).join(", ")})`,
+                }}
+              >
+                <span className={styles.detailBannerEmoji} aria-hidden="true">
+                  {categoryEmoji(selected.category)}
+                </span>
+              </div>
             )}
             {isAdmin && (
               <AdminStatsEditor
@@ -445,14 +580,26 @@ function DateSpots() {
               />
             )}
             <div className={styles.detailBody}>
-              {selected.category && (
-                <span className={styles.detailTag}>
-                  {categoryLabel(selected.category, t)}
-                </span>
+              {(selected.category || selected.best_for?.length > 0) && (
+                <div className={styles.detailTags}>
+                  {selected.category && (
+                    <span className={styles.detailTag}>
+                      {categoryLabel(selected.category, t)}
+                    </span>
+                  )}
+                  {(selected.best_for || []).map((b) => (
+                    <span key={b} className={styles.bestForPill}>
+                      {bestForLabel(b, t)}
+                    </span>
+                  ))}
+                </div>
               )}
               <h2 className={styles.detailTitle}>{selected.name}</h2>
               <p className={styles.detailPlace}>
-                📍 {selected.city}, {selected.country}
+                📍 {fullPlace(selected)}
+                {selected.price && (
+                  <span className={styles.detailPrice}>{priceLabel(selected.price, t)}</span>
+                )}
               </p>
               <SpotStats spot={selected} t={t} className={styles.detailStats} />
               <p className={styles.detailText}>{selected.description}</p>
@@ -462,9 +609,16 @@ function DateSpots() {
                 </p>
               )}
               <div className={styles.detailActions}>
+                {isLoggedIn && (
+                  <button className={styles.inviteBtn} onClick={() => setInviteSpot(selected)}>
+                    💌 {t("dateSpots.invite")}
+                  </button>
+                )}
                 {selected.map_url && (
                   <a
-                    className={styles.mapBtn}
+                    // The invite is the main action for logged-in users; for
+                    // visitors, directions stay the primary button.
+                    className={isLoggedIn ? styles.secondaryLink : styles.mapBtn}
                     href={selected.map_url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -476,24 +630,151 @@ function DateSpots() {
                 <button className={styles.shareBtn} onClick={() => shareSpot(selected)}>
                   🔗 {copied ? t("dateSpots.linkCopied") : t("dateSpots.shareLink")}
                 </button>
+                {canEdit(selected) && (
+                  <button className={styles.shareBtn} onClick={() => startEdit(selected)}>
+                    ✏️ {t("dateSpots.edit")}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
+      )}
+
+      {inviteSpot && (
+        <InvitePicker
+          spot={inviteSpot}
+          token={token}
+          onClose={() => setInviteSpot(null)}
+          onSent={(conversationId) => navigate(`/chat/${conversationId}`)}
+        />
       )}
       <Footer />
     </>
   );
 }
 
-function AddSpotForm({ token, onCancel, onCreated }) {
+// Pick a match to send this spot to. The invite lands in your conversation as
+// a card ("Want to go to ... together?") - for a woman opening the chat, it's
+// a ready-made first message.
+function InvitePicker({ spot, token, onClose, onSent }) {
   const { t } = useTranslation();
-  const [name, setName] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [mapUrl, setMapUrl] = useState("");
+  const [matches, setMatches] = useState(null); // null while loading
+  const [error, setError] = useState("");
+  const [sendingId, setSendingId] = useState(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetch(`${BASE_URL}/profile/profiles/matched`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (alive) setMatches(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (!alive) return;
+        setMatches([]);
+        setError(NETWORK_ERROR);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [token]);
+
+  async function invite(match) {
+    setSendingId(match.id);
+    setError("");
+    const result = await postJson(`${BASE_URL}/date_spots/${spot.id}/invite`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        profile_id: match.id,
+        content: t("dateSpots.inviteMessage", { name: spot.name }),
+      }),
+    });
+    setSendingId(null);
+    if (!result.ok) {
+      // e.g. "the woman has to send the first message" - shown as-is.
+      setError(result.message);
+      return;
+    }
+    onSent(result.data.conversation_id);
+  }
+
+  return (
+    <div className={styles.inviteOverlay} onClick={onClose}>
+      <div
+        className={styles.inviteSheet}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <button className={styles.detailClose} onClick={onClose} aria-label="Close">
+          ✕
+        </button>
+        <h3 className={styles.inviteTitle}>
+          💌 {t("dateSpots.inviteTitle", { name: spot.name })}
+        </h3>
+        <p className={styles.inviteHint}>{t("dateSpots.inviteHint")}</p>
+        {error !== "" && <p className={styles.error}>{error}</p>}
+
+        {matches === null ? (
+          <p className={styles.inviteHint}>{t("dateSpots.inviteLoading")}</p>
+        ) : matches.length === 0 ? (
+          <p className={styles.inviteEmpty}>{t("dateSpots.inviteEmpty")}</p>
+        ) : (
+          <ul className={styles.matchList}>
+            {matches.map((m) => (
+              <li key={m.id}>
+                <button
+                  className={styles.matchRow}
+                  onClick={() => invite(m)}
+                  disabled={sendingId !== null}
+                >
+                  {m.photos?.[0]?.image_url ? (
+                    <img
+                      className={styles.matchPhoto}
+                      src={IMG.thumb(m.photos[0].image_url)}
+                      alt=""
+                    />
+                  ) : (
+                    <span className={styles.matchPhotoEmpty}>🌸</span>
+                  )}
+                  <span className={styles.matchName}>
+                    {m.first_name}
+                    {m.age ? `, ${m.age}` : ""}
+                  </span>
+                  <span className={styles.matchAction}>
+                    {sendingId === m.id ? t("dateSpots.inviteSending") : "→"}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Used both to share a new place and, with `initial`, to edit an existing one
+// (authors their own, admins any - e.g. adding a photo to a starter spot).
+function AddSpotForm({ token, initial, onCancel, onSaved }) {
+  const { t } = useTranslation();
+  const editing = Boolean(initial);
+  const [name, setName] = useState(initial?.name || "");
+  const [city, setCity] = useState(initial?.city || "");
+  const [country, setCountry] = useState(initial?.country || "");
+  const [neighborhood, setNeighborhood] = useState(initial?.neighborhood || "");
+  const [description, setDescription] = useState(initial?.description || "");
+  const [category, setCategory] = useState(initial?.category || "");
+  const [price, setPrice] = useState(initial?.price || "");
+  const [bestFor, setBestFor] = useState(initial?.best_for || []);
+  const [mapUrl, setMapUrl] = useState(initial?.map_url || "");
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -503,6 +784,62 @@ function AddSpotForm({ token, onCancel, onCreated }) {
     const f = e.target.files?.[0] || null;
     setFile(f);
     setPreview(f ? URL.createObjectURL(f) : null);
+  }
+
+  function toggleBestFor(value) {
+    setBestFor((cur) =>
+      cur.includes(value) ? cur.filter((v) => v !== value) : [...cur, value],
+    );
+  }
+
+  function create() {
+    const body = new FormData();
+    body.append("name", name.trim());
+    body.append("city", city.trim());
+    body.append("country", country.trim());
+    body.append("description", description.trim());
+    if (neighborhood.trim()) body.append("neighborhood", neighborhood.trim());
+    if (category) body.append("category", category);
+    if (price) body.append("price", price);
+    if (bestFor.length > 0) body.append("best_for", bestFor.join(","));
+    if (mapUrl.trim()) body.append("map_url", mapUrl.trim());
+    if (file) body.append("image", file);
+    return postJson(`${BASE_URL}/date_spots`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body,
+    });
+  }
+
+  // Details go as JSON (so clearing a field works), then the photo separately
+  // if a new one was picked.
+  async function saveEdit() {
+    const result = await postJson(`${BASE_URL}/date_spots/${initial.id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        city: city.trim(),
+        country: country.trim(),
+        neighborhood: neighborhood.trim(),
+        description: description.trim(),
+        category,
+        price,
+        best_for: bestFor,
+        map_url: mapUrl.trim(),
+      }),
+    });
+    if (!result.ok || !file) return result;
+    const body = new FormData();
+    body.append("image", file);
+    return postJson(`${BASE_URL}/date_spots/${initial.id}/image`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body,
+    });
   }
 
   async function submit(e) {
@@ -520,42 +857,21 @@ function AddSpotForm({ token, onCancel, onCreated }) {
     )
       return setError(t("dateSpots.errMapUrl"));
 
-    const body = new FormData();
-    body.append("name", name.trim());
-    body.append("city", city.trim());
-    body.append("country", country.trim());
-    body.append("description", description.trim());
-    if (category) body.append("category", category);
-    if (mapUrl.trim()) body.append("map_url", mapUrl.trim());
-    if (file) body.append("image", file);
-
     setSubmitting(true);
-    let resp;
-    try {
-      resp = await fetch(`${BASE_URL}/date_spots`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body,
-      });
-    } catch {
-      setSubmitting(false);
-      return setError(NETWORK_ERROR);
-    }
-    let data = null;
-    try {
-      data = await resp.json();
-    } catch {
-      data = null;
-    }
+    const result = editing ? await saveEdit() : await create();
     setSubmitting(false);
 
-    if (!resp.ok) return setError(friendlyError(data, resp));
-    onCreated();
+    if (!result.ok) return setError(result.message);
+    onSaved(result.data);
   }
+
+  const shownPhoto = preview || (editing ? initial.image_url : null);
 
   return (
     <form className={styles.form} onSubmit={submit}>
-      <h2 className={styles.formTitle}>{t("dateSpots.formTitle")}</h2>
+      <h2 className={styles.formTitle}>
+        {editing ? t("dateSpots.editTitle") : t("dateSpots.formTitle")}
+      </h2>
       {error !== "" && <p className={styles.error}>{error}</p>}
 
       <div className={styles.formRow}>
@@ -591,6 +907,16 @@ function AddSpotForm({ token, onCancel, onCreated }) {
         </label>
       </div>
 
+      <label className={styles.label}>
+        {t("dateSpots.neighborhood")}
+        <input
+          className={styles.input}
+          value={neighborhood}
+          onChange={(e) => setNeighborhood(e.target.value)}
+          placeholder={t("dateSpots.neighborhoodPlaceholder")}
+        />
+      </label>
+
       {/* Vibe picker */}
       <p className={styles.label}>{t("dateSpots.category")}</p>
       <div className={styles.pickRow}>
@@ -604,6 +930,39 @@ function AddSpotForm({ token, onCancel, onCreated }) {
             {categoryLabel(c, t)}
           </button>
         ))}
+      </div>
+
+      <div className={styles.formGrid}>
+        <div>
+          <p className={styles.label}>{t("dateSpots.bestFor")}</p>
+          <div className={styles.pickRow}>
+            {BEST_FOR.map((b) => (
+              <button
+                type="button"
+                key={b}
+                className={`${styles.chip} ${styles.chipSmall} ${bestFor.includes(b) ? styles.chipActive : ""}`}
+                onClick={() => toggleBestFor(b)}
+              >
+                {bestForLabel(b, t)}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.label}>{t("dateSpots.price")}</p>
+          <div className={styles.pickRow}>
+            {PRICES.map((p) => (
+              <button
+                type="button"
+                key={p}
+                className={`${styles.chip} ${styles.chipSmall} ${price === p ? styles.chipActive : ""}`}
+                onClick={() => setPrice(price === p ? "" : p)}
+              >
+                {priceLabel(p, t)}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <label className={styles.label}>
@@ -629,10 +988,10 @@ function AddSpotForm({ token, onCancel, onCreated }) {
       </label>
 
       <label className={styles.label}>
-        {t("dateSpots.photo")}
+        {editing ? t("dateSpots.photoReplace") : t("dateSpots.photo")}
         <input className={styles.file} type="file" accept="image/*" onChange={pickFile} />
       </label>
-      {preview && <img className={styles.preview} src={preview} alt="Preview" />}
+      {shownPhoto && <img className={styles.preview} src={shownPhoto} alt="Preview" />}
 
       <p className={styles.safety}>{t("dateSpots.safety")}</p>
 
@@ -641,7 +1000,13 @@ function AddSpotForm({ token, onCancel, onCreated }) {
           {t("dateSpots.cancel")}
         </button>
         <button type="submit" className={styles.submitBtn} disabled={submitting}>
-          {submitting ? t("dateSpots.submitting") : t("dateSpots.submit")}
+          {editing
+            ? submitting
+              ? t("dateSpots.saving")
+              : t("dateSpots.saveChanges")
+            : submitting
+              ? t("dateSpots.submitting")
+              : t("dateSpots.submit")}
         </button>
       </div>
     </form>

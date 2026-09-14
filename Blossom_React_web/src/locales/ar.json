@@ -151,7 +151,7 @@
     "name": "اسم المكان",
     "namePlaceholder": "مثال: مقهى دو فلور",
     "city": "المدينة",
-    "cityPlaceholder": "مثال: باريس",
+    "cityPlaceholder": "مثال: باريس (المدينة وليس الحي)",
     "country": "البلد",
     "countryPlaceholder": "مثال: فرنسا",
     "why": "لماذا كان رائعًا؟",
@@ -197,6 +197,42 @@
     "adminWent": "ذهبوا إلى هناك",
     "adminSave": "حفظ",
     "adminSaving": "جارٍ الحفظ...",
-    "adminSaved": "تم تحديث العدّادات"
+    "adminSaved": "تم تحديث العدّادات",
+    "neighborhood": "الحي (اختياري)",
+    "neighborhoodPlaceholder": "مثال: لو ماريه",
+    "price": "السعر",
+    "priceFree": "مجاني",
+    "bestFor": "مناسب لـ",
+    "bestForOptions": {
+      "firstDate": "الموعد الأول",
+      "romantic": "رومانسي",
+      "casual": "غير رسمي",
+      "adventurous": "مغامر"
+    },
+    "invite": "ادعُ شخصًا تطابقت معه",
+    "inviteTitle": "ادعُ شخصًا تطابقت معه إلى {{name}}",
+    "inviteHint": "سيصله هذا المكان كرسالة في محادثتكما.",
+    "inviteLoading": "جارٍ تحميل تطابقاتك…",
+    "inviteEmpty": "لا توجد تطابقات بعد. بمجرد أن تتطابق مع شخص ما، يمكنك دعوته من هنا.",
+    "inviteMessage": "ما رأيك أن نذهب إلى {{name}} معًا؟ 💕",
+    "inviteSending": "جارٍ الإرسال…",
+    "dateIdea": "فكرة موعد",
+    "edit": "تعديل",
+    "editTitle": "تعديل هذا المكان",
+    "saveChanges": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ…",
+    "photoReplace": "صورة جديدة (اختياري)",
+    "adminSeed": "إضافة أماكن البداية",
+    "adminSeeding": "جارٍ الإضافة…",
+    "adminSeedConfirm": "هل تريد إضافة أماكن Blossom المختارة لباريس؟ سيتم تخطي الأماكن الموجودة بالفعل.",
+    "adminSeedDone": "تمت إضافة {{added}}، و{{skipped}} موجودة بالفعل."
+  },
+  "founder": {
+    "eyebrow": "من المؤسس",
+    "title": "مشاريع أخرى لمؤسس Blossom",
+    "subtitle": "أنشأ مؤسس Blossom أيضًا مشروعين مجتمعيين.",
+    "findreward": "للحيوانات الأليفة المفقودة: مساعدتها على العودة إلى منازلها.",
+    "helpreward": "لمساعدة الجيران: أشخاص يساعدون بعضهم بالقرب منهم.",
+    "visit": "زيارة الموقع"
   }
 }

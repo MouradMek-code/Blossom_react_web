@@ -5,6 +5,7 @@ import AppBanner from "../components/AppBanner";
 import TrustBadges from "../components/TrustBadges";
 import FAQ from "../components/FAQ";
 import LanguageDating from "../components/LanguageDating";
+import FounderProjects from "../components/FounderProjects";
 import Footer from "../components/Footer";
 import styles from "./Homepage.module.css";
 
@@ -20,6 +21,7 @@ function Homepage() {
       <Testimonials />
       <AppBanner />
       <FAQ />
+      <FounderProjects />
       <Footer />
     </>
   );

@@ -151,7 +151,7 @@
     "name": "地点名称",
     "namePlaceholder": "例如：花神咖啡馆",
     "city": "城市",
-    "cityPlaceholder": "例如：巴黎",
+    "cityPlaceholder": "例如：巴黎（填写城市，不是街区）",
     "country": "国家",
     "countryPlaceholder": "例如：法国",
     "why": "它为什么很棒？",
@@ -197,6 +197,42 @@
     "adminWent": "去过人数",
     "adminSave": "保存",
     "adminSaving": "保存中...",
-    "adminSaved": "计数已更新"
+    "adminSaved": "计数已更新",
+    "neighborhood": "街区（可选）",
+    "neighborhoodPlaceholder": "例如：玛黑区",
+    "price": "价格",
+    "priceFree": "免费",
+    "bestFor": "适合",
+    "bestForOptions": {
+      "firstDate": "第一次约会",
+      "romantic": "浪漫",
+      "casual": "轻松",
+      "adventurous": "冒险"
+    },
+    "invite": "邀请配对对象",
+    "inviteTitle": "邀请配对对象去{{name}}",
+    "inviteHint": "这个地点会以消息的形式发送到你们的聊天中。",
+    "inviteLoading": "正在加载你的配对…",
+    "inviteEmpty": "还没有配对。和别人配对成功后，就可以在这里邀请对方。",
+    "inviteMessage": "要不要一起去{{name}}？💕",
+    "inviteSending": "发送中…",
+    "dateIdea": "约会灵感",
+    "edit": "编辑",
+    "editTitle": "编辑这个地点",
+    "saveChanges": "保存修改",
+    "saving": "保存中…",
+    "photoReplace": "新照片（可选）",
+    "adminSeed": "添加初始地点",
+    "adminSeeding": "添加中…",
+    "adminSeedConfirm": "添加 Blossom 为巴黎精选的初始地点？已存在的地点会被跳过。",
+    "adminSeedDone": "已添加 {{added}} 个，{{skipped}} 个已存在。"
+  },
+  "founder": {
+    "eyebrow": "来自创始人",
+    "title": "Blossom 创始人的其他项目",
+    "subtitle": "Blossom 的创始人还创建了两个社区项目。",
+    "findreward": "寻找走失宠物：帮助它们回家。",
+    "helpreward": "邻里互助：身边的人互相帮助。",
+    "visit": "访问网站"
   }
 }
