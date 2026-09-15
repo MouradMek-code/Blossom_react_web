@@ -40,8 +40,8 @@
     "privacyPolicyLink": "Politique de confidentialité"
   },
   "verify": {
-    "title": "Vérifiez votre email/téléphone",
-    "subtitle": "Entrez le code de vérification à 6 chiffres envoyé à votre téléphone/email",
+    "title": "Vérifiez votre email",
+    "subtitle": "Entrez le code de vérification à 6 chiffres envoyé à votre email",
     "button": "Continuer",
     "resend": "Vous n'avez pas reçu le code ?",
     "resendLink": "Renvoyer",
@@ -244,6 +244,9 @@
     "browse": "Explorer les profils",
     "loading": "Chargement…",
     "viewProfile": "Voir le profil",
-    "back": "Retour aux messages"
+    "back": "Retour aux messages",
+    "send": "Envoyer",
+    "placeholder": "Écrivez un message…",
+    "sending": "Envoi…"
   }
 }

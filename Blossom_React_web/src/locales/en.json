@@ -40,8 +40,8 @@
     "privacyPolicyLink": "Privacy Policy"
   },
   "verify": {
-    "title": "Verify your email/phone",
-    "subtitle": "Enter the 6-digit verification code sent to your phone/email",
+    "title": "Verify your email",
+    "subtitle": "Enter the 6-digit verification code sent to your email",
     "button": "Continue",
     "resend": "Didn't receive the code?",
     "resendLink": "Resend",
@@ -244,6 +244,9 @@
     "browse": "Browse profiles",
     "loading": "Loading…",
     "viewProfile": "View profile",
-    "back": "Back to messages"
+    "back": "Back to messages",
+    "send": "Send",
+    "placeholder": "Type a message…",
+    "sending": "Sending…"
   }
 }

@@ -40,8 +40,8 @@
     "privacyPolicyLink": "隐私政策"
   },
   "verify": {
-    "title": "验证您的邮箱/手机",
-    "subtitle": "请输入发送到您手机/邮箱的6位验证码",
+    "title": "验证您的邮箱",
+    "subtitle": "请输入发送到您邮箱的6位验证码",
     "button": "继续",
     "resend": "没有收到验证码？",
     "resendLink": "重新发送",
@@ -244,6 +244,9 @@
     "browse": "浏览资料",
     "loading": "加载中…",
     "viewProfile": "查看资料",
-    "back": "返回消息"
+    "back": "返回消息",
+    "send": "发送",
+    "placeholder": "输入消息…",
+    "sending": "发送中…"
   }
 }

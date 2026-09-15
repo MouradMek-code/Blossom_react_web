@@ -5,6 +5,7 @@ import styles from "./ChatPage.module.css";
 import PageNav from "../components/PageNav";
 
 import { BASE_URL } from "../api/config";
+import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
 import { categoryEmoji, categoryGradient, shortPlace } from "../api/categories";
 
@@ -48,11 +49,23 @@ function ChatPage() {
   const token = sessionStorage.getItem("token");
 
   const [messages, setMessages] = useState([]);
+  // Messages already shown in the chat but still on their way to the server.
+  const [pending, setPending] = useState([]);
   const [details, setDetails] = useState(null);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
 
   const bottomRef = useRef(null);
+  const inputRef = useRef(null);
+  // Mirrors `text` synchronously. A double click fires send twice before React
+  // re-renders, and both calls would otherwise read the same text and post it
+  // twice; reading and clearing through the ref lets only the first through.
+  const textRef = useRef("");
+
+  function updateText(value) {
+    textRef.current = value;
+    setText(value);
+  }
 
   // Who's on the other side (name + photo for the header), and our own
   // profile id - more reliable than the locally stored one for deciding which
@@ -99,34 +112,54 @@ function ChatPage() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, pending]);
 
-  async function sendMessage() {
-    if (!text.trim()) return;
+  // Sends feel instant: the input clears and the bubble appears straight away
+  // (faded, "Sending…"), then turns solid once the server confirms. On failure
+  // the bubble goes away and the text is put back so nothing is lost.
+  async function sendMessage(e) {
+    e?.preventDefault();
+    const content = textRef.current.trim();
+    if (!content) return;
+    updateText("");
     setError("");
+    inputRef.current?.focus();
 
-    const resp = await fetch(
-      `${BASE_URL}/messages/conversation/${conversationId}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content: text }),
+    const tempId = `pending-${Date.now()}-${Math.random()}`;
+    const afterId = messages.reduce((max, m) => Math.max(max, Number(m.id) || 0), 0);
+    setPending((cur) => [...cur, { id: tempId, content, afterId }]);
+
+    const result = await postJson(`${BASE_URL}/messages/conversation/${conversationId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({ content }),
+    });
 
-    const data = await resp.json();
-
-    if (!resp.ok) {
-      setError(data.detail || "Failed to send message");
+    setPending((cur) => cur.filter((m) => m.id !== tempId));
+    if (!result.ok) {
+      setError(result.message);
+      if (!textRef.current) updateText(content);
       return;
     }
-
-    setMessages((prev) => [...prev, data]);
-    setText("");
+    setMessages((cur) =>
+      cur.some((m) => m.id === result.data.id) ? cur : [...cur, result.data],
+    );
   }
+
+  // The 3s poll can deliver a message before its own send call returns; don't
+  // show the pending copy next to the real one in that moment.
+  const visiblePending = pending.filter(
+    (p) =>
+      !messages.some(
+        (m) =>
+          m.id > p.afterId &&
+          m.content === p.content &&
+          Number(m.sender_profile_id) === Number(profileId),
+      ),
+  );
 
   return (
     <>
@@ -185,6 +218,15 @@ function ChatPage() {
             );
           })}
 
+          {visiblePending.map((message) => (
+            <div key={message.id} className={`${styles.row} ${styles.right}`}>
+              <div className={`${styles.bubble} ${styles.mine} ${styles.pending}`}>
+                {message.content}
+                <span className={styles.pendingStatus}>{t("messages.sending")}</span>
+              </div>
+            </div>
+          ))}
+
           <div ref={bottomRef} />
         </div>
 
@@ -194,17 +236,22 @@ function ChatPage() {
           </p>
         )}
 
-        <div className={styles.inputBox}>
+        {/* A form so Enter sends too. The button is disabled while the box is
+            empty - which it is right after a send, so a second click can't
+            post the same message again. */}
+        <form className={styles.inputBox} onSubmit={sendMessage}>
           <input
+            ref={inputRef}
             value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Type message..."
+            onChange={(e) => updateText(e.target.value)}
+            placeholder={t("messages.placeholder")}
             className={styles.input}
+            autoComplete="off"
           />
-          <button onClick={sendMessage} className={styles.button}>
-            Send
+          <button type="submit" className={styles.button} disabled={!text.trim()}>
+            {t("messages.send")}
           </button>
-        </div>
+        </form>
       </div>
     </>
   );

@@ -149,6 +149,32 @@
   background: #ff4da6;
   color: white;
   cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+/* Press feedback, so a click visibly registers. */
+.button:active:not(:disabled) {
+  transform: scale(0.94);
+  background: #e6007a;
+}
+
+/* Empty box - including right after sending. */
+.button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* A message shown instantly while it's still being sent. */
+.pending {
+  opacity: 0.65;
+}
+
+.pendingStatus {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  text-align: right;
+  opacity: 0.9;
 }
 
 /* DATE SPOT INVITES */
