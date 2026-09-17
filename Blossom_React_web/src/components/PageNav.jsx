@@ -58,29 +58,38 @@ function PageNav({ minimal = false }) {
       storedToken === "undefined" || storedToken === null;
     if (storedTokenMissing) return;
 
+    const headers = { Authorization: `Bearer ${storedToken}` };
+
+    // Backends from before /user/badges: the old four requests (the admin
+    // check downloads the whole user list, hence the switch).
+    async function legacyCounts() {
+      const [matchedResp, likedResp, userResp, messagesResp] = await Promise.all([
+        fetch(`${BASE_URL}/matches/unseen_count`, { headers }),
+        fetch(`${BASE_URL}/likes/profile_likes/unseen_count`, { headers }),
+        fetch(`${BASE_URL}/user/admin/users`, { headers }),
+        fetch(`${BASE_URL}/messages/unread_count`, { headers }),
+      ]);
+      const matched = matchedResp.ok ? await matchedResp.json() : { count: 0 };
+      const liked = likedResp.ok ? await likedResp.json() : { count: 0 };
+      const unread = messagesResp.ok ? await messagesResp.json() : { count: 0 };
+      return {
+        matches: matched.count,
+        likes: liked.count,
+        messages: unread.count,
+        is_admin: userResp.ok,
+      };
+    }
+
+    // All three badges and the admin flag in one request.
     async function fetchCounts() {
       try {
-        const [matchedResp, likedResp, userResp, messagesResp] = await Promise.all([
-          fetch(`${BASE_URL}/matches/unseen_count`, {
-            headers: { Authorization: `Bearer ${storedToken}` },
-          }),
-          fetch(`${BASE_URL}/likes/profile_likes/unseen_count`, {
-            headers: { Authorization: `Bearer ${storedToken}` },
-          }),
-          fetch(`${BASE_URL}/user/admin/users`, {
-            headers: { Authorization: `Bearer ${storedToken}` },
-          }),
-          fetch(`${BASE_URL}/messages/unread_count`, {
-            headers: { Authorization: `Bearer ${storedToken}` },
-          }),
-        ]);
-        const matched = matchedResp.ok ? await matchedResp.json() : { count: 0 };
-        const liked = likedResp.ok ? await likedResp.json() : { count: 0 };
-        const unread = messagesResp.ok ? await messagesResp.json() : { count: 0 };
-        setMatchCount(matched.count || 0);
-        setLikeCount(liked.count || 0);
-        setMessageCount(unread.count || 0);
-        setIsAdmin(userResp.ok);
+        const resp = await fetch(`${BASE_URL}/user/badges`, { headers });
+        // An old backend reads "badges" as a user id (422) or doesn't know it.
+        const counts = resp.ok ? await resp.json() : await legacyCounts();
+        setMatchCount(counts.matches || 0);
+        setLikeCount(counts.likes || 0);
+        setMessageCount(counts.messages || 0);
+        setIsAdmin(Boolean(counts.is_admin));
       } catch (err) {
         // Leave counts at 0 if the backend is unreachable - not worth
         // bouncing the user to login just because a badge couldn't load.
@@ -88,8 +97,18 @@ function PageNav({ minimal = false }) {
     }
 
     fetchCounts();
-    const interval = setInterval(fetchCounts, 30000);
-    return () => clearInterval(interval);
+    // Background tabs don't poll; coming back to the tab refreshes at once.
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") fetchCounts();
+    }, 30000);
+    function onVisible() {
+      if (document.visibilityState === "visible") fetchCounts();
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, []);
 
   return (
