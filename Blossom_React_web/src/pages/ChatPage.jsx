@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./ChatPage.module.css";
 import PageNav from "../components/PageNav";
@@ -45,8 +45,11 @@ function InviteCard({ message, mine }) {
 function ChatPage() {
   const { t } = useTranslation();
   const { conversationId } = useParams();
+  const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const [messages, setMessages] = useState([]);
   // Messages already shown in the chat but still on their way to the server.
@@ -87,6 +90,43 @@ function ChatPage() {
 
   const profileId = details?.me_profile_id ?? sessionStorage.getItem("profile_id");
   const partner = details?.profile;
+
+  // Clicking away from the chat menu, or pressing Escape, closes it.
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    function onPointerDown(event) {
+      if (!menuRef.current?.contains(event.target)) setMenuOpen(false);
+    }
+    function onKeyDown(event) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
+
+  // Unmatching lives here now that there's no separate matches page. The
+  // server deletes the conversation with it, so there's a confirmation first.
+  async function handleUnmatch() {
+    setMenuOpen(false);
+    const question = `${t("messages.unmatchTitle", { name: partner.first_name })}\n\n${t(
+      "messages.unmatchMessage",
+    )}`;
+    if (!window.confirm(question)) return;
+    try {
+      const resp = await fetch(`${BASE_URL}/matches/unmatch/${partner.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!resp.ok) throw new Error(`unmatch failed with ${resp.status}`);
+      navigate("/messages");
+    } catch {
+      setError(t("messages.unmatchFailed"));
+    }
+  }
 
   const loadMessages = useCallback(async () => {
     try {
@@ -164,7 +204,8 @@ function ChatPage() {
   return (
     <>
       <div className={styles.chatContainer}>
-        <PageNav />
+        {/* No bottom tab bar here: the message box needs the bottom. */}
+        <PageNav hideTabBar />
         <div className={styles.header}>
           <Link to="/messages" className={styles.back} aria-label={t("messages.back")}>
             ←
@@ -190,6 +231,41 @@ function ChatPage() {
             </Link>
           ) : (
             <span className={styles.partnerName}>💬</span>
+          )}
+
+          {partner && (
+            <div className={styles.menuWrap} ref={menuRef}>
+              <button
+                type="button"
+                className={styles.menuBtn}
+                onClick={() => setMenuOpen((open) => !open)}
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+                aria-label={t("messages.options")}
+              >
+                ⋮
+              </button>
+              {menuOpen && (
+                <div className={styles.menu} role="menu">
+                  <Link
+                    to={`/profile/${partner.id}`}
+                    className={styles.menuItem}
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {t("messages.viewProfile")}
+                  </Link>
+                  <button
+                    type="button"
+                    className={`${styles.menuItem} ${styles.menuDanger}`}
+                    role="menuitem"
+                    onClick={handleUnmatch}
+                  >
+                    {t("messages.unmatch")}
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
 

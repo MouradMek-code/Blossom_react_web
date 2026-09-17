@@ -75,6 +75,191 @@
   gap: 6px;
 }
 
+/* ---- Logged in: main links in the bar, account menu on the right ---- */
+.mainLinks {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mainLinkItem {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.mainLink {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-soft);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
+}
+
+.mainLink:hover {
+  color: var(--primary);
+  background-color: var(--primary-tint);
+}
+
+.mainLink:global(.active) {
+  color: var(--primary-deep);
+  background-color: var(--primary-soft);
+  font-weight: 600;
+}
+
+.account {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.accountBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-soft);
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+  transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.accountBtn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1000;
+  min-width: 210px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 12px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--text);
+  background: none;
+  border: none;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: var(--primary-tint);
+  color: var(--primary-deep);
+}
+
+.menuDanger {
+  color: var(--primary-deep);
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+  margin-top: 4px;
+}
+
+/* ---- Phone: the same five tabs the app has, along the bottom ---- */
+.tabBar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mainLinks {
+    display: none;
+  }
+
+  .tabBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    display: flex;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 16px rgba(63, 44, 38, 0.07);
+  }
+
+  .tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 9px 2px 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .tabActive {
+    color: var(--primary);
+  }
+
+  .tabIcon {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .tabBadge {
+    position: absolute;
+    top: -5px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: var(--r-pill);
+    background: #ff2d55;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .tabLabel {
+    white-space: nowrap;
+  }
+
+  /* Set while the tab bar is on screen, so it never covers the page's end. */
+  :global(body.has-tabbar) {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}
+
 .badge {
   position: absolute;
   top: -4px;

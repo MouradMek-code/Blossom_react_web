@@ -1,13 +1,13 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Profile from "./pages/Profile";
 import Profiles from "./pages/Profiles";
 import SignUp from "./pages/SignUp";
 import Homepage from "./pages/Homepage";
 import PageNotFound from "./pages/PageNotFound";
 import Login from "./pages/Login";
-import MatchedList from "./pages/MatchedList";
 import ProfileDetails from "./pages/ProfileDetails";
+import Settings from "./pages/Settings";
 import ChatPage from "./pages/ChatPage";
 import Messages from "./pages/Messages";
 import LikedYou from "./pages/LikedYou";
@@ -23,7 +23,9 @@ function App() {
       <Routes>
         <Route path="profile" element={<Profile />} />
         <Route path="profiles" element={<Profiles />} />
-        <Route path="MatchedList" element={<MatchedList />} />
+        {/* Matches live at the top of the chats page now; old links still work. */}
+        <Route path="MatchedList" element={<Navigate to="/messages" replace />} />
+        <Route path="settings" element={<Settings />} />
         <Route path="liked_you" element={<LikedYou />} />
         <Route path="sign_up" element={<SignUp />} />
         <Route path="/chat/:conversationId" element={<ChatPage />} />

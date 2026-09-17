@@ -1,27 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
-import LocationPicker from "../components/LocationPicker";
+import NavIcon from "../components/NavIcon";
 import "./profile.css";
 
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
-import { postJson } from "../api/errors";
-import { tidyCity } from "../api/geo";
 
 function Profile() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
-  const [editingLocation, setEditingLocation] = useState(false);
-  const [locationDraft, setLocationDraft] = useState({ country: "", city: "" });
-  const [savingLocation, setSavingLocation] = useState(false);
   const [editingBio, setEditingBio] = useState(false);
   const [bioDraft, setBioDraft] = useState("");
   const [savingBio, setSavingBio] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const [deletingAccount, setDeletingAccount] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef(null);
 
@@ -64,32 +58,6 @@ function Profile() {
     setBioDraft(profile.bio || "");
     setEditingBio(true);
     setError("");
-  }
-
-  function startEditingLocation() {
-    setLocationDraft({ country: profile.country || "", city: profile.city || "" });
-    setEditingLocation(true);
-    setError("");
-  }
-
-  async function saveLocation() {
-    setSavingLocation(true);
-    setError("");
-    const params = new URLSearchParams({
-      country: locationDraft.country,
-      city: tidyCity(locationDraft.city),
-    });
-    const result = await postJson(`${BASE_URL}/profile/update_city_country?${params}`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setSavingLocation(false);
-    if (!result.ok) {
-      setError(result.message);
-      return;
-    }
-    setProfile(result.data);
-    setEditingLocation(false);
   }
 
   async function saveBio() {
@@ -156,28 +124,6 @@ function Profile() {
     }
   }
 
-  async function handleDeleteAccount() {
-    const confirmed = window.confirm(
-      "Delete your account permanently? This will remove your profile, photos, matches, and messages. This cannot be undone."
-    );
-    if (!confirmed) return;
-
-    setDeletingAccount(true);
-    setError("");
-    try {
-      const resp = await fetch(`${BASE_URL}/user/me`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (resp.status !== 200) throw new Error("Failed to delete account");
-      sessionStorage.clear();
-      navigate("/");
-    } catch (err) {
-      setError(err.toString());
-      setDeletingAccount(false);
-    }
-  }
-
   if (!profile)
     return (
       <div className="profile-page">
@@ -208,39 +154,13 @@ function Profile() {
               {profile.city || profile.country
                 ? [profile.city, profile.country].filter(Boolean).join(", ")
                 : t("location.notSet")}
-              {!editingLocation && (
-                <button type="button" className="location-change" onClick={startEditingLocation}>
-                  {t("location.change")}
-                </button>
-              )}
             </p>
 
-            {editingLocation && (
-              <div className="location-editor">
-                <LocationPicker
-                  country={locationDraft.country}
-                  city={locationDraft.city}
-                  onChange={setLocationDraft}
-                />
-                <div className="location-editor-actions">
-                  <button
-                    type="button"
-                    className="location-save"
-                    onClick={saveLocation}
-                    disabled={savingLocation || !locationDraft.country || !locationDraft.city.trim()}
-                  >
-                    {savingLocation ? t("location.saving") : t("location.save")}
-                  </button>
-                  <button
-                    type="button"
-                    className="location-cancel"
-                    onClick={() => setEditingLocation(false)}
-                  >
-                    {t("location.cancel")}
-                  </button>
-                </div>
-              </div>
-            )}
+            {/* Language, location, logging out and deleting the account. */}
+            <Link to="/settings" className="settings-link">
+              <NavIcon name="settings" size={17} />
+              {t("settings.title")}
+            </Link>
 
             <div className="hero-badges">
               <span>💘 {profile.relationship_goal || "Not specified"}</span>
@@ -493,29 +413,6 @@ function Profile() {
           </div>
         </section>
 
-        {/* DANGER ZONE */}
-        <section className="card" style={{ borderColor: "#e11d48" }}>
-          <h2>Danger Zone</h2>
-          <p style={{ color: "#666", marginBottom: "12px" }}>
-            Permanently delete your account, profile, photos, matches, and messages.
-          </p>
-          <button
-            type="button"
-            onClick={handleDeleteAccount}
-            disabled={deletingAccount}
-            style={{
-              border: "none",
-              borderRadius: "999px",
-              padding: "8px 18px",
-              background: "#e11d48",
-              color: "white",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {deletingAccount ? "Deleting..." : "Delete Account"}
-          </button>
-        </section>
       </div>
     </div>
   );

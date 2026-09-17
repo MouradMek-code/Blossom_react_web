@@ -241,7 +241,8 @@
 
 .blockBtn:hover { background: #fecaca; }
 
-/* STICKY ACTION BAR */
+/* STICKY ACTION BAR - above the phone's tab bar, at the very bottom on
+   wider screens (see PageNav.module.css). */
 .actionBar {
   position: fixed;
   bottom: 0;
@@ -482,6 +483,11 @@
 }
 
 .lightboxClose:hover { background: rgba(255,255,255,0.3); }
+
+/* Phone widths carry the bottom tab bar, so the like/pass bar sits above it. */
+@media (max-width: 768px) {
+  .actionBar { bottom: calc(64px + env(safe-area-inset-bottom)); }
+}
 
 @media (max-width: 600px) {
   .hero { height: 380px; }
