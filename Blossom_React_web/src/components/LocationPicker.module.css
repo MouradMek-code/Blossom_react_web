@@ -1,0 +1,118 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted, #8a7e76);
+}
+
+.control {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border, #ece2da);
+  border-radius: var(--r-sm, 12px);
+  background: var(--surface-muted, #f7f1ec);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text, #2a2420);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.control:focus {
+  border-color: var(--primary, #c1466b);
+  background: var(--surface, #fff);
+  box-shadow: 0 0 0 4px var(--primary-tint, #fbf1f4);
+}
+
+.control:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cityWrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #ece2da);
+  border-radius: var(--r-sm, 12px);
+  box-shadow: 0 12px 30px rgba(63, 44, 38, 0.14);
+}
+
+.option {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text, #2a2420);
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover,
+.optionActive {
+  background: var(--primary-tint, #fbf1f4);
+  color: var(--primary, #c1466b);
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted, #8a7e76);
+}
+
+.error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #c0392b;
+}
+
+.retry {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--primary, #c1466b);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.credit {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--text-muted, #8a7e76);
+}
+
+.credit a {
+  color: inherit;
+}

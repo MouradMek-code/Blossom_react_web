@@ -1,14 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
+import LocationPicker from "../components/LocationPicker";
 import "./profile.css";
 
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
+import { postJson } from "../api/errors";
+import { tidyCity } from "../api/geo";
 
 function Profile() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
+  const [editingLocation, setEditingLocation] = useState(false);
+  const [locationDraft, setLocationDraft] = useState({ country: "", city: "" });
+  const [savingLocation, setSavingLocation] = useState(false);
   const [editingBio, setEditingBio] = useState(false);
   const [bioDraft, setBioDraft] = useState("");
   const [savingBio, setSavingBio] = useState(false);
@@ -56,6 +64,32 @@ function Profile() {
     setBioDraft(profile.bio || "");
     setEditingBio(true);
     setError("");
+  }
+
+  function startEditingLocation() {
+    setLocationDraft({ country: profile.country || "", city: profile.city || "" });
+    setEditingLocation(true);
+    setError("");
+  }
+
+  async function saveLocation() {
+    setSavingLocation(true);
+    setError("");
+    const params = new URLSearchParams({
+      country: locationDraft.country,
+      city: tidyCity(locationDraft.city),
+    });
+    const result = await postJson(`${BASE_URL}/profile/update_city_country?${params}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setSavingLocation(false);
+    if (!result.ok) {
+      setError(result.message);
+      return;
+    }
+    setProfile(result.data);
+    setEditingLocation(false);
   }
 
   async function saveBio() {
@@ -170,9 +204,43 @@ function Profile() {
             </h1>
 
             <p className="location">
-              📍 {profile.city || "Location not set"},{" "}
-              {profile.country || "Location not set"}
+              📍{" "}
+              {profile.city || profile.country
+                ? [profile.city, profile.country].filter(Boolean).join(", ")
+                : t("location.notSet")}
+              {!editingLocation && (
+                <button type="button" className="location-change" onClick={startEditingLocation}>
+                  {t("location.change")}
+                </button>
+              )}
             </p>
+
+            {editingLocation && (
+              <div className="location-editor">
+                <LocationPicker
+                  country={locationDraft.country}
+                  city={locationDraft.city}
+                  onChange={setLocationDraft}
+                />
+                <div className="location-editor-actions">
+                  <button
+                    type="button"
+                    className="location-save"
+                    onClick={saveLocation}
+                    disabled={savingLocation || !locationDraft.country || !locationDraft.city.trim()}
+                  >
+                    {savingLocation ? t("location.saving") : t("location.save")}
+                  </button>
+                  <button
+                    type="button"
+                    className="location-cancel"
+                    onClick={() => setEditingLocation(false)}
+                  >
+                    {t("location.cancel")}
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="hero-badges">
               <span>💘 {profile.relationship_goal || "Not specified"}</span>

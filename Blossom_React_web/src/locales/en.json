@@ -248,5 +248,29 @@
     "send": "Send",
     "placeholder": "Type a message…",
     "sending": "Sending…"
+  },
+  "location": {
+    "title": "Where do you live?",
+    "subtitle": "Choose your country and city. Blossom never uses your GPS location.",
+    "country": "Country",
+    "city": "City",
+    "chooseCountry": "Choose your country",
+    "chooseCity": "Choose your city",
+    "searchCountry": "Search for a country",
+    "searchCity": "Type your city's name",
+    "countryFirst": "Choose a country first",
+    "useTyped": "Use “{{name}}”",
+    "notListed": "Town not listed? Type its name and choose “Use”.",
+    "noResults": "No results",
+    "loading": "Loading…",
+    "loadError": "Couldn't load the list. Check your connection and try again.",
+    "retry": "Try again",
+    "continue": "Continue",
+    "change": "Change",
+    "yourLocation": "Your location",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "notSet": "Location not set"
   }
 }

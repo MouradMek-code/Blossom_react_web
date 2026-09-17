@@ -248,5 +248,29 @@
     "send": "发送",
     "placeholder": "输入消息…",
     "sending": "发送中…"
+  },
+  "location": {
+    "title": "你住在哪里？",
+    "subtitle": "选择你的国家和城市。Blossom 从不使用你的 GPS 位置。",
+    "country": "国家",
+    "city": "城市",
+    "chooseCountry": "选择你的国家",
+    "chooseCity": "选择你的城市",
+    "searchCountry": "搜索国家（请用英文）",
+    "searchCity": "输入城市名称（请用拼音或英文）",
+    "countryFirst": "请先选择国家",
+    "useTyped": "使用“{{name}}”",
+    "notListed": "找不到你的城市？输入名称并选择“使用”。",
+    "noResults": "没有结果",
+    "loading": "加载中…",
+    "loadError": "无法加载列表。请检查网络后重试。",
+    "retry": "重试",
+    "continue": "继续",
+    "change": "修改",
+    "yourLocation": "你的位置",
+    "save": "保存",
+    "saving": "保存中…",
+    "cancel": "取消",
+    "notSet": "未设置位置"
   }
 }

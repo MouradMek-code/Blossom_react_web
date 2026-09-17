@@ -248,5 +248,29 @@
     "send": "Envoyer",
     "placeholder": "Écrivez un message…",
     "sending": "Envoi…"
+  },
+  "location": {
+    "title": "Où habitez-vous ?",
+    "subtitle": "Choisissez votre pays et votre ville. Blossom n'utilise jamais votre position GPS.",
+    "country": "Pays",
+    "city": "Ville",
+    "chooseCountry": "Choisissez votre pays",
+    "chooseCity": "Choisissez votre ville",
+    "searchCountry": "Rechercher un pays (en anglais)",
+    "searchCity": "Tapez le nom de votre ville",
+    "countryFirst": "Choisissez d'abord un pays",
+    "useTyped": "Utiliser « {{name}} »",
+    "notListed": "Ville introuvable ? Tapez son nom et choisissez « Utiliser ».",
+    "noResults": "Aucun résultat",
+    "loading": "Chargement…",
+    "loadError": "Impossible de charger la liste. Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer",
+    "continue": "Continuer",
+    "change": "Modifier",
+    "yourLocation": "Votre localisation",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "cancel": "Annuler",
+    "notSet": "Localisation non renseignée"
   }
 }

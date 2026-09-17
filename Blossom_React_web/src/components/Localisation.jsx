@@ -1,84 +1,41 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./Localisation.css";
+import LocationPicker from "./LocationPicker";
+import { tidyCity } from "../api/geo";
 import { saveSignupDraft } from "../api/signupDraft";
 
+// Sign-up step: where do you live? Chosen from lists rather than detected by
+// GPS - some people don't want to share their position, and with GPS there
+// was no way past this step for anyone who said no.
 function Localisation({ setlocated, setAnswer, answer }) {
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
-  const [locationData, setLocationData] = useState(null);
-  const [error, setError] = useState("");
+  const { t } = useTranslation();
+  const [location, setLocation] = useState({
+    country: answer?.country || "",
+    city: answer?.city || "",
+  });
 
-  const handleGetPosition = () => {
-    setError("");
-    setStatus("loading");
+  const ready = Boolean(location.country && location.city.trim());
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
-          );
-
-          const data = await res.json();
-
-          setLocationData({
-            city:
-              data.address?.city || data.address?.town || data.address?.village,
-            country: data.address?.country,
-          });
-
-          const resp = answer;
-          resp.city =
-            data.address?.city || data.address?.town || data.address?.village;
-          resp.country = data.address?.country;
-          setAnswer(resp);
-          setStatus("success");
-        } catch {
-          setError("Failed to fetch location.");
-          setStatus("error");
-        }
-      },
-      () => {
-        setError("Location permission denied.");
-        setStatus("error");
-      },
-    );
-  };
+  function next() {
+    const updated = { ...answer, country: location.country, city: tidyCity(location.city) };
+    setAnswer(updated);
+    saveSignupDraft({ located: true, answer: updated });
+    setlocated(true);
+  }
 
   return (
     <div className="location-wrapper">
       <div className="location-card">
-        <h2>Enable Location</h2>
+        <div className="location-icon">📍</div>
+        <h2>{t("location.title")}</h2>
+        <p className="subtitle">{t("location.subtitle")}</p>
 
-        <p className="subtitle">
-          We use your location to improve your experience.
-        </p>
+        <LocationPicker country={location.country} city={location.city} onChange={setLocation} />
 
-        {status !== "success" && (
-          <button onClick={handleGetPosition} disabled={status === "loading"}>
-            {status === "loading" ? "Detecting..." : "Allow Location"}
-          </button>
-        )}
-
-        {error && <p className="error">{error}</p>}
-
-        {locationData && (
-          <div className="result">
-            <p>
-              📍 {locationData.city}, {locationData.country}
-            </p>
-
-            <button
-              onClick={() => {
-                saveSignupDraft({ located: true, answer });
-                setlocated(true);
-              }}
-            >
-              Continue
-            </button>
-          </div>
-        )}
+        <button className="location-continue" onClick={next} disabled={!ready}>
+          {t("location.continue")}
+        </button>
       </div>
     </div>
   );

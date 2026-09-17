@@ -317,3 +317,55 @@
     height: 280px;
   }
 }
+
+/* Change location (country + city picker, no GPS) */
+.location-change {
+  margin-left: 10px;
+  padding: 4px 12px;
+  border: 1px solid #e11d48;
+  border-radius: 999px;
+  background: white;
+  color: #e11d48;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.location-editor {
+  max-width: 420px;
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.location-editor-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.location-save {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  background: #e11d48;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.location-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.location-cancel {
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  padding: 8px 18px;
+  background: white;
+  cursor: pointer;
+}
