@@ -49,9 +49,8 @@ function FormLogin() {
 
       const data = result.data;
       sessionStorage.setItem("token", data.access_token);
-      sessionStorage.setItem("profilecreated", "yes");
 
-      // Check if the user has finished profile setup; if not, resume signup.
+      // Finished profile -> straight to Browse; otherwise resume sign-up.
       let profileResp;
       try {
         profileResp = await fetch(`${BASE_URL}/profile`, {
@@ -62,7 +61,18 @@ function FormLogin() {
         setSubmitting(false);
         return;
       }
-      navigate(profileResp.status === 200 ? "/profile" : "/signup");
+      if (profileResp.status === 200) {
+        // Only now: this flag switches on the logged-in menu, and used to be
+        // set even for people who hadn't finished their profile.
+        sessionStorage.setItem("profilecreated", "yes");
+        const profile = await profileResp.json().catch(() => null);
+        if (profile?.id) sessionStorage.setItem("profile_id", profile.id);
+        navigate("/profiles");
+      } else {
+        sessionStorage.removeItem("profilecreated");
+        // The sign-up page lives at /sign_up; "/signup" was a dead link.
+        navigate("/sign_up");
+      }
     }
     Login();
   }

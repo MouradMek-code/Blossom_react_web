@@ -45,7 +45,7 @@ function Profile() {
         }
         if (resp.status !== 200) {
           // Token valid but no profile yet — resume signup flow
-          navigate("/signup");
+          navigate("/sign_up");
           return;
         }
         const data = await resp.json();
