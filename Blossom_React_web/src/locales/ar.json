@@ -312,5 +312,19 @@
   "menu": {
     "open": "حسابك",
     "profile": "ملفي الشخصي"
+  },
+  "safety": {
+    "back": "رجوع",
+    "report": "إبلاغ",
+    "block": "حظر",
+    "blockTitle": "حظر {{name}}؟",
+    "blockMessage": "لن تريا بعضكما مرة أخرى ولن تتمكنا من مراسلة بعضكما.",
+    "blocking": "جارٍ الحظر…",
+    "reportTitle": "الإبلاغ عن هذا الملف",
+    "reportQuestion": "لماذا تبلغ عن {{name}}؟",
+    "reportPlaceholder": "صف المشكلة…",
+    "submit": "إرسال",
+    "sending": "جارٍ الإرسال…",
+    "cancel": "إلغاء"
   }
 }

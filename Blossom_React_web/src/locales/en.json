@@ -312,5 +312,19 @@
   "menu": {
     "open": "Your account",
     "profile": "Your profile"
+  },
+  "safety": {
+    "back": "Back",
+    "report": "Report",
+    "block": "Block",
+    "blockTitle": "Block {{name}}?",
+    "blockMessage": "You won't see each other again and won't be able to message each other.",
+    "blocking": "Blocking…",
+    "reportTitle": "Report this profile",
+    "reportQuestion": "Why are you reporting {{name}}?",
+    "reportPlaceholder": "Describe the issue…",
+    "submit": "Submit",
+    "sending": "Sending…",
+    "cancel": "Cancel"
   }
 }

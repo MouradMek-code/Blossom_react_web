@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import styles from "./ProfileDetails.module.css";
 
+// Someone's full profile. Liking and passing happen on the Browse cards, not
+// here; opened from a chat it also offers "Unmatch", next to Report and Block.
 function ProfileDetails() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  // Set by the chat page's links: this person is a match.
+  const isMatch = Boolean(location.state?.matched);
 
   const [profile, setProfile] = useState(null);
-  const [liked, setLiked] = useState(false);
-  const [matched, setMatched] = useState(false);
-  const [liking, setLiking] = useState(false);
+  const [unmatching, setUnmatching] = useState(false);
 
   const [blockModalOpen, setBlockModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
@@ -33,25 +38,24 @@ function ProfileDetails() {
     fetchProfile();
   }, [id]);
 
-  async function handleLike() {
-    if (liked || liking) return;
-    setLiking(true);
+  // The server deletes the conversation with the match, hence the confirmation.
+  async function handleUnmatch() {
+    const question = `${t("messages.unmatchTitle", { name: profile.first_name })}\n\n${t(
+      "messages.unmatchMessage",
+    )}`;
+    if (!window.confirm(question)) return;
+    setUnmatching(true);
     const token = sessionStorage.getItem("token");
     try {
-      const resp = await fetch(`${BASE_URL}/likes/${id}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      const resp = await fetch(`${BASE_URL}/matches/unmatch/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
       });
-      const data = await resp.json();
-      setLiked(true);
-      if (data.matched) {
-        setMatched(true);
-        setTimeout(() => setMatched(false), 3000);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLiking(false);
+      if (!resp.ok) throw new Error(`unmatch failed with ${resp.status}`);
+      navigate("/messages");
+    } catch {
+      setUnmatching(false);
+      window.alert(t("messages.unmatchFailed"));
     }
   }
 
@@ -96,7 +100,7 @@ function ProfileDetails() {
     return (
       <div className={styles.loadingPage}>
         <div className={styles.spinner} />
-        <p style={{ color: "#d6336c", fontWeight: 600 }}>Loading profile…</p>
+        <p style={{ color: "#d6336c", fontWeight: 600 }}>{t("messages.loading")}</p>
       </div>
     );
   }
@@ -116,7 +120,7 @@ function ProfileDetails() {
         )}
         <div className={styles.heroGradient} />
 
-        <button className={styles.backBtn} onClick={() => navigate(-1)}>← Back</button>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>← {t("safety.back")}</button>
 
         <div className={styles.heroInfo}>
           <h1 className={styles.heroName}>
@@ -137,8 +141,17 @@ function ProfileDetails() {
         {/* Safety */}
         <div className={styles.card}>
           <div className={styles.safetyRow}>
-            <button className={styles.reportBtn} onClick={() => setReportModalOpen(true)}>⚠️ Report</button>
-            <button className={styles.blockBtn} onClick={() => setBlockModalOpen(true)}>🚫 Block</button>
+            {isMatch && (
+              <button className={styles.unmatchBtn} onClick={handleUnmatch} disabled={unmatching}>
+                💔 {t("messages.unmatch")}
+              </button>
+            )}
+            <button className={styles.reportBtn} onClick={() => setReportModalOpen(true)}>
+              ⚠️ {t("safety.report")}
+            </button>
+            <button className={styles.blockBtn} onClick={() => setBlockModalOpen(true)}>
+              🚫 {t("safety.block")}
+            </button>
           </div>
         </div>
 
@@ -222,36 +235,18 @@ function ProfileDetails() {
         )}
       </div>
 
-      {/* STICKY ACTION BAR */}
-      <div className={styles.actionBar}>
-        <button className={styles.passBtn} onClick={() => navigate(-1)} title="Pass">✕</button>
-        <button
-          className={styles.likeBtn}
-          onClick={handleLike}
-          disabled={liked || liking}
-          title={liked ? "Liked!" : "Like"}
-        >
-          {liked ? "💖" : "❤️"}
-        </button>
-      </div>
-
-      {/* MATCH TOAST */}
-      {matched && (
-        <div className={styles.matchToast}>🎉 It's a Match with {profile.first_name}!</div>
-      )}
-
       {/* BLOCK MODAL */}
       {blockModalOpen && (
         <div className={styles.modalOverlay} onClick={() => setBlockModalOpen(false)}>
           <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
-            <p className={styles.modalTitle}>Block {profile.first_name}?</p>
-            <p className={styles.modalSub}>
-              You won't see each other again and won't be able to message them.
-            </p>
+            <p className={styles.modalTitle}>{t("safety.blockTitle", { name: profile.first_name })}</p>
+            <p className={styles.modalSub}>{t("safety.blockMessage")}</p>
             <div className={styles.modalActions}>
-              <button className={styles.modalCancelBtn} onClick={() => setBlockModalOpen(false)}>Cancel</button>
+              <button className={styles.modalCancelBtn} onClick={() => setBlockModalOpen(false)}>
+                {t("safety.cancel")}
+              </button>
               <button className={styles.modalDestructiveBtn} onClick={handleBlock} disabled={blocking}>
-                {blocking ? "Blocking…" : "Block"}
+                {blocking ? t("safety.blocking") : t("safety.block")}
               </button>
             </div>
           </div>
@@ -270,23 +265,25 @@ function ProfileDetails() {
       {reportModalOpen && (
         <div className={styles.modalOverlay} onClick={() => setReportModalOpen(false)}>
           <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
-            <p className={styles.modalTitle}>Report this profile</p>
-            <p className={styles.modalSub}>Why are you reporting {profile.first_name}?</p>
+            <p className={styles.modalTitle}>{t("safety.reportTitle")}</p>
+            <p className={styles.modalSub}>{t("safety.reportQuestion", { name: profile.first_name })}</p>
             <textarea
               className={styles.modalTextarea}
               value={reportReason}
               onChange={(e) => setReportReason(e.target.value)}
-              placeholder="Describe the issue…"
+              placeholder={t("safety.reportPlaceholder")}
               rows={4}
             />
             <div className={styles.modalActions}>
-              <button className={styles.modalCancelBtn} onClick={() => setReportModalOpen(false)}>Cancel</button>
+              <button className={styles.modalCancelBtn} onClick={() => setReportModalOpen(false)}>
+                {t("safety.cancel")}
+              </button>
               <button
                 className={styles.modalSubmitBtn}
                 onClick={handleReport}
                 disabled={!reportReason.trim() || reporting}
               >
-                {reporting ? "Sending…" : "Submit"}
+                {reporting ? t("safety.sending") : t("safety.submit")}
               </button>
             </div>
           </div>

@@ -312,5 +312,19 @@
   "menu": {
     "open": "你的账户",
     "profile": "我的资料"
+  },
+  "safety": {
+    "back": "返回",
+    "report": "举报",
+    "block": "屏蔽",
+    "blockTitle": "屏蔽{{name}}？",
+    "blockMessage": "你们将不会再看到对方，也无法再互发消息。",
+    "blocking": "屏蔽中…",
+    "reportTitle": "举报此资料",
+    "reportQuestion": "你为什么要举报{{name}}？",
+    "reportPlaceholder": "描述问题…",
+    "submit": "提交",
+    "sending": "发送中…",
+    "cancel": "取消"
   }
 }

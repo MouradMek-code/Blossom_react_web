@@ -48,8 +48,6 @@ function ChatPage() {
   const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
 
   const [messages, setMessages] = useState([]);
   // Messages already shown in the chat but still on their way to the server.
@@ -91,27 +89,9 @@ function ChatPage() {
   const profileId = details?.me_profile_id ?? sessionStorage.getItem("profile_id");
   const partner = details?.profile;
 
-  // Clicking away from the chat menu, or pressing Escape, closes it.
-  useEffect(() => {
-    if (!menuOpen) return undefined;
-    function onPointerDown(event) {
-      if (!menuRef.current?.contains(event.target)) setMenuOpen(false);
-    }
-    function onKeyDown(event) {
-      if (event.key === "Escape") setMenuOpen(false);
-    }
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [menuOpen]);
-
   // Unmatching lives here now that there's no separate matches page. The
   // server deletes the conversation with it, so there's a confirmation first.
   async function handleUnmatch() {
-    setMenuOpen(false);
     const question = `${t("messages.unmatchTitle", { name: partner.first_name })}\n\n${t(
       "messages.unmatchMessage",
     )}`;
@@ -211,61 +191,50 @@ function ChatPage() {
             ←
           </Link>
           {partner ? (
-            <Link to={`/profile/${partner.id}`} className={styles.partner}>
-              {partner.photo ? (
-                <img
-                  className={styles.partnerPhoto}
-                  src={IMG.thumb(partner.photo)}
-                  alt={partner.first_name}
-                />
-              ) : (
-                <span className={`${styles.partnerPhoto} ${styles.partnerPhotoEmpty}`}>🌸</span>
-              )}
+            <div className={styles.partner}>
+              {/* state: tells their profile page this is a match (Unmatch). */}
+              <Link
+                to={`/profile/${partner.id}`}
+                state={{ matched: true }}
+                className={styles.partnerPhotoLink}
+              >
+                {partner.photo ? (
+                  <img
+                    className={styles.partnerPhoto}
+                    src={IMG.thumb(partner.photo)}
+                    alt={partner.first_name}
+                  />
+                ) : (
+                  <span className={`${styles.partnerPhoto} ${styles.partnerPhotoEmpty}`}>🌸</span>
+                )}
+              </Link>
               <span className={styles.partnerText}>
-                <span className={styles.partnerName}>
+                <Link
+                  to={`/profile/${partner.id}`}
+                  state={{ matched: true }}
+                  className={styles.partnerName}
+                >
                   {partner.first_name}
                   {partner.age ? `, ${partner.age}` : ""}
-                </span>
-                <span className={styles.partnerHint}>{t("messages.viewProfile")}</span>
-              </span>
-            </Link>
-          ) : (
-            <span className={styles.partnerName}>💬</span>
-          )}
-
-          {partner && (
-            <div className={styles.menuWrap} ref={menuRef}>
-              <button
-                type="button"
-                className={styles.menuBtn}
-                onClick={() => setMenuOpen((open) => !open)}
-                aria-haspopup="menu"
-                aria-expanded={menuOpen}
-                aria-label={t("messages.options")}
-              >
-                ⋮
-              </button>
-              {menuOpen && (
-                <div className={styles.menu} role="menu">
+                </Link>
+                {/* Both actions in plain sight, right under the name. */}
+                <span className={styles.partnerActions}>
                   <Link
                     to={`/profile/${partner.id}`}
-                    className={styles.menuItem}
-                    role="menuitem"
-                    onClick={() => setMenuOpen(false)}
+                    state={{ matched: true }}
+                    className={styles.partnerHint}
                   >
                     {t("messages.viewProfile")}
                   </Link>
-                  <button
-                    type="button"
-                    className={`${styles.menuItem} ${styles.menuDanger}`}
-                    role="menuitem"
-                    onClick={handleUnmatch}
-                  >
-                    {t("messages.unmatch")}
+                  <span className={styles.dot} aria-hidden="true">·</span>
+                  <button type="button" className={styles.unmatchLink} onClick={handleUnmatch}>
+                    💔 {t("messages.unmatch")}
                   </button>
-                </div>
-              )}
+                </span>
+              </span>
             </div>
+          ) : (
+            <span className={styles.partnerName}>💬</span>
           )}
         </div>
 

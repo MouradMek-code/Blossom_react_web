@@ -312,5 +312,19 @@
   "menu": {
     "open": "Votre compte",
     "profile": "Mon profil"
+  },
+  "safety": {
+    "back": "Retour",
+    "report": "Signaler",
+    "block": "Bloquer",
+    "blockTitle": "Bloquer {{name}} ?",
+    "blockMessage": "Vous ne vous verrez plus et ne pourrez plus vous écrire.",
+    "blocking": "Blocage…",
+    "reportTitle": "Signaler ce profil",
+    "reportQuestion": "Pourquoi signalez-vous {{name}} ?",
+    "reportPlaceholder": "Décrivez le problème…",
+    "submit": "Envoyer",
+    "sending": "Envoi…",
+    "cancel": "Annuler"
   }
 }
