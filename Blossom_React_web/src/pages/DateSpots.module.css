@@ -124,17 +124,6 @@
   margin: 0 0 16px;
 }
 
-.formRow {
-  margin-bottom: 14px;
-}
-
-.formGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
 .label {
   display: block;
   margin-bottom: 14px;
@@ -145,6 +134,70 @@
 
 .req {
   color: var(--primary);
+}
+
+/* ---- Simple share form: link first, place from the profile ---- */
+.hint {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.linkStatus {
+  margin: -8px 0 14px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.placeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: var(--surface-muted);
+}
+
+.placeText {
+  font-size: 0.92rem;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeChange {
+  flex-shrink: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.placePicker {
+  margin-bottom: 14px;
+}
+
+.detailsToggle {
+  display: block;
+  margin: 0 0 14px;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .input,
@@ -242,11 +295,6 @@
   margin-bottom: 14px;
 }
 
-@media (max-width: 600px) {
-  .formGrid {
-    grid-template-columns: 1fr;
-  }
-}
 
 /* DETAIL MODAL */
 .detailOverlay {

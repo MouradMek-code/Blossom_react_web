@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
+import LocationPicker from "../components/LocationPicker";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
@@ -753,23 +754,110 @@ function InvitePicker({ spot, token, onClose, onSent }) {
   );
 }
 
+const GOOGLE_MAPS_LINK = /^https?:\/\/(www\.)?([a-z-]+\.)?(google\.[a-z.]+|goo\.gl|maps\.app\.goo\.gl)\//i;
+
 // Used both to share a new place and, with `initial`, to edit an existing one
 // (authors their own, admins any - e.g. adding a photo to a starter spot).
+//
+// Sharing is kept to what takes seconds: paste the Google Maps link (which also
+// fills in the name and makes "Open in Google Maps" exact), pick a vibe, done.
+// City and country come from the profile; neighborhood and "best for" wait
+// behind "More details".
 function AddSpotForm({ token, initial, onCancel, onSaved }) {
   const { t } = useTranslation();
   const editing = Boolean(initial);
+  const [mapUrl, setMapUrl] = useState(initial?.map_url || "");
+  const [linkStatus, setLinkStatus] = useState(""); // "" | "reading" | "noName"
   const [name, setName] = useState(initial?.name || "");
-  const [city, setCity] = useState(initial?.city || "");
-  const [country, setCountry] = useState(initial?.country || "");
+  const [place, setPlace] = useState({ country: initial?.country || "", city: initial?.city || "" });
+  const [editingPlace, setEditingPlace] = useState(false);
   const [neighborhood, setNeighborhood] = useState(initial?.neighborhood || "");
   const [description, setDescription] = useState(initial?.description || "");
   const [category, setCategory] = useState(initial?.category || "");
   const [bestFor, setBestFor] = useState(initial?.best_for || []);
-  const [mapUrl, setMapUrl] = useState(initial?.map_url || "");
+  const [showDetails, setShowDetails] = useState(
+    Boolean(initial?.neighborhood || initial?.best_for?.length),
+  );
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  // The name we filled in from the link, so a newer link can replace it -
+  // but never a name the person typed themselves.
+  const autoName = useRef("");
+
+  function fillName(value) {
+    const previous = autoName.current;
+    autoName.current = value;
+    setName((cur) => (!cur.trim() || cur === previous ? value : cur));
+  }
+
+  // Most date spots are in the city people live in: start from their profile.
+  useEffect(() => {
+    if (editing) return undefined;
+    let alive = true;
+    fetch(`${BASE_URL}/profile`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((resp) => (resp.ok ? resp.json() : null))
+      .then((profile) => {
+        if (alive && profile?.country) {
+          setPlace((cur) => (cur.country ? cur : { country: profile.country, city: profile.city || "" }));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [editing, token]);
+
+  // Pasting the link fills in the name. Google Maps' share text sometimes
+  // comes whole ("name / address / link"): keep just the link, and its first
+  // line already is the name.
+  useEffect(() => {
+    const raw = mapUrl.trim();
+    const found = raw.match(/https?:\/\/\S+/);
+    if (!found || (editing && raw === initial?.map_url)) {
+      setLinkStatus("");
+      return undefined;
+    }
+    if (found[0] !== raw) {
+      const firstLine = raw
+        .slice(0, found.index)
+        .split("\n")
+        .map((line) => line.trim())
+        .find(Boolean);
+      if (firstLine) fillName(firstLine);
+      setMapUrl(found[0]);
+      return undefined;
+    }
+    if (!GOOGLE_MAPS_LINK.test(raw)) {
+      setLinkStatus("");
+      return undefined;
+    }
+    let alive = true;
+    const timer = setTimeout(async () => {
+      setLinkStatus("reading");
+      try {
+        const resp = await fetch(
+          `${BASE_URL}/date_spots/resolve_link?url=${encodeURIComponent(raw)}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        const data = resp.ok ? await resp.json() : null;
+        if (!alive) return;
+        if (data?.name) {
+          fillName(data.name);
+          setLinkStatus("");
+        } else {
+          setLinkStatus("noName");
+        }
+      } catch {
+        if (alive) setLinkStatus("noName");
+      }
+    }, 500);
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [mapUrl, token, editing, initial?.map_url]);
 
   function pickFile(e) {
     const f = e.target.files?.[0] || null;
@@ -786,13 +874,13 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
   function create() {
     const body = new FormData();
     body.append("name", name.trim());
-    body.append("city", city.trim());
-    body.append("country", country.trim());
-    body.append("description", description.trim());
+    body.append("city", place.city.trim());
+    body.append("country", place.country.trim());
+    body.append("map_url", mapUrl.trim());
+    if (description.trim()) body.append("description", description.trim());
     if (neighborhood.trim()) body.append("neighborhood", neighborhood.trim());
     if (category) body.append("category", category);
     if (bestFor.length > 0) body.append("best_for", bestFor.join(","));
-    if (mapUrl.trim()) body.append("map_url", mapUrl.trim());
     if (file) body.append("image", file);
     return postJson(`${BASE_URL}/date_spots`, {
       method: "POST",
@@ -812,8 +900,8 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
       },
       body: JSON.stringify({
         name: name.trim(),
-        city: city.trim(),
-        country: country.trim(),
+        city: place.city.trim(),
+        country: place.country.trim(),
         neighborhood: neighborhood.trim(),
         description: description.trim(),
         category,
@@ -835,16 +923,12 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
     e.preventDefault();
     setError("");
 
-    if (!name.trim()) return setError(t("dateSpots.errName"));
-    if (!city.trim() || !country.trim()) return setError(t("dateSpots.errPlace"));
-    if (description.trim().length < 10) return setError(t("dateSpots.errDesc"));
-    if (
-      mapUrl.trim() &&
-      !/^https?:\/\/(www\.)?([a-z-]+\.)?(google\.[a-z.]+|goo\.gl|maps\.app\.goo\.gl)\//i.test(
-        mapUrl.trim(),
-      )
-    )
+    // Required when sharing; older places being edited may not have one yet.
+    if (!editing && !mapUrl.trim()) return setError(t("dateSpots.errLink"));
+    if (mapUrl.trim() && !GOOGLE_MAPS_LINK.test(mapUrl.trim()))
       return setError(t("dateSpots.errMapUrl"));
+    if (!name.trim()) return setError(t("dateSpots.errName"));
+    if (!place.city.trim() || !place.country.trim()) return setError(t("dateSpots.errPlace"));
 
     setSubmitting(true);
     const result = editing ? await saveEdit() : await create();
@@ -863,50 +947,35 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
       </h2>
       {error !== "" && <p className={styles.error}>{error}</p>}
 
-      <div className={styles.formRow}>
-        <label className={styles.label}>
-          {t("dateSpots.name")} <span className={styles.req}>*</span>
-          <input
-            className={styles.input}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={t("dateSpots.namePlaceholder")}
-          />
-        </label>
-      </div>
-
-      <div className={styles.formGrid}>
-        <label className={styles.label}>
-          {t("dateSpots.city")} <span className={styles.req}>*</span>
-          <input
-            className={styles.input}
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder={t("dateSpots.cityPlaceholder")}
-          />
-        </label>
-        <label className={styles.label}>
-          {t("dateSpots.country")} <span className={styles.req}>*</span>
-          <input
-            className={styles.input}
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            placeholder={t("dateSpots.countryPlaceholder")}
-          />
-        </label>
-      </div>
-
+      {/* 1. The Google Maps link: exact place, and usually the name too. */}
       <label className={styles.label}>
-        {t("dateSpots.neighborhood")}
+        <span>
+          {t("dateSpots.mapLink")} {!editing && <span className={styles.req}>*</span>}
+        </span>
+        <span className={styles.hint}>{t("dateSpots.mapLinkHint")}</span>
         <input
           className={styles.input}
-          value={neighborhood}
-          onChange={(e) => setNeighborhood(e.target.value)}
-          placeholder={t("dateSpots.neighborhoodPlaceholder")}
+          value={mapUrl}
+          onChange={(e) => setMapUrl(e.target.value)}
+          placeholder={t("dateSpots.mapLinkPlaceholder")}
+          autoComplete="off"
+        />
+      </label>
+      {linkStatus === "reading" && <p className={styles.linkStatus}>{t("dateSpots.linkReading")}</p>}
+      {linkStatus === "noName" && <p className={styles.linkStatus}>{t("dateSpots.linkNoName")}</p>}
+
+      {/* 2. Name - filled in from the link, still editable. */}
+      <label className={styles.label}>
+        {t("dateSpots.name")} <span className={styles.req}>*</span>
+        <input
+          className={styles.input}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={t("dateSpots.namePlaceholder")}
         />
       </label>
 
-      {/* Vibe picker */}
+      {/* 3. Vibe - one click. */}
       <p className={styles.label}>{t("dateSpots.category")}</p>
       <div className={styles.pickRow}>
         {CATEGORIES.map((c) => (
@@ -916,52 +985,82 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
             className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
             onClick={() => setCategory(category === c ? "" : c)}
           >
-            {categoryLabel(c, t)}
+            {categoryEmoji(c)} {categoryLabel(c, t)}
           </button>
         ))}
       </div>
 
-      <p className={styles.label}>{t("dateSpots.bestFor")}</p>
-      <div className={styles.pickRow}>
-        {BEST_FOR.map((b) => (
-          <button
-            type="button"
-            key={b}
-            className={`${styles.chip} ${styles.chipSmall} ${bestFor.includes(b) ? styles.chipActive : ""}`}
-            onClick={() => toggleBestFor(b)}
-          >
-            {bestForLabel(b, t)}
-          </button>
-        ))}
+      {/* Where: their own city, changeable. */}
+      <div className={styles.placeRow}>
+        <span className={styles.placeText}>
+          📍 {[place.city, place.country].filter(Boolean).join(", ") || t("location.notSet")}
+        </span>
+        <button
+          type="button"
+          className={styles.placeChange}
+          onClick={() => setEditingPlace((open) => !open)}
+        >
+          {editingPlace ? t("dateSpots.close") : t("location.change")}
+        </button>
       </div>
-
-      <label className={styles.label}>
-        {t("dateSpots.why")} <span className={styles.req}>*</span>
-        <textarea
-          className={styles.textarea}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={4}
-          placeholder={t("dateSpots.whyPlaceholder")}
-        />
-      </label>
-
-      <label className={styles.label}>
-        {t("dateSpots.mapUrl")}
-        <input
-          className={styles.input}
-          type="url"
-          value={mapUrl}
-          onChange={(e) => setMapUrl(e.target.value)}
-          placeholder={t("dateSpots.mapUrlPlaceholder")}
-        />
-      </label>
+      {editingPlace && (
+        <div className={styles.placePicker}>
+          <LocationPicker country={place.country} city={place.city} onChange={setPlace} />
+        </div>
+      )}
 
       <label className={styles.label}>
         {editing ? t("dateSpots.photoReplace") : t("dateSpots.photo")}
         <input className={styles.file} type="file" accept="image/*" onChange={pickFile} />
       </label>
       {shownPhoto && <img className={styles.preview} src={shownPhoto} alt="Preview" />}
+
+      <label className={styles.label}>
+        {t("dateSpots.whyOptional")}
+        <textarea
+          className={styles.textarea}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={2}
+          placeholder={t("dateSpots.whyPlaceholder")}
+        />
+      </label>
+
+      {/* Rarely needed, so out of the way. */}
+      <button
+        type="button"
+        className={styles.detailsToggle}
+        onClick={() => setShowDetails((open) => !open)}
+      >
+        {showDetails ? `− ${t("dateSpots.lessDetails")}` : `+ ${t("dateSpots.moreDetails")}`}
+      </button>
+      {showDetails && (
+        <>
+          <label className={styles.label}>
+            {t("dateSpots.neighborhood")}
+            <input
+              className={styles.input}
+              value={neighborhood}
+              onChange={(e) => setNeighborhood(e.target.value)}
+              placeholder={t("dateSpots.neighborhoodPlaceholder")}
+            />
+          </label>
+
+          <p className={styles.label}>{t("dateSpots.bestFor")}</p>
+          <div className={styles.pickRow}>
+            {BEST_FOR.map((b) => (
+              <button
+                type="button"
+                key={b}
+                className={`${styles.chip} ${styles.chipSmall} ${bestFor.includes(b) ? styles.chipActive : ""}`}
+                onClick={() => toggleBestFor(b)}
+              >
+                {bestForLabel(b, t)}
+              </button>
+            ))}
+          </div>
+        </>
+      )}}
 
       <p className={styles.safety}>{t("dateSpots.safety")}</p>
 
