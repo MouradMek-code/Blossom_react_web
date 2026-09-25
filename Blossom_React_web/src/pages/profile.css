@@ -318,6 +318,79 @@
   }
 }
 
+/* Dating / language exchange / both */
+.hero-badges span.hero-connection {
+  background: #c1466b;
+  color: #fff;
+}
+
+.connection-options {
+  display: grid;
+  gap: 10px;
+}
+
+.connection-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  text-align: left;
+  font-family: inherit;
+  background: #fff;
+  border: 1.5px solid #ece2da;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.connection-option:hover:not(:disabled) {
+  border-color: #dccec3;
+}
+
+.connection-option.selected {
+  border-color: #c1466b;
+  background: #fbf1f4;
+}
+
+.connection-option:disabled {
+  cursor: default;
+}
+
+.connection-emoji {
+  flex-shrink: 0;
+  width: 42px;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.connection-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.connection-text strong {
+  font-size: 1rem;
+  color: #2a2420;
+}
+
+.connection-option.selected .connection-text strong {
+  color: #7e2a44;
+}
+
+.connection-text small {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #8a7e76;
+}
+
+.connection-saving {
+  font-weight: 700;
+  color: #c1466b;
+}
+
 /* Language, location, logging out, deleting the account - all in Settings */
 .settings-link {
   display: inline-flex;

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import LocationPicker from "../components/LocationPicker";
@@ -327,9 +327,19 @@ function DateSpots() {
               {formOpen ? t("dateSpots.close") : `＋ ${t("dateSpots.share")}`}
             </button>
           ) : (
-            <p className={styles.loginHint}>
-              <a href="/login">{t("dateSpots.loginHint")}</a>
-            </p>
+            // Visitors get the same button: sharing needs a free account, so
+            // it takes them to sign-up (members can log in from the line below).
+            <div className={styles.guestShare}>
+              <button className={styles.addBtn} onClick={() => navigate("/sign_up")}>
+                ＋ {t("dateSpots.share")}
+              </button>
+              <p className={styles.loginHint}>
+                {t("dateSpots.signUpToShare")}{" "}
+                <Link to="/login" className={styles.loginLink}>
+                  {t("dateSpots.haveAccount")}
+                </Link>
+              </p>
+            </div>
           )}
           {isAdmin && (
             <div className={styles.seedRow}>
@@ -475,8 +485,12 @@ function DateSpots() {
               <p className={styles.emptyText}>
                 {hasFilters ? t("dateSpots.emptyFiltered") : t("dateSpots.emptyAll")}
               </p>
-              {isLoggedIn && !formOpen && (
-                <button className={styles.emptyBtn} onClick={() => setFormOpen(true)}>
+              {!formOpen && (
+                <button
+                  className={styles.emptyBtn}
+                  // Visitors: sharing needs a free account.
+                  onClick={() => (isLoggedIn ? setFormOpen(true) : navigate("/sign_up"))}
+                >
                   ＋ {t("dateSpots.share")}
                 </button>
               )}

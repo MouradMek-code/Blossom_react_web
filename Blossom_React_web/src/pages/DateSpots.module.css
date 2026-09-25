@@ -60,6 +60,28 @@
   font-size: 0.95rem;
 }
 
+/* Visitors: the share button (to sign-up) and a line to log in instead. */
+.guestShare {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.guestShare .loginHint {
+  margin: 0;
+}
+
+.loginLink {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
+
 /* BODY */
 .body {
   max-width: 1120px;

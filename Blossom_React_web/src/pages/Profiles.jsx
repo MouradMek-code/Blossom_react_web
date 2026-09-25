@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import ProfileFilterModal from "../components/ProfileFilterModal";
 import { matchesFilters, getDefaultFilters } from "../api/profileFilters";
@@ -7,8 +8,11 @@ import { seededShuffle } from "../api/shuffle";
 import styles from "./Profiles.module.css";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
+import { isNewMember } from "../api/newMember";
+import { connectionLabel, connectionOf, languagesLine } from "../api/connection";
 
 function Profiles() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const [profiles, setProfiles] = useState([]);
@@ -193,8 +197,15 @@ function Profiles() {
               className={styles.image}
             />
 
+            {/* Joined less than a week ago. */}
+            {isNewMember(profile) && <span className={styles.newBadge}>✨ {t("browse.new")}</span>}
+
             <div className={styles.overlay}>
               <div className={styles.profileInfo}>
+                {/* What they're here for: dating, language exchange or both. */}
+                <span className={styles.connection}>
+                  {connectionLabel(connectionOf(profile), t)}
+                </span>
                 <h3>
                   {profile.first_name}
                   <span>{profile.age}</span>
@@ -203,6 +214,11 @@ function Profiles() {
                 <p className={styles.location}>
                   📍 {profile.city}, {profile.country}
                 </p>
+
+                {/* The languages matter to anyone open to language exchange. */}
+                {connectionOf(profile) !== "dating" && languagesLine(profile) && (
+                  <p className={styles.languages}>{languagesLine(profile)}</p>
+                )}
 
                 {profile.occupation && (
                   <div className={styles.tag}>💼 {profile.occupation}</div>

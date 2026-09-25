@@ -426,6 +426,104 @@
   transition: width 0.4s ease;
 }
 
+/* ---- "What brings you to Blossom?" ---- */
+.connectionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.connectionHint {
+  margin: 0 0 4px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #8a7e76;
+}
+
+.connectionCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 18px;
+  text-align: left;
+  font-family: inherit;
+  background: #fff;
+  border: 1.5px solid #ece2da;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.connectionCard:hover {
+  border-color: #dccec3;
+  transform: translateY(-1px);
+}
+
+.connectionCardSelected {
+  border-color: #c1466b;
+  background: #fbf1f4;
+}
+
+.connectionEmoji {
+  flex-shrink: 0;
+  width: 48px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.connectionText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.connectionTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #2a2420;
+}
+
+.connectionCardSelected .connectionTitle {
+  color: #7e2a44;
+}
+
+.connectionDefault {
+  padding: 2px 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #c1466b;
+  background: #f7e6ec;
+  border-radius: 999px;
+}
+
+.connectionDesc {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #8a7e76;
+}
+
+.radio {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #dccec3;
+  border-radius: 50%;
+}
+
+.radioSelected {
+  border-color: #c1466b;
+  background: radial-gradient(circle, #c1466b 0 5px, transparent 6px);
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .questions {

@@ -87,6 +87,12 @@
   color: #fff;
 }
 
+/* Dating / language exchange / both. */
+.heroConnection {
+  background: rgba(193, 70, 107, 0.85);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
 /* BODY */
 .body {
   max-width: 760px;

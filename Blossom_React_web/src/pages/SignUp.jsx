@@ -145,6 +145,8 @@ function SignUp() {
         wants_children: answer?.wants_children,
         city: answer?.city,
         country: answer?.country,
+        // Dating, language exchange or both (the default).
+        connection_type: answer?.connection_type || "both",
       }),
     });
     const data = await resp.json();

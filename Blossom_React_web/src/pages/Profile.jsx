@@ -7,11 +7,14 @@ import "./profile.css";
 
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
+import { postJson } from "../api/errors";
+import { CONNECTION_EMOJI, CONNECTION_TYPES, connectionLabel, connectionOf } from "../api/connection";
 
 function Profile() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
+  const [savingConnection, setSavingConnection] = useState(null);
   const [editingBio, setEditingBio] = useState(false);
   const [bioDraft, setBioDraft] = useState("");
   const [savingBio, setSavingBio] = useState(false);
@@ -58,6 +61,27 @@ function Profile() {
     setBioDraft(profile.bio || "");
     setEditingBio(true);
     setError("");
+  }
+
+  // Dating, language exchange or both - one click.
+  async function changeConnection(type) {
+    if (type === connectionOf(profile) || savingConnection) return;
+    setSavingConnection(type);
+    setError("");
+    const result = await postJson(`${BASE_URL}/profile/connection`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ connection_type: type }),
+    });
+    setSavingConnection(null);
+    if (!result.ok) {
+      setError(result.message || t("connection.changeFailed"));
+      return;
+    }
+    setProfile(result.data);
   }
 
   async function saveBio() {
@@ -163,12 +187,42 @@ function Profile() {
             </Link>
 
             <div className="hero-badges">
+              <span className="hero-connection">{connectionLabel(connectionOf(profile), t)}</span>
               <span>💘 {profile.relationship_goal || "Not specified"}</span>
 
               {profile.occupation && <span>💼 {profile.occupation}</span>}
 
               {profile.education && <span>🎓 {profile.education}</span>}
             </div>
+          </div>
+        </section>
+
+        {/* DATING / LANGUAGE EXCHANGE / BOTH */}
+        <section className="card">
+          <h2>{t("connection.title")}</h2>
+          <div className="connection-options">
+            {CONNECTION_TYPES.map((type) => {
+              const isSelected = connectionOf(profile) === type;
+              return (
+                <button
+                  key={type}
+                  type="button"
+                  className={`connection-option ${isSelected ? "selected" : ""}`}
+                  onClick={() => changeConnection(type)}
+                  disabled={savingConnection !== null}
+                  aria-pressed={isSelected}
+                >
+                  <span className="connection-emoji" aria-hidden="true">
+                    {CONNECTION_EMOJI[type]}
+                  </span>
+                  <span className="connection-text">
+                    <strong>{t(`connection.${type}`)}</strong>
+                    <small>{t(`connection.${type}Desc`)}</small>
+                  </span>
+                  {savingConnection === type && <span className="connection-saving">…</span>}
+                </button>
+              );
+            })}
           </div>
         </section>
 
@@ -358,45 +412,49 @@ function Profile() {
           </div>
         </section>
 
-        {/* FUTURE */}
-        <section className="card">
-          <h2>Family & Future</h2>
+        {/* FUTURE + DATING PREFERENCES - not asked of someone only here for
+            language exchange. */}
+        {connectionOf(profile) !== "language" && (
+          <>
+            <section className="card">
+              <h2>Family & Future</h2>
 
-          <div className="grid">
-            <div>
-              <span>Children</span>
-              <b>{profile.has_children}</b>
-            </div>
-            <div>
-              <span>Wants children</span>
-              <b>{profile.wants_children}</b>
-            </div>
-            <div>
-              <span>Goal</span>
-              <b>{profile.relationship_goal}</b>
-            </div>
-          </div>
-        </section>
+              <div className="grid">
+                <div>
+                  <span>Children</span>
+                  <b>{profile.has_children}</b>
+                </div>
+                <div>
+                  <span>Wants children</span>
+                  <b>{profile.wants_children}</b>
+                </div>
+                <div>
+                  <span>Goal</span>
+                  <b>{profile.relationship_goal}</b>
+                </div>
+              </div>
+            </section>
 
-        {/* DATING PREFERENCES */}
-        <section className="card">
-          <h2>Dating Preferences</h2>
+            <section className="card">
+              <h2>Dating Preferences</h2>
 
-          <div className="grid">
-            <div>
-              <span>Ideal first date</span>
-              <b>{profile.first_date_preference || "-"}</b>
-            </div>
-            <div>
-              <span>Past relationships</span>
-              <b>{profile.past_relationships_count || "-"}</b>
-            </div>
-            <div>
-              <span>Last breakup reason</span>
-              <b>{profile.last_breakup_reason || "-"}</b>
-            </div>
-          </div>
-        </section>
+              <div className="grid">
+                <div>
+                  <span>Ideal first date</span>
+                  <b>{profile.first_date_preference || "-"}</b>
+                </div>
+                <div>
+                  <span>Past relationships</span>
+                  <b>{profile.past_relationships_count || "-"}</b>
+                </div>
+                <div>
+                  <span>Last breakup reason</span>
+                  <b>{profile.last_breakup_reason || "-"}</b>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
 
         {/* LANGUAGES */}
         <section className="card">

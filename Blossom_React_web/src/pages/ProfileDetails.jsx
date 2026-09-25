@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
+import { connectionLabel, connectionOf } from "../api/connection";
 import styles from "./ProfileDetails.module.css";
 
 // Someone's full profile. Liking and passing happen on the Browse cards, not
@@ -128,6 +129,9 @@ function ProfileDetails() {
             <span className={styles.heroAge}>, {profile.age}</span>
           </h1>
           <div className={styles.heroMeta}>
+            <span className={`${styles.heroBadge} ${styles.heroConnection}`}>
+              {connectionLabel(connectionOf(profile), t)}
+            </span>
             {profile.city && <span className={styles.heroBadge}>📍 {profile.city}</span>}
             {profile.relationship_goal && <span className={styles.heroBadge}>💘 {profile.relationship_goal}</span>}
             {profile.occupation && <span className={styles.heroBadge}>💼 {profile.occupation}</span>}
@@ -199,16 +203,18 @@ function ProfileDetails() {
           </div>
         </div>
 
-        {/* Family */}
-        <div className={styles.card}>
-          <p className={styles.cardTitle}>Family & Future</p>
-          <div className={styles.grid}>
-            <Fact label="Children" value={profile.has_children} />
-            <Fact label="Wants children" value={profile.wants_children} />
-            <Fact label="Goal" value={profile.relationship_goal} />
-            <Fact label="Ideal first date" value={profile.first_date_preference} />
+        {/* Family - not asked of someone only here for language exchange. */}
+        {connectionOf(profile) !== "language" && (
+          <div className={styles.card}>
+            <p className={styles.cardTitle}>Family & Future</p>
+            <div className={styles.grid}>
+              <Fact label="Children" value={profile.has_children} />
+              <Fact label="Wants children" value={profile.wants_children} />
+              <Fact label="Goal" value={profile.relationship_goal} />
+              <Fact label="Ideal first date" value={profile.first_date_preference} />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Languages */}
         {profile.languages?.length > 0 && (

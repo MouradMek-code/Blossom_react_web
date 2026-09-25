@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./StartProfile.module.css";
 import { saveSignupDraft } from "../api/signupDraft";
-import questions from "../data/questions.json";
+import allQuestions from "../data/questions.json";
 import ProfileFlowerProgress from "./ProfileFlowerProgress";
+import { CONNECTION_EMOJI, CONNECTION_TYPES, questionsFor } from "../api/connection";
 
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(
@@ -23,6 +25,11 @@ function StartProfile({ setQuestionEnded, answer, setAnswer, initialIndex = 0, a
   const [started, setStart] = useState(autoStart);
   const [indiceQuestion, setIndiceQuestion] = useState(initialIndex);
   const [clicked, setClicked] = useState(false);
+  // Someone here only for language exchange skips the dating questions.
+  const questions = useMemo(
+    () => questionsFor(allQuestions, answer.connection_type),
+    [answer.connection_type],
+  );
 
   function Handleclicked(question, values) {
     setClicked(true);
@@ -98,17 +105,19 @@ function QuestionOption({
   answer,
   setClicked,
 }) {
+  const { t } = useTranslation();
   const isMobile = useIsMobile();
   const nextButton = (
     <button className={styles.end_button} onClick={onclick}>
       NEXT
     </button>
   );
+  const title = question.field === "connection_type" ? t("connection.question") : question.question;
 
   return (
     <>
       <div className={styles.questions}>
-        <h2>{question.question}</h2>
+        <h2>{title}</h2>
         <div className={styles.button_question}>
           <Question
             question={question}
@@ -125,7 +134,70 @@ function QuestionOption({
     </>
   );
 }
+// "What brings you to Blossom?": dating, language exchange or both. "Both" is
+// chosen already, so Next works straight away.
+function ConnectionQuestion({ answer, setAnswer, setClicked }) {
+  const { t } = useTranslation();
+  const selected = answer.connection_type || "both";
+
+  function choose(type) {
+    setAnswer((prev) => {
+      const next = { ...prev, connection_type: type };
+      // Language exchange is about friendship; its relationship question is
+      // skipped. Changing their mind brings that question back.
+      if (type === "language") next.relationship_goal = "Friendship";
+      else if (prev.connection_type === "language") delete next.relationship_goal;
+      return next;
+    });
+    setClicked(true);
+  }
+
+  useEffect(() => {
+    if (answer.connection_type) setClicked(true);
+    else choose("both");
+    // Only on first showing: pick the default once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div className={styles.connectionList}>
+      <p className={styles.connectionHint}>{t("connection.hint")}</p>
+      {CONNECTION_TYPES.map((type) => {
+        const isSelected = selected === type;
+        return (
+          <button
+            type="button"
+            key={type}
+            role="radio"
+            aria-checked={isSelected}
+            className={`${styles.connectionCard} ${isSelected ? styles.connectionCardSelected : ""}`}
+            onClick={() => choose(type)}
+          >
+            <span className={styles.connectionEmoji} aria-hidden="true">
+              {CONNECTION_EMOJI[type]}
+            </span>
+            <span className={styles.connectionText}>
+              <span className={styles.connectionTitle}>
+                {t(`connection.${type}`)}
+                {type === "both" && (
+                  <span className={styles.connectionDefault}>{t("connection.defaultTag")}</span>
+                )}
+              </span>
+              <span className={styles.connectionDesc}>{t(`connection.${type}Desc`)}</span>
+            </span>
+            <span className={`${styles.radio} ${isSelected ? styles.radioSelected : ""}`} aria-hidden="true" />
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function Question({ question, Handleclicked, answer, setAnswer, setClicked }) {
+  if (question.field === "connection_type") {
+    return <ConnectionQuestion answer={answer} setAnswer={setAnswer} setClicked={setClicked} />;
+  }
+
   // Multi-select personality
   if (question.field === "personality_type") {
     const selected = answer.personality_type ? answer.personality_type.split(", ") : [];
