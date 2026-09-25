@@ -8,6 +8,7 @@ import "./profile.css";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { postJson } from "../api/errors";
+import { deletePhoto, fetchOwnPhotos, isImageFile, uploadPhoto } from "../api/photoUpload";
 import { CONNECTION_EMOJI, CONNECTION_TYPES, connectionLabel, connectionOf } from "../api/connection";
 
 function Profile() {
@@ -107,44 +108,50 @@ function Profile() {
     }
   }
 
+  // Each photo shows as soon as it is saved.
   async function handleUploadPhoto(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploadingPhoto(true);
+    const chosen = Array.from(e.target.files || []);
+    e.target.value = "";
+    const files = chosen.filter(isImageFile);
     setError("");
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
-      const resp = await fetch(`${BASE_URL}/profile/image`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
-      const newPhoto = await resp.json();
-      if (resp.status !== 200) throw new Error("Failed to upload photo");
-      setProfile((prev) => ({ ...prev, photos: [...(prev.photos || []), newPhoto] }));
-    } catch (err) {
-      setError(err.toString());
-    } finally {
-      setUploadingPhoto(false);
-      e.target.value = "";
+    if (chosen.length && !files.length) {
+      setError(t("photos.notImage"));
+      return;
+    }
+    if (!files.length) return;
+    setUploadingPhoto(true);
+    const known = new Set((profile?.photos || []).map((p) => p.id));
+    let failure = null;
+    for (const file of files) {
+      try {
+        const photo = await uploadPhoto(file, known);
+        known.add(photo.id);
+        setProfile((prev) => withPhoto(prev, photo));
+      } catch (err) {
+        failure = err.message || t("photos.connection");
+      }
+    }
+    setUploadingPhoto(false);
+    if (failure !== null) {
+      setError(failure);
+      // Show whatever did get saved.
+      fetchOwnPhotos()
+        .then((photos) => setProfile((prev) => ({ ...prev, photos })))
+        .catch(() => {});
     }
   }
 
   async function handleDeletePhoto(photoId) {
+    if (!window.confirm(t("photos.deleteTitle"))) return;
     setError("");
     try {
-      const resp = await fetch(`${BASE_URL}/profile/image/${photoId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (resp.status !== 200) throw new Error("Failed to delete photo");
+      await deletePhoto(photoId);
       setProfile((prev) => ({
         ...prev,
-        photos: prev.photos.filter((p) => p.id !== photoId),
+        photos: (prev.photos || []).filter((p) => p.id !== photoId),
       }));
-    } catch (err) {
-      setError(err.toString());
+    } catch {
+      setError(t("photos.deleteFailed"));
     }
   }
 
@@ -229,7 +236,7 @@ function Profile() {
         {/* PHOTOS */}
         <section className="card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h2>Photos</h2>
+            <h2>{t("photos.section")}</h2>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -244,12 +251,13 @@ function Profile() {
                 cursor: "pointer",
               }}
             >
-              {uploadingPhoto ? "Uploading..." : "+ Add Photo"}
+              {uploadingPhoto ? t("photos.uploading") : t("photos.addButton")}
             </button>
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
+              multiple
               style={{ display: "none" }}
               onChange={handleUploadPhoto}
             />
@@ -474,6 +482,12 @@ function Profile() {
       </div>
     </div>
   );
+}
+
+function withPhoto(profile, photo) {
+  const photos = profile?.photos || [];
+  if (photos.some((p) => p.id === photo.id)) return profile;
+  return { ...profile, photos: [...photos, { id: photo.id, image_url: photo.image_url }] };
 }
 
 export default Profile;

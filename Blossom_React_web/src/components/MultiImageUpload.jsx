@@ -1,200 +1,200 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../api/config";
+import { useTranslation } from "react-i18next";
+import { IMG } from "../api/images";
+import {
+  deletePhoto,
+  fetchOwnPhotos,
+  findSavedPhoto,
+  isImageFile,
+  uploadPhoto,
+} from "../api/photoUpload";
+import styles from "./MultiImageUpload.module.css";
+
+const MAX = 6;
+const MIN_REQUIRED = 2;
+
+let nextKey = 0;
+
 export default function ImageUploader() {
-  const MAX = 6;
-  const MIN_REQUIRED = 2;
-  const [images, setImages] = useState([]);
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const handleUpload = async (e, index) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  // [{ key, url, status: "done" | "uploading" | "failed", id?, file?, message? }]
+  const [slots, setSlots] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  // Ids of the photos already on the server (null until known).
+  const knownIds = useRef(null);
+  const mounted = useRef(true);
+  const inputRef = useRef(null);
 
-    const formData = new FormData();
-    formData.append("image", file);
+  function update(key, changes) {
+    if (!mounted.current) return;
+    setSlots((prev) => prev.map((s) => (s.key === key ? { ...s, ...changes } : s)));
+  }
 
-    const token = sessionStorage.getItem("token");
-
-    await fetch(`${BASE_URL}/profile/image`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-    const newImage = {
-      file,
-      url: URL.createObjectURL(file),
+  // Photos already uploaded (coming back to this step, or saved after a
+  // dropped connection) show straight away.
+  useEffect(() => {
+    mounted.current = true;
+    fetchOwnPhotos()
+      .then((photos) => {
+        if (!mounted.current) return;
+        knownIds.current = new Set(photos.map((p) => p.id));
+        setSlots((prev) => [
+          ...photos.slice(0, MAX).map((p) => ({ key: `s${p.id}`, id: p.id, url: IMG.thumb(p.image_url), status: "done" })),
+          ...prev.filter((s) => !knownIds.current.has(s.id)),
+        ]);
+      })
+      .catch(() => {})
+      .finally(() => mounted.current && setLoading(false));
+    return () => {
+      mounted.current = false;
     };
+  }, []);
 
-    setImages((prev) => {
-      const updated = [...prev];
-      updated[index] = newImage;
-      return updated;
-    });
-
-    e.target.value = "";
+  function saved(key, photo) {
+    knownIds.current?.add(photo.id);
     sessionStorage.setItem("profilecreated", "yes");
-  };
+    update(key, { status: "done", id: photo.id, message: "" });
+  }
 
-  const removeImage = (index) => {
-    setImages((prev) => {
-      const updated = [...prev];
-      updated[index] = null;
-      return updated;
-    });
-  };
+  async function send(key, file) {
+    update(key, { status: "uploading", message: "" });
+    try {
+      saved(key, await uploadPhoto(file, knownIds.current));
+    } catch (err) {
+      update(key, { status: "failed", message: err.message || t("photos.connection") });
+    }
+  }
 
-  const uploadedCount = images.filter(Boolean).length;
+  function addPhotos(e) {
+    setError("");
+    const chosen = Array.from(e.target.files || []);
+    e.target.value = "";
+    const files = chosen.filter(isImageFile).slice(0, MAX - slots.length);
+    if (chosen.length && !files.length) {
+      setError(t("photos.notImage"));
+      return;
+    }
+    const added = files.map((file) => ({
+      key: `n${nextKey++}`,
+      url: URL.createObjectURL(file),
+      file,
+      status: "uploading",
+    }));
+    if (!added.length) return;
+    setSlots((prev) => [...prev, ...added].slice(0, MAX));
+    added.forEach((s) => send(s.key, s.file));
+  }
+
+  // A photo that "failed" may have reached the server after all: look first,
+  // then send it again. (Not while others are uploading - a new photo on the
+  // server could be theirs.)
+  async function retry(slot) {
+    const othersUploading = slots.some((s) => s.status === "uploading" && s.key !== slot.key);
+    update(slot.key, { status: "uploading", message: "" });
+    if (knownIds.current && !othersUploading) {
+      const found = await findSavedPhoto(knownIds.current, { waits: [0] });
+      if (found) return saved(slot.key, found);
+    }
+    send(slot.key, slot.file);
+  }
+
+  async function remove(slot) {
+    setError("");
+    setSlots((prev) => prev.filter((s) => s.key !== slot.key));
+    if (slot.status !== "done") return;
+    try {
+      await deletePhoto(slot.id);
+      knownIds.current?.delete(slot.id);
+    } catch {
+      // Still on the server: put it back and say so.
+      if (!mounted.current) return;
+      setSlots((prev) => [...prev, slot]);
+      setError(t("photos.deleteFailed"));
+    }
+  }
+
+  const doneCount = slots.filter((s) => s.status === "done").length;
+  const uploading = slots.some((s) => s.status === "uploading");
+  const missing = Math.max(0, MIN_REQUIRED - doneCount);
+  const failed = slots.find((s) => s.status === "failed");
 
   return (
-    <div style={styles.wrapper}>
-      <h2 style={styles.title}>Upload Images (max 6)</h2>
+    <div className={styles.wrapper}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>{t("photos.title")}</h2>
+        <p className={styles.subtitle}>{t("photos.subtitle", { min: MIN_REQUIRED, max: MAX })}</p>
 
-      <div style={styles.grid}>
-        {Array.from({ length: MAX }).map((_, index) => {
-          const img = images[index];
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          hidden
+          onChange={addPhotos}
+        />
 
-          return (
-            <div key={index} style={styles.box}>
-              {img ? (
-                <>
-                  <img src={img.url} alt="" style={styles.image} />
-
+        <div className={styles.grid}>
+          {Array.from({ length: MAX }).map((_, index) => {
+            const slot = slots[index];
+            if (!slot) {
+              return (
+                <button
+                  key={`empty${index}`}
+                  type="button"
+                  className={`${styles.box} ${styles.addBox}`}
+                  onClick={() => inputRef.current?.click()}
+                  disabled={loading}
+                  aria-label={t("photos.add")}
+                >
+                  {loading && index === 0 ? <span className={styles.spinnerDark} /> : <span className={styles.plus}>+</span>}
+                </button>
+              );
+            }
+            return (
+              <div key={slot.key} className={styles.box}>
+                <img src={slot.url} alt="" className={styles.image} />
+                {slot.status === "uploading" && (
+                  <div className={styles.overlay}>
+                    <span className={styles.spinner} />
+                  </div>
+                )}
+                {slot.status === "failed" && (
+                  <button type="button" className={`${styles.overlay} ${styles.failedOverlay}`} onClick={() => retry(slot)}>
+                    <span className={styles.failedIcon}>↻</span>
+                    <span className={styles.failedText}>{t("photos.tapToRetry")}</span>
+                  </button>
+                )}
+                {slot.status !== "uploading" && (
                   <button
-                    onClick={() => removeImage(index)}
-                    style={styles.removeBtn}
+                    type="button"
+                    className={styles.removeBtn}
+                    onClick={() => remove(slot)}
+                    aria-label={t("photos.remove")}
                   >
                     ✕
                   </button>
-                </>
-              ) : (
-                <label style={styles.addBox}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={(e) => handleUpload(e, index)}
-                  />
-                  <div style={styles.plus}>+</div>
-                </label>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      {uploadedCount < MIN_REQUIRED ? (
-        <p style={styles.hint}>
-          Add {MIN_REQUIRED - uploadedCount} more photo
-          {MIN_REQUIRED - uploadedCount > 1 ? "s" : ""} to continue
-        </p>
-      ) : (
-        <div style={styles.buttonWrap}>
-          <button style={styles.button} onClick={() => navigate("/profiles")}>
-            Go Check Profiles →
-          </button>
+                )}
+              </div>
+            );
+          })}
         </div>
-      )}
+
+        {failed && <p className={styles.error}>{failed.message || t("photos.connection")}</p>}
+        {error && <p className={styles.error}>{error}</p>}
+
+        {missing > 0 || uploading ? (
+          <p className={styles.hint}>
+            {uploading ? t("photos.uploading") : t(missing === 1 ? "photos.addOne" : "photos.addMore", { count: missing })}
+          </p>
+        ) : (
+          <button type="button" className={styles.button} onClick={() => navigate("/profiles")}>
+            {t("photos.continue")}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
-
-const styles = {
-  wrapper: {
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "24px 0",
-  },
-
-  buttonWrap: {
-    marginTop: "24px",
-  },
-
-  hint: {
-    marginTop: "24px",
-    fontSize: "14px",
-    fontWeight: "600",
-    color: "#888",
-    textAlign: "center",
-  },
-
-  button: {
-    border: "none",
-    borderRadius: "999px",
-    padding: "16px 36px",
-    background: "#e11d48",
-    color: "white",
-    fontWeight: 700,
-    fontSize: "16px",
-    letterSpacing: "0.3px",
-    cursor: "pointer",
-    boxShadow: "0 8px 20px rgba(225, 29, 72, 0.3)",
-    transition: "transform 0.15s ease, box-shadow 0.15s ease",
-  },
-
-  title: {
-    marginBottom: "20px",
-    fontSize: "30px",
-    fontWeight: "600",
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, minmax(90px, 120px))",
-    gap: "12px",
-    justifyContent: "center",
-    width: "100%",
-    maxWidth: "400px",
-    padding: "0 16px",
-  },
-
-  box: {
-    width: "100%",
-    aspectRatio: "1",
-    position: "relative",
-    borderRadius: "12px",
-    overflow: "hidden",
-    background: "#fff",
-    border: "1px solid #ddd",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  image: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-  },
-
-  addBox: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-  },
-
-  plus: {
-    fontSize: "28px",
-    fontWeight: "bold",
-    color: "#666",
-  },
-
-  removeBtn: {
-    position: "absolute",
-    top: "5px",
-    right: "5px",
-    background: "rgba(0,0,0,0.6)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "50%",
-    width: "22px",
-    height: "22px",
-    cursor: "pointer",
-  },
-};
