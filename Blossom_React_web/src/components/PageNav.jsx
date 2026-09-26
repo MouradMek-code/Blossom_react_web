@@ -210,7 +210,12 @@ function PageNav({ minimal = false, hideTabBar = false }) {
                     {t("settings.title")}
                   </NavLink>
                   {isAdmin && (
-                    <NavLink to="/admin" className={styles.menuItem} role="menuitem" onClick={closeMenu}>
+                    <NavLink to="/admin/dashboard" className={styles.menuItem} role="menuitem" onClick={closeMenu}>
+                      {t("nav.dashboard")}
+                    </NavLink>
+                  )}
+                  {isAdmin && (
+                    <NavLink to="/admin" end className={styles.menuItem} role="menuitem" onClick={closeMenu}>
                       {t("nav.admin")}
                     </NavLink>
                   )}

@@ -1,5 +1,6 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Profile from "./pages/Profile";
 import Profiles from "./pages/Profiles";
 import SignUp from "./pages/SignUp";
@@ -17,9 +18,29 @@ import Terms from "./pages/Terms";
 import DateSpots from "./pages/DateSpots";
 import DeleteAccount from "./pages/DeleteAccount";
 import Admin from "./pages/Admin";
+import AdminDashboard from "./pages/AdminDashboard";
+import { trackVisit } from "./api/analytics";
+
+// Visits for the admin dashboard (see api/analytics.js).
+function VisitTracker() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    trackVisit(pathname);
+  }, [pathname]);
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") trackVisit(window.location.pathname);
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
+  return null;
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <VisitTracker />
       <Routes>
         <Route path="profile" element={<Profile />} />
         <Route path="profiles" element={<Profiles />} />
@@ -41,6 +62,7 @@ function App() {
         <Route path="/date-spots/:id" element={<DateSpots />} />
         <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

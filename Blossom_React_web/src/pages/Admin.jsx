@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
 
@@ -82,7 +82,10 @@ export default function Admin() {
               🛡️ Admin Panel
             </h1>
             <p style={{ margin: "4px 0 0", color: "#888", fontSize: "14px" }}>
-              {users.length} users total
+              {users.length} users total ·{" "}
+              <Link to="/admin/dashboard" style={{ color: "#c1466b", fontWeight: 700 }}>
+                📊 Dashboard
+              </Link>
             </p>
           </div>
           <input
