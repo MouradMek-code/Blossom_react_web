@@ -19,6 +19,8 @@ import DateSpots from "./pages/DateSpots";
 import DeleteAccount from "./pages/DeleteAccount";
 import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminPromos from "./pages/AdminPromos";
+import Promotions from "./pages/Promotions";
 import { trackVisit } from "./api/analytics";
 
 // Visits for the admin dashboard (see api/analytics.js).
@@ -63,6 +65,8 @@ function App() {
         <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/promos" element={<AdminPromos />} />
+        <Route path="/promotions" element={<Promotions />} />
       </Routes>
     </BrowserRouter>
   );

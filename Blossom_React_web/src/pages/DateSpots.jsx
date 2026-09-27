@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import LocationPicker from "../components/LocationPicker";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
+import { formatHours, offerTerms } from "../api/offers";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
 import {
   BEST_FOR,
@@ -21,6 +22,12 @@ import styles from "./DateSpots.module.css";
 
 // Fire-and-forget engagement tracking. Never block or surface errors: a missed
 // count must never get in the way of the user opening a place.
+// A venue promotion for matched couples who go together ("🎁 -20%...").
+function OfferPill({ offer }) {
+  if (!offer) return null;
+  return <span className={styles.offerPill}>🎁 {offer.title}</span>;
+}
+
 function track(spotId, action) {
   fetch(`${BASE_URL}/date_spots/${spotId}/${action}`, { method: "POST" }).catch(() => {});
 }
@@ -152,7 +159,7 @@ function AdminStatsEditor({ spot, token, t, onSaved }) {
 }
 
 function DateSpots() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [spots, setSpots] = useState([]);
   const [locations, setLocations] = useState([]);
   const [country, setCountry] = useState("");
@@ -317,15 +324,21 @@ function DateSpots() {
           <h1 className={styles.title}>{t("dateSpots.title")}</h1>
           <p className={styles.subtitle}>{t("dateSpots.subtitle")}</p>
           {isLoggedIn ? (
-            <button
-              className={styles.addBtn}
-              onClick={() => {
-                setEditing(null);
-                setFormOpen((o) => !o);
-              }}
-            >
-              {formOpen ? t("dateSpots.close") : `＋ ${t("dateSpots.share")}`}
-            </button>
+            <>
+              <button
+                className={styles.addBtn}
+                onClick={() => {
+                  setEditing(null);
+                  setFormOpen((o) => !o);
+                }}
+              >
+                {formOpen ? t("dateSpots.close") : `＋ ${t("dateSpots.share")}`}
+              </button>
+              {/* Promotion codes a match and I got at spots with 🎁. */}
+              <Link to="/promotions" className={styles.myPromos}>
+                {t("offers.myPromos")}
+              </Link>
+            </>
           ) : (
             // Visitors get the same button: sharing needs a free account, so
             // it takes them to sign-up (members can log in from the line below).
@@ -511,6 +524,7 @@ function DateSpots() {
                 <div className={styles.scrim} />
                 <span className={styles.featuredFlag}>★ {t("dateSpots.featured")}</span>
                 <div className={styles.featuredInfo}>
+                  <OfferPill offer={featured.offer} />
                   {featured.category && (
                     <span className={styles.tag}>
                       {categoryLabel(featured.category, t)}
@@ -541,6 +555,7 @@ function DateSpots() {
                       />
                       <div className={styles.scrim} />
                       <div className={styles.cardInfo}>
+                        <OfferPill offer={spot.offer} />
                         {spot.category && (
                           <span className={styles.tag}>
                             {categoryLabel(spot.category, t)}
@@ -609,6 +624,16 @@ function DateSpots() {
               <h2 className={styles.detailTitle}>{selected.name}</h2>
               <p className={styles.detailPlace}>📍 {fullPlace(selected)}</p>
               <SpotStats spot={selected} t={t} className={styles.detailStats} />
+              {selected.offer && (
+                <div className={styles.offerBox}>
+                  <strong className={styles.offerBoxTitle}>🎁 {selected.offer.title}</strong>
+                  {selected.offer.details && <p className={styles.offerBoxDetails}>{selected.offer.details}</p>}
+                  <p className={styles.offerBoxTerms}>{offerTerms(selected.offer, t, i18n.language)}</p>
+                  <p className={styles.offerBoxHow}>
+                    {t("offers.howTo")} {t("offers.useWithin", { time: formatHours(selected.offer.valid_hours, t) })}
+                  </p>
+                </div>
+              )}
               <p className={styles.detailText}>{selected.description}</p>
               {selected.profile?.first_name && (
                 <p className={styles.detailAuthor}>

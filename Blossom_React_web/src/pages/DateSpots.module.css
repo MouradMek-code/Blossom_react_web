@@ -1116,3 +1116,62 @@
   opacity: 0.6;
   cursor: default;
 }
+
+/* Venue promotions for couples who go together. */
+.offerPill {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #ffb547;
+  color: #3d2300;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.offerBox {
+  margin: 14px 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff4e5;
+  border: 1px solid #ffd8a3;
+  color: #3d2300;
+}
+
+.offerBoxTitle {
+  font-size: 1.05rem;
+}
+
+.offerBoxDetails,
+.offerBoxTerms,
+.offerBoxHow {
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.offerBoxTerms {
+  font-weight: 600;
+  color: #6b3e00;
+}
+
+.offerBoxHow {
+  color: #6b4a1e;
+}
+
+.myPromos {
+  display: inline-block;
+  margin: 10px auto 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid #ffb547;
+  background: #fff4e5;
+  color: #6b3e00;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+}

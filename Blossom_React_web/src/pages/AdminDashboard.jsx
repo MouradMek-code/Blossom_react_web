@@ -63,6 +63,7 @@ export default function AdminDashboard() {
           </div>
           <div className={styles.headerActions}>
             <Link to="/admin" className={styles.linkBtn}>{t("dashboard.membersLink")}</Link>
+            <Link to="/admin/promos" className={styles.linkBtn}>{t("offers.tab")}</Link>
             <div className={styles.segmented} role="tablist" aria-label={t("dashboard.period")}>
               {PERIODS.map((p) => (
                 <button

@@ -292,3 +292,118 @@
   font-weight: 700;
   color: #c1466b;
 }
+
+/* Date spot invites: "I'm in", a venue promotion, the couple's code. */
+.offerStrip {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #fff4e5;
+  color: #6b3e00;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.voucherBox {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px dashed var(--primary, #c1466b);
+  background: #fff;
+  color: #2a2420;
+  text-decoration: none;
+  text-align: center;
+}
+
+.voucherTitle {
+  font-size: 14px;
+}
+
+.voucherLabel {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #8a7e76;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.voucherCode {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #7e2a44;
+}
+
+.voucherDeadline {
+  font-size: 12.5px;
+  color: #574d46;
+}
+
+.voucherDone {
+  color: #8a7e76;
+}
+
+.inStatus {
+  margin: 8px 4px 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.imInBtn {
+  margin-top: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 10px;
+  background: #3ba776;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.imInBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.notice {
+  margin: 0 12px 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #fff4e5;
+  border: 1px solid #ffd8a3;
+  color: #3d2300;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.noticeActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.noticeActions a {
+  color: #7e2a44;
+  font-weight: 700;
+}
+
+.noticeActions button {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  background: #3d2300;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}

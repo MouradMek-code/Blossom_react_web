@@ -8,12 +8,18 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
 import { categoryEmoji, categoryGradient, shortPlace } from "../api/categories";
+import { formatDeadline } from "../api/offers";
 
 // A date spot sent with "Invite a match": the message text plus a tappable
-// card for the place.
-function InviteCard({ message, mine }) {
-  const { t } = useTranslation();
+// card for the place. The invited person answers "I'm in"; when the spot has
+// a venue promotion, that gets them both a code.
+function InviteCard({ message, mine, partnerName, onAccept, accepting }) {
+  const { t, i18n } = useTranslation();
   const spot = message.date_spot;
+  const offer = spot.offer;
+  const voucher = message.voucher;
+  const accepted = Boolean(message.accepted_at);
+  const deadline = (value) => formatDeadline(value, i18n.language);
   return (
     <div className={styles.invite}>
       <p className={styles.inviteText}>{message.content}</p>
@@ -38,12 +44,44 @@ function InviteCard({ message, mine }) {
           <span className={styles.inviteCta}>{t("dateSpots.viewSpot")} →</span>
         </div>
       </Link>
+
+      {voucher ? (
+        <Link to={`/promotions?highlight=${voucher.id}`} className={styles.voucherBox}>
+          <strong className={styles.voucherTitle}>🎁 {voucher.title}</strong>
+          <span className={styles.voucherLabel}>{t("offers.yourCode")}</span>
+          <span className={styles.voucherCode}>{voucher.code}</span>
+          <span className={`${styles.voucherDeadline} ${voucher.status !== "active" ? styles.voucherDone : ""}`}>
+            {voucher.status === "used"
+              ? t("offers.usedOn", { date: deadline(voucher.used_at) })
+              : voucher.status === "expired"
+                ? t("offers.expiredOn", { date: deadline(voucher.expires_at) })
+                : t("offers.useBefore", { date: deadline(voucher.expires_at) })}
+          </span>
+        </Link>
+      ) : offer && !accepted ? (
+        <p className={styles.offerStrip}>
+          🎁{" "}
+          {mine
+            ? t("offers.ifTheySayYes", { title: offer.title, name: partnerName })
+            : t("offers.ifYouSayYes", { title: offer.title })}
+        </p>
+      ) : null}
+
+      {accepted ? (
+        <p className={styles.inStatus}>
+          {mine ? t("offers.theyreIn", { name: partnerName }) : t("offers.youreIn")}
+        </p>
+      ) : !mine ? (
+        <button type="button" className={styles.imInBtn} onClick={() => onAccept(message)} disabled={accepting}>
+          {accepting ? "…" : t("offers.imIn")}
+        </button>
+      ) : null}
     </div>
   );
 }
 
 function ChatPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { conversationId } = useParams();
   const navigate = useNavigate();
 
@@ -55,6 +93,9 @@ function ChatPage() {
   const [details, setDetails] = useState(null);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
+  // The invite being answered with "I'm in", and what it got the couple.
+  const [accepting, setAccepting] = useState(null);
+  const [notice, setNotice] = useState(null);
 
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
@@ -88,6 +129,40 @@ function ChatPage() {
 
   const profileId = details?.me_profile_id ?? sessionStorage.getItem("profile_id");
   const partner = details?.profile;
+
+  // "I'm in" on a date spot invite. With a venue promotion on the spot, the
+  // couple gets a code - or a word on why not.
+  async function acceptInvite(message) {
+    if (accepting) return;
+    setAccepting(message.id);
+    setError("");
+    const result = await postJson(`${BASE_URL}/offers/invites/${message.id}/accept`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setAccepting(null);
+    if (!result.ok) {
+      setError(result.message || t("offers.acceptFailed"));
+      return;
+    }
+    const updated = result.data.message;
+    setMessages((cur) => cur.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)));
+    const voucher = result.data.voucher;
+    const reason = result.data.reason;
+    if (voucher) {
+      setNotice({
+        title: t("offers.gotTitle"),
+        text: t("offers.gotText", {
+          title: voucher.title,
+          spot: voucher.spot?.name || message.date_spot.name,
+          date: formatDeadline(voucher.expires_at, i18n.language),
+        }),
+        voucherId: voucher.id,
+      });
+    } else if (reason && reason !== "no_offer") {
+      setNotice({ title: t("offers.dateOn"), text: t(`offers.reason_${reason}`) });
+    }
+  }
 
   // Unmatching lives here now that there's no separate matches page. The
   // server deletes the conversation with it, so there's a confirmation first.
@@ -254,7 +329,13 @@ function ChatPage() {
                   } ${message.date_spot ? styles.bubbleInvite : ""}`}
                 >
                   {message.date_spot ? (
-                    <InviteCard message={message} mine={isMine} />
+                    <InviteCard
+                      message={message}
+                      mine={isMine}
+                      partnerName={partner?.first_name || ""}
+                      onAccept={acceptInvite}
+                      accepting={accepting === message.id}
+                    />
                   ) : (
                     message.content
                   )}
@@ -279,6 +360,19 @@ function ChatPage() {
           <p style={{ color: "#e11d48", textAlign: "center", padding: "0 12px" }}>
             {error}
           </p>
+        )}
+
+        {notice && (
+          <div className={styles.notice} role="status">
+            <strong>{notice.title}</strong>
+            <span>{notice.text}</span>
+            <div className={styles.noticeActions}>
+              {notice.voucherId && (
+                <Link to={`/promotions?highlight=${notice.voucherId}`}>{t("offers.myPromos")}</Link>
+              )}
+              <button type="button" onClick={() => setNotice(null)}>OK</button>
+            </div>
+          </div>
         )}
 
         {/* A form so Enter sends too. The button is disabled while the box is

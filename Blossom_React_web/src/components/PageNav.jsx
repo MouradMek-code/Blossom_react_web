@@ -219,6 +219,11 @@ function PageNav({ minimal = false, hideTabBar = false }) {
                       {t("nav.admin")}
                     </NavLink>
                   )}
+                  {isAdmin && (
+                    <NavLink to="/admin/promos" className={styles.menuItem} role="menuitem" onClick={closeMenu}>
+                      {t("offers.tab")}
+                    </NavLink>
+                  )}
                   <button
                     type="button"
                     className={`${styles.menuItem} ${styles.menuDanger}`}

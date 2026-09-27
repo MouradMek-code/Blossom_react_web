@@ -1,0 +1,274 @@
+.page {
+  min-height: 100vh;
+  background: #fbf8f6;
+  color: #2a2420;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 16px 64px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.links {
+  display: flex;
+  gap: 14px;
+  font-weight: 600;
+}
+
+.links a {
+  color: #7e2a44;
+}
+
+.newBtn,
+.primary {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: #c1466b;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.newBtn {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.primary:disabled {
+  opacity: 0.6;
+}
+
+.secondary {
+  border: 1.5px solid #dccec3;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: #fff;
+  color: #574d46;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.error {
+  color: #b3261e;
+  font-size: 13px;
+}
+
+.muted {
+  color: #8a7e76;
+  font-size: 13px;
+  margin: 2px 0 0;
+}
+
+.empty {
+  text-align: center;
+  color: #8a7e76;
+  margin-top: 30px;
+}
+
+.card,
+.form {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.spot {
+  font-weight: 700;
+  color: #574d46;
+  font-size: 14px;
+}
+
+.state {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.state_open {
+  color: #1f7a4d;
+  background: #e3f4ea;
+}
+
+.state_full {
+  color: #6b3e00;
+  background: #fff4e5;
+}
+
+.state_paused,
+.state_ended {
+  color: #574d46;
+  background: #f7f1ec;
+}
+
+.offerTitle {
+  margin: 8px 0 0;
+  font-size: 18px;
+}
+
+.line {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #574d46;
+}
+
+.stats {
+  margin: 10px 0 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.couples {
+  margin-top: 12px;
+  border-top: 1px solid #efe7e1;
+  padding-top: 10px;
+  font-size: 14px;
+}
+
+.couples summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #574d46;
+}
+
+.couples table {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+}
+
+.couples td {
+  padding: 6px 4px;
+  border-bottom: 1px solid #f5eeea;
+}
+
+.code {
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #7e2a44;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.actions button {
+  border: 1.5px solid #dccec3;
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: #fff;
+  font-weight: 700;
+  color: #574d46;
+  cursor: pointer;
+}
+
+.actions .danger {
+  color: #b3261e;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #574d46;
+}
+
+.field input,
+.field textarea {
+  font: inherit;
+  font-weight: 400;
+  font-size: 15px;
+  color: #2a2420;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #dccec3;
+}
+
+.field small {
+  font-weight: 400;
+  color: #8a7e76;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.row input {
+  width: 80px;
+}
+
+.row span {
+  font-weight: 400;
+}
+
+.spotList {
+  display: flex;
+  flex-direction: column;
+}
+
+.spotList button {
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid #efe7e1;
+  background: none;
+  padding: 9px 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.spotList button:hover {
+  background: #fbf1f4;
+}
+
+.chosenSpot {
+  text-align: left;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  background: #fbf1f4;
+  color: #7e2a44;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
