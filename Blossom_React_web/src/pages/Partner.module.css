@@ -1,0 +1,151 @@
+.page {
+  min-height: 100vh;
+  background: #fbf8f6;
+  color: #2a2420;
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 16px 64px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.intro {
+  margin: 10px 0 14px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #574d46;
+}
+
+.steps {
+  margin: 0 0 22px;
+  padding-left: 20px;
+  color: #574d46;
+  line-height: 1.7;
+}
+
+.form,
+.sent {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 18px;
+  box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
+}
+
+.sent {
+  text-align: center;
+}
+
+.sent h2 {
+  margin: 0 0 8px;
+}
+
+.section {
+  margin: 8px 0 14px;
+  font-size: 17px;
+  color: #7e2a44;
+}
+
+.section:not(:first-child) {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid #efe7e1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #574d46;
+  min-width: 0;
+}
+
+.field input,
+.field textarea {
+  font: inherit;
+  font-weight: 400;
+  font-size: 15px;
+  color: #2a2420;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #dccec3;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field small {
+  font-weight: 400;
+  color: #8a7e76;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 12px;
+}
+
+@media (max-width: 520px) {
+  .row2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.inline input {
+  width: 80px;
+}
+
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.error {
+  color: #b3261e;
+  font-size: 14px;
+}
+
+.primary,
+.secondary {
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 999px;
+  padding: 14px;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.primary {
+  border: none;
+  background: #c1466b;
+  color: #fff;
+}
+
+.primary:disabled {
+  opacity: 0.6;
+}
+
+.secondary {
+  border: 1.5px solid #dccec3;
+  background: #fff;
+  color: #574d46;
+}

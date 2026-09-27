@@ -6,6 +6,7 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { formatDeadline, formatHours } from "../api/offers";
 import styles from "./AdminPromos.module.css";
+import { PartnerRequests, PartnerVenues } from "../components/PartnerAdmin";
 
 // Admin: venue promotions for couples - publish one on a date spot, follow
 // how many couples got it and used it, pause, add places, end it.
@@ -17,6 +18,8 @@ export default function AdminPromos() {
   const [error, setError] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [busy, setBusy] = useState(null);
+  // Approving a partner request publishes an offer: refresh the lists.
+  const [partnerKey, setPartnerKey] = useState(0);
 
   const send = useCallback(
     (path, method, body) =>
@@ -63,6 +66,25 @@ export default function AdminPromos() {
   }
 
   const deadline = (value) => formatDeadline(value, i18n.language);
+  const [copied, setCopied] = useState(null);
+
+  // The instructions and staff code, ready to paste into WhatsApp / an email.
+  async function copyForVenue(o) {
+    const text = t("offers.venueMessage", {
+      spot: o.spot?.name || "",
+      title: o.title,
+      details: o.details ? ` (${o.details})` : "",
+      url: `${window.location.origin}/venue`,
+      code: o.staff_code,
+    });
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(o.id);
+      setTimeout(() => setCopied(null), 2500);
+    } catch {
+      window.prompt(t("offers.copyVenue"), text);
+    }
+  }
 
   return (
     <div className={styles.page}>
@@ -75,6 +97,14 @@ export default function AdminPromos() {
             <Link to="/admin">{t("dashboard.membersLink")}</Link>
           </div>
         </header>
+
+        <PartnerRequests
+          token={token}
+          onApproved={() => {
+            load();
+            setPartnerKey((k) => k + 1);
+          }}
+        />
 
         {formOpen ? (
           <OfferForm
@@ -108,7 +138,7 @@ export default function AdminPromos() {
               <h2 className={styles.offerTitle}>🎁 {o.title}</h2>
               {o.details && <p className={styles.muted}>{o.details}</p>}
               <p className={styles.line}>
-                {t("offers.until", { date: deadline(o.ends_at) })} · {t("offers.useWithin", { time: formatHours(o.valid_hours, t) })}
+                {t("offers.until", { date: deadline(o.ends_at) })} · {t("offers.validAfterYes", { time: formatHours(o.valid_hours, t) })}
               </p>
               <p className={styles.line}>
                 {o.stats.remaining == null ? t("offers.noLimit") : t("offers.placesLeft", { count: o.stats.remaining })}
@@ -162,9 +192,18 @@ export default function AdminPromos() {
                   </button>
                 </div>
               )}
+              <div className={styles.actions}>
+                <button type="button" onClick={() => copyForVenue(o)}>
+                  {copied === o.id ? t("offers.copied") : t("offers.copyVenue")}
+                </button>
+                <a className={styles.linkBtn} href={`/poster/${o.id}`} target="_blank" rel="noreferrer">
+                  {t("offers.poster")}
+                </a>
+              </div>
             </article>
           ))
         )}
+        <PartnerVenues token={token} refreshKey={partnerKey} />
       </main>
     </div>
   );

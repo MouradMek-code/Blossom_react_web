@@ -272,3 +272,49 @@
   gap: 10px;
   justify-content: flex-end;
 }
+
+.linkBtn {
+  border: 1.5px solid #dccec3;
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: #fff;
+  font-weight: 700;
+  color: #574d46;
+  text-decoration: none;
+  font-size: 13.33px;
+}
+
+.partnerBlock {
+  margin-bottom: 22px;
+}
+
+.blockTitle {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.editBox {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f7f1ec;
+}
+
+.approveBtn {
+  border-color: #3ba776 !important;
+  color: #1f7a4d !important;
+}
+
+.venueRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid #efe7e1;
+}
+
+.venueRow .actions {
+  margin-top: 0;
+}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./ChatPage.module.css";
@@ -80,6 +80,86 @@ function InviteCard({ message, mine, partnerName, onAccept, accepting }) {
   );
 }
 
+// "Suggest a spot" from the chat: spots with a venue promotion first, one
+// click sends the invite card.
+function SpotSuggester({ partner, token, onClose, onSent }) {
+  const { t } = useTranslation();
+  const [spots, setSpots] = useState(null);
+  const [search, setSearch] = useState("");
+  const [sending, setSending] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/date_spots`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setSpots)
+      .catch(() => setSpots([]));
+  }, []);
+
+  const shown = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return (spots || [])
+      .filter((s) => !q || `${s.name} ${s.city} ${s.neighborhood || ""}`.toLowerCase().includes(q))
+      .sort((a, b) => Number(Boolean(b.offer)) - Number(Boolean(a.offer)));
+  }, [spots, search]);
+
+  async function suggest(spot) {
+    if (sending) return;
+    setSending(spot.id);
+    setError("");
+    const result = await postJson(`${BASE_URL}/date_spots/${spot.id}/invite`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ profile_id: partner.id, content: t("dateSpots.inviteMessage", { name: spot.name }) }),
+    });
+    setSending(null);
+    if (!result.ok) {
+      setError(result.message || t("offers.inviteFailed"));
+      return;
+    }
+    onSent(result.data.message);
+  }
+
+  return (
+    <div className={styles.suggestOverlay} onClick={onClose}>
+      <div className={styles.suggestSheet} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={t("offers.suggestTitle")}>
+        <div className={styles.suggestHead}>
+          <strong>{t("offers.suggestTitle")}</strong>
+          <button type="button" onClick={onClose} aria-label="Close">✕</button>
+        </div>
+        <p className={styles.suggestHint}>{t("offers.suggestHint")}</p>
+        <input
+          className={styles.suggestSearch}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={t("offers.searchSpot")}
+          autoFocus
+        />
+        {error && <p className={styles.suggestError}>{error}</p>}
+        <div className={styles.suggestList}>
+          {spots === null
+            ? "…"
+            : shown.map((spot) => (
+                <button key={spot.id} type="button" className={styles.suggestRow} onClick={() => suggest(spot)} disabled={!!sending}>
+                  {spot.image_url ? (
+                    <img className={styles.suggestImage} src={IMG.thumb(spot.image_url)} alt="" />
+                  ) : (
+                    <span className={styles.suggestImage}>{categoryEmoji(spot.category)}</span>
+                  )}
+                  <span className={styles.suggestText}>
+                    <strong>{spot.name}</strong>
+                    <span>📍 {shortPlace(spot)}</span>
+                    {spot.offer && <span className={styles.suggestOffer}>🎁 {spot.offer.title}</span>}
+                  </span>
+                  <span aria-hidden="true">{sending === spot.id ? "…" : "💌"}</span>
+                </button>
+              ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ChatPage() {
   const { t, i18n } = useTranslation();
   const { conversationId } = useParams();
@@ -96,6 +176,7 @@ function ChatPage() {
   // The invite being answered with "I'm in", and what it got the couple.
   const [accepting, setAccepting] = useState(null);
   const [notice, setNotice] = useState(null);
+  const [suggestOpen, setSuggestOpen] = useState(false);
 
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
@@ -379,6 +460,17 @@ function ChatPage() {
             empty - which it is right after a send, so a second click can't
             post the same message again. */}
         <form className={styles.inputBox} onSubmit={sendMessage}>
+          {partner && (
+            <button
+              type="button"
+              className={styles.suggestBtn}
+              onClick={() => setSuggestOpen(true)}
+              title={t("offers.suggestSpot")}
+              aria-label={t("offers.suggestSpot")}
+            >
+              📍
+            </button>
+          )}
           <input
             ref={inputRef}
             value={text}
@@ -391,6 +483,18 @@ function ChatPage() {
             {t("messages.send")}
           </button>
         </form>
+
+        {suggestOpen && partner && (
+          <SpotSuggester
+            partner={partner}
+            token={token}
+            onClose={() => setSuggestOpen(false)}
+            onSent={(message) => {
+              setSuggestOpen(false);
+              setMessages((cur) => (cur.some((m) => m.id === message.id) ? cur : [...cur, message]));
+            }}
+          />
+        )}
       </div>
     </>
   );

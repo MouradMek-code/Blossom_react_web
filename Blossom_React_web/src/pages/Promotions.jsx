@@ -150,6 +150,11 @@ export default function Promotions() {
                       {t("offers.staffButton")}
                     </button>
                   ))}
+                {active && (
+                  <p className={styles.venueHint}>
+                    {t("offers.venueHint", { url: `${window.location.host}/venue` })}
+                  </p>
+                )}
               </article>
             );
           })

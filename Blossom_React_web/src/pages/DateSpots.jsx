@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import LocationPicker from "../components/LocationPicker";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
-import { formatHours, offerTerms } from "../api/offers";
+import { offerTerms } from "../api/offers";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
 import {
   BEST_FOR,
@@ -159,7 +159,7 @@ function AdminStatsEditor({ spot, token, t, onSaved }) {
 }
 
 function DateSpots() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [spots, setSpots] = useState([]);
   const [locations, setLocations] = useState([]);
   const [country, setCountry] = useState("");
@@ -312,7 +312,11 @@ function DateSpots() {
   const hasFilters = Boolean(country || city || category || bestFor);
   // The first spot gets the full-width featured treatment; the rest tile
   // below. The API lists spots with photos first, so the hero has one.
-  const [featured, ...rest] = spots;
+  // Spots with a venue promotion for couples: their own row, and a filter.
+  const [promoOnly, setPromoOnly] = useState(false);
+  const promoSpots = spots.filter((s) => s.offer);
+  const shownSpots = promoOnly ? promoSpots : spots;
+  const [featured, ...rest] = shownSpots;
 
   return (
     <>
@@ -338,6 +342,9 @@ function DateSpots() {
               <Link to="/promotions" className={styles.myPromos}>
                 {t("offers.myPromos")}
               </Link>
+              <Link to="/partner" className={styles.partnerLink}>
+                {t("partners.link")}
+              </Link>
             </>
           ) : (
             // Visitors get the same button: sharing needs a free account, so
@@ -352,6 +359,9 @@ function DateSpots() {
                   {t("dateSpots.haveAccount")}
                 </Link>
               </p>
+              <Link to="/partner" className={styles.partnerLink}>
+                {t("partners.link")}
+              </Link>
             </div>
           )}
           {isAdmin && (
@@ -391,8 +401,44 @@ function DateSpots() {
             />
           )}
 
+          {promoSpots.length > 0 && !promoOnly && (
+            <section className={styles.promoRow}>
+              <h2 className={styles.promoRowTitle}>{t("offers.promoRow")}</h2>
+              <div className={styles.promoRowList}>
+                {promoSpots.map((spot) => (
+                  <button key={spot.id} type="button" className={styles.promoCard} onClick={() => openSpot(spot)}>
+                    {spot.image_url ? (
+                      <img className={styles.promoCardImage} src={IMG.card(spot.image_url)} alt="" loading="lazy" />
+                    ) : (
+                      <span
+                        className={styles.promoCardImage}
+                        style={{ background: `linear-gradient(135deg, ${categoryGradient(spot.category).join(", ")})` }}
+                      >
+                        {categoryEmoji(spot.category)}
+                      </span>
+                    )}
+                    <strong className={styles.promoCardName}>{spot.name}</strong>
+                    <span className={styles.promoCardOffer}>🎁 {spot.offer.title}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Filter chips - each row is named so it's clear what it filters. */}
           <div className={styles.filterBar}>
+            {(promoSpots.length > 0 || promoOnly) && (
+              <div className={styles.filterGroup}>
+                <div className={styles.chipRow}>
+                  <button
+                    className={`${styles.chip} ${styles.chipSmall} ${promoOnly ? styles.chipActive : ""}`}
+                    onClick={() => setPromoOnly((v) => !v)}
+                  >
+                    {t("offers.onlyPromos")}
+                  </button>
+                </div>
+              </div>
+            )}
             <div className={styles.filterGroup}>
               <span className={styles.filterLabel}>{t("dateSpots.country")}</span>
               <div className={styles.chipRow}>
@@ -491,7 +537,7 @@ function DateSpots() {
                 </div>
               ))}
             </div>
-          ) : spots.length === 0 ? (
+          ) : shownSpots.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>📍</div>
               <p className={styles.emptyTitle}>{t("dateSpots.emptyTitle")}</p>
@@ -628,10 +674,8 @@ function DateSpots() {
                 <div className={styles.offerBox}>
                   <strong className={styles.offerBoxTitle}>🎁 {selected.offer.title}</strong>
                   {selected.offer.details && <p className={styles.offerBoxDetails}>{selected.offer.details}</p>}
-                  <p className={styles.offerBoxTerms}>{offerTerms(selected.offer, t, i18n.language)}</p>
-                  <p className={styles.offerBoxHow}>
-                    {t("offers.howTo")} {t("offers.useWithin", { time: formatHours(selected.offer.valid_hours, t) })}
-                  </p>
+                  <p className={styles.offerBoxTerms}>{offerTerms(selected.offer, t)}</p>
+                  <p className={styles.offerBoxHow}>{t("offers.howTo")}</p>
                 </div>
               )}
               <p className={styles.detailText}>{selected.description}</p>

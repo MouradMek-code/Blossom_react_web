@@ -1,0 +1,115 @@
+.page {
+  min-height: 100vh;
+  background: #f3ece7;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.message {
+  text-align: center;
+  margin-top: 60px;
+  color: #8a7e76;
+}
+
+.print {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  background: #2a2420;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* A5-ish card that prints on one page. */
+.poster {
+  width: 100%;
+  max-width: 148mm;
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px 24px 24px;
+  text-align: center;
+  color: #2a2420;
+  box-shadow: 0 8px 30px rgba(63, 44, 38, 0.12);
+  border-top: 10px solid #c1466b;
+}
+
+.brand {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #c1466b;
+}
+
+.for {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a7e76;
+}
+
+.title {
+  margin: 14px 0 0;
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+.details {
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: #574d46;
+}
+
+.spot {
+  margin: 12px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.how {
+  margin: 16px auto 0;
+  max-width: 360px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #574d46;
+}
+
+.qr {
+  display: block;
+  width: 170px;
+  height: 170px;
+  margin: 18px auto 0;
+}
+
+.scan {
+  margin: 8px 0 0;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.site {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #8a7e76;
+}
+
+@media print {
+  .page {
+    background: #fff;
+    padding: 0;
+  }
+  .print {
+    display: none;
+  }
+  .poster {
+    box-shadow: none;
+    border-radius: 0;
+  }
+}

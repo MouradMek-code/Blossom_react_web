@@ -1,0 +1,126 @@
+.page {
+  min-height: 100vh;
+  background: #fbf8f6;
+  color: #2a2420;
+}
+
+.wrap {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 28px 16px 64px;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.intro {
+  margin: 6px 0 18px;
+  color: #8a7e76;
+  font-size: 14px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #574d46;
+}
+
+.field input {
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1.5px solid #dccec3;
+}
+
+.codeInput {
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #574d46;
+}
+
+.error {
+  margin: 0;
+  color: #b3261e;
+  font-size: 14px;
+}
+
+.primary,
+.secondary {
+  border-radius: 999px;
+  padding: 13px;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.primary {
+  border: none;
+  background: #c1466b;
+  color: #fff;
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.secondary {
+  border: 1.5px solid #dccec3;
+  background: #fff;
+  color: #574d46;
+}
+
+.status {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.code {
+  margin: 0;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #7e2a44;
+}
+
+.offer {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.muted {
+  margin: 0;
+  text-align: center;
+  color: #8a7e76;
+  font-size: 14px;
+}

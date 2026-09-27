@@ -30,11 +30,13 @@ export function formatHours(hours, t) {
   return parts.join(" ");
 }
 
-// "For matched couples who go together · 3 left · until Sat 12 Oct, 18:00"
-export function offerTerms(offer, t, language) {
+// "For matched couples who go together · 3 left · valid 7 d after you both
+// say yes" - only what matters to the couple (their own deadline comes with
+// their code).
+export function offerTerms(offer, t) {
   const parts = [t("offers.forCouples")];
   if (offer.remaining != null) parts.push(t("offers.left", { count: offer.remaining }));
-  parts.push(t("offers.until", { date: formatDeadline(offer.ends_at, language) }));
+  parts.push(t("offers.validAfterYes", { time: formatHours(offer.valid_hours, t) }));
   return parts.join(" · ");
 }
 

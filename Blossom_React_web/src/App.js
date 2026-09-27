@@ -21,6 +21,10 @@ import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPromos from "./pages/AdminPromos";
 import Promotions from "./pages/Promotions";
+import Venue from "./pages/Venue";
+import Poster from "./pages/Poster";
+import Partner from "./pages/Partner";
+import VenueManage from "./pages/VenueManage";
 import { trackVisit } from "./api/analytics";
 
 // Visits for the admin dashboard (see api/analytics.js).
@@ -67,6 +71,12 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/promos" element={<AdminPromos />} />
         <Route path="/promotions" element={<Promotions />} />
+        {/* For the venues: check a couple's code, print the counter poster. */}
+        <Route path="/venue" element={<Venue />} />
+        <Route path="/poster/:offerId" element={<Poster />} />
+        {/* "Partner with Blossom": the form, and each venue's private page. */}
+        <Route path="/partner" element={<Partner />} />
+        <Route path="/venue/manage/:token" element={<VenueManage />} />
       </Routes>
     </BrowserRouter>
   );
