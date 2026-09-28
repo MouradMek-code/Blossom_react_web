@@ -443,3 +443,6 @@ function LanguagePicker({ field, options, answer, setAnswer, setClicked, styles 
 }
 
 export default StartProfile;
+
+// One question on its own (the admin's "profile for a friend" form shows them all).
+export { Question as ProfileQuestion };

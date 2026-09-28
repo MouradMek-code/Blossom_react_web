@@ -20,6 +20,8 @@ import DeleteAccount from "./pages/DeleteAccount";
 import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPromos from "./pages/AdminPromos";
+import AdminFriends from "./pages/AdminFriends";
+import Claim from "./pages/Claim";
 import Promotions from "./pages/Promotions";
 import Venue from "./pages/Venue";
 import Poster from "./pages/Poster";
@@ -71,6 +73,8 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/promos" element={<AdminPromos />} />
+        <Route path="/admin/friends" element={<AdminFriends />} />
+        <Route path="/claim/:token" element={<Claim />} />
         <Route path="/promotions" element={<Promotions />} />
         {/* For the venues: check a couple's code, print the counter poster. */}
         <Route path="/venue" element={<Venue />} />

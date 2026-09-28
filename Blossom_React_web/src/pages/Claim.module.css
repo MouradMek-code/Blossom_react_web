@@ -1,0 +1,254 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--primary-tint) 0%, var(--bg) 320px);
+  color: var(--text);
+}
+
+.head {
+  display: flex;
+  justify-content: center;
+  padding: 22px 16px 6px;
+}
+
+.wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 14px 16px 64px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  padding: 28px 24px;
+}
+
+.title {
+  margin: 0 0 10px;
+  font-size: 26px;
+}
+
+.text {
+  margin: 0 0 14px;
+  color: var(--text-soft);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+.muted {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.preview {
+  margin: 20px 0;
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+}
+
+.previewLabel {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.mainPhoto {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  background: var(--surface-sunk);
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.thumbs img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.name {
+  margin: 12px 0 2px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.age {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-soft);
+}
+
+.place {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.bio {
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+.editLater {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loginWith {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-deep);
+  background: var(--primary-tint);
+  border-radius: var(--r-sm);
+  overflow-wrap: anywhere;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: var(--text);
+  background: var(--input-bg);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-soft);
+  cursor: pointer;
+}
+
+.check input {
+  margin-top: 3px;
+  accent-color: var(--primary);
+}
+
+.check a {
+  font-weight: 700;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.primaryBtn {
+  margin-top: 6px;
+  padding: 15px 22px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-primary);
+  cursor: pointer;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.notMe {
+  display: block;
+  margin: 22px auto 0;
+  padding: 6px 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.notMe:hover {
+  color: var(--danger);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.secondaryBtn {
+  padding: 11px 20px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary);
+  border-radius: var(--r-pill);
+}
+
+.secondaryBtn:hover {
+  color: #fff;
+  background: var(--primary-dark);
+}
+
+.plainLink {
+  font-weight: 600;
+}

@@ -1,0 +1,521 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 28px 16px 72px;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.back:hover {
+  color: var(--primary-deep);
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+}
+
+.intro {
+  margin: 8px 0 12px;
+  color: var(--text-soft);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.steps {
+  margin: 0 0 22px;
+  padding: 14px 18px 14px 36px;
+  background: var(--primary-tint);
+  border: 1px solid var(--primary-soft);
+  border-radius: var(--r-md);
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.section {
+  margin: 36px 0 12px;
+  font-size: 20px;
+}
+
+.muted {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.error {
+  display: block;
+  margin: 10px 0;
+  color: var(--danger);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ok {
+  display: block;
+  color: #1f7a4d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.warn {
+  display: block;
+  color: #9a5b00;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.notice {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  background: #e9f7ef;
+  border: 1px solid #bfe6cf;
+  color: #1f5c3d;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-primary);
+  cursor: pointer;
+  transition: background 0.18s var(--ease), transform 0.18s var(--ease);
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---- Form ----------------------------------------------------------- */
+.form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 22px 26px;
+}
+
+.formHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.formTitle {
+  margin: 0;
+  font-size: 21px;
+}
+
+.consent {
+  margin: 10px 0 4px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.block {
+  margin: 22px 0 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
+.blockTitle {
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-deep);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--input-bg);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+}
+
+.chipActive {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* The sign-up questions, one under the other. They come with the sign-up
+   wizard's big cards; tightened here so 20 questions stay scannable. */
+.question {
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+
+.questionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 15.5px;
+  font-weight: 700;
+}
+
+.questionNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  font-size: 12.5px;
+  color: var(--primary-deep);
+  background: var(--primary-soft);
+  border-radius: 50%;
+}
+
+.tick {
+  color: #1f7a4d;
+  font-weight: 800;
+}
+
+.question [class*="optionGrid"] {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.question [class*="optionCard"] {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 12px;
+}
+
+.question [class*="optionCard"]:hover {
+  transform: none;
+}
+
+.question textarea,
+.question input[type="text"] {
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+
+.question textarea {
+  min-height: 110px;
+}
+
+/* ---- Photos --------------------------------------------------------- */
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.photo,
+.addPhoto {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--surface-sunk);
+}
+
+.mainTag {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 9px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: var(--r-pill);
+}
+
+.removePhoto,
+.uploadedTag {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 50%;
+  border: none;
+}
+
+.removePhoto {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+
+.uploadedTag {
+  color: #fff;
+  background: #1f7a4d;
+}
+
+.addPhoto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-deep);
+  background: var(--primary-tint);
+  border: 2px dashed var(--primary-soft);
+  cursor: pointer;
+}
+
+.addPhoto span {
+  font-size: 26px;
+}
+
+.submitRow {
+  margin-top: 24px;
+}
+
+.submitRow .primaryBtn {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+}
+
+/* ---- List ----------------------------------------------------------- */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarEmpty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: var(--primary-soft);
+}
+
+.rowInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.rowName {
+  font-size: 16px;
+}
+
+.rowEmail {
+  font-size: 13px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 3px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: var(--r-pill);
+}
+
+.status_draft {
+  color: var(--text-soft);
+  background: var(--surface-sunk);
+}
+
+.status_sent {
+  color: #8a5300;
+  background: #fff4e0;
+}
+
+.status_active {
+  color: #1f5c3d;
+  background: #e3f5ea;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 280px;
+}
+
+.smallBtn,
+.smallBtnPrimary,
+.smallBtnDanger {
+  padding: 8px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.smallBtn {
+  color: var(--text-soft);
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+}
+
+.smallBtnPrimary {
+  color: #fff;
+  background: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.smallBtnDanger {
+  color: var(--danger);
+  background: transparent;
+  border: 1.5px solid #f0c9c6;
+}
+
+.smallBtn:disabled,
+.smallBtnPrimary:disabled,
+.smallBtnDanger:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+@media (max-width: 600px) {
+  .form {
+    padding: 18px 14px 22px;
+  }
+
+  .grid2 {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .rowActions {
+    max-width: none;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

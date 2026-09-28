@@ -33,7 +33,7 @@ function loadImage(file) {
   });
 }
 
-async function shrink(file) {
+export async function shrink(file) {
   if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
   try {
     const image = await loadImage(file);

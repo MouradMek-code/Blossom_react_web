@@ -85,6 +85,10 @@ export default function Admin() {
               {users.length} users total ·{" "}
               <Link to="/admin/dashboard" style={{ color: "#c1466b", fontWeight: 700 }}>
                 📊 Dashboard
+              </Link>{" "}
+              ·{" "}
+              <Link to="/admin/friends" style={{ color: "#c1466b", fontWeight: 700 }}>
+                👯 Profiles for friends
               </Link>
             </p>
           </div>
@@ -149,7 +153,14 @@ export default function Admin() {
                         </div>
                       )}
                     </td>
-                    <td style={{ ...td, fontWeight: "600" }}>{u.profile?.first_name || "—"}</td>
+                    <td style={{ ...td, fontWeight: "600" }}>
+                      {u.profile?.first_name || "—"}
+                      {u.pending_friend && (
+                        <span style={{ display: "block", marginTop: "3px", fontSize: "12px", fontWeight: 700, color: "#8a5300" }}>
+                          ⏳ Waiting for friend
+                        </span>
+                      )}
+                    </td>
                     <td style={td}>{u.username}</td>
                     <td style={{ ...td, color: "#666" }}>{u.email}</td>
                     <td style={td}>{u.profile ? `${u.profile.city || "—"}, ${u.profile.country || "—"}` : "—"}</td>
