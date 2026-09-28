@@ -438,7 +438,7 @@ function ChatPage() {
         </div>
 
         {error !== "" && (
-          <p style={{ color: "#e11d48", textAlign: "center", padding: "0 12px" }}>
+          <p style={{ color: "var(--primary)", textAlign: "center", padding: "0 12px" }}>
             {error}
           </p>
         )}

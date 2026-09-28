@@ -159,7 +159,7 @@ export default function Admin() {
                     </td>
                     <td style={td}>
                       {u.is_admin ? (
-                        <span style={{ color: "#e91e63", fontWeight: "700", fontSize: "13px" }}>Admin</span>
+                        <span style={{ color: "var(--primary)", fontWeight: "700", fontSize: "13px" }}>Admin</span>
                       ) : (
                         <button
                           onClick={() => handleDelete(u.id, u.username)}
@@ -167,16 +167,16 @@ export default function Admin() {
                           style={{
                             padding: "7px 16px",
                             borderRadius: "999px",
-                            border: "1.5px solid #ff4444",
+                            border: "1.5px solid var(--danger)",
                             background: "transparent",
-                            color: "#ff4444",
+                            color: "var(--danger)",
                             fontSize: "13px",
                             fontWeight: "700",
                             cursor: "pointer",
                             transition: "all 0.2s",
                           }}
-                          onMouseEnter={(e) => { e.currentTarget.style.background = "#ff4444"; e.currentTarget.style.color = "#fff"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#ff4444"; }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--danger)"; e.currentTarget.style.color = "#fff"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--danger)"; }}
                         >
                           {deletingId === u.id ? "Deleting..." : "Delete"}
                         </button>

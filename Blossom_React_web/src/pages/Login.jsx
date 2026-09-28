@@ -6,7 +6,7 @@ export default function Login() {
   return (
     <>
       <div className={styles.head}>
-        <PageNav />
+        <PageNav overlay />
         <FormLogin />
       </div>
       <Footer />

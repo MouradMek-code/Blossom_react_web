@@ -20,15 +20,14 @@
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--font-display);
   font-size: 1.7rem;
   font-weight: 700;
   color: #fff;
   letter-spacing: -0.01em;
-}
-
-.bloom {
-  font-size: 1.3rem;
 }
 
 .blurb {

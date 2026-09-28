@@ -23,7 +23,7 @@ function Homepage() {
   return (
     <>
       <div className={`${styles.head} ${styles.animatedBg}`}>
-        <PageNav />
+        <PageNav overlay />
         <StartHome />
       </div>
       <TrustBadges />

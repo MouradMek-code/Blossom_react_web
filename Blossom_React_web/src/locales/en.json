@@ -6,12 +6,15 @@
     "likesYou": "Likes You",
     "admin": "🛡️ Admin",
     "logout": "Logout",
-    "homePage": "HomePage",
-    "signUp": "Sign Up",
-    "login": "Login",
+    "homePage": "Home",
+    "signUp": "Sign up",
+    "login": "Log in",
     "dateSpots": "Date spots",
     "messages": "Messages",
-    "dashboard": "📊 Dashboard"
+    "dashboard": "📊 Dashboard",
+    "joinFree": "Join free",
+    "language": "Language",
+    "adminGroup": "Admin"
   },
   "home": {
     "title": "Meet your dating soul TODAY !!",
@@ -20,7 +23,8 @@
     "cta": "Start Dating Now ❤️",
     "trustLine": "Where she always makes the first move 💌",
     "carousel": "Love finds everyone 🌸",
-    "langBadge": "🌍 NEW · Language Learning Dating"
+    "langBadge": "🌍 NEW · Language Learning Dating",
+    "ctaSpots": "Explore date spots"
   },
   "login": {
     "title": "LOGIN HERE",
@@ -672,5 +676,20 @@
     "markHandled": "Mark as handled",
     "reopen": "Not handled",
     "handled": "Handled ✓"
+  },
+  "footer": {
+    "blurb": "Where she always makes the first move.",
+    "getItOn": "Get it on",
+    "product": "Product",
+    "company": "Company",
+    "browse": "Browse",
+    "signUp": "Sign up",
+    "logIn": "Log in",
+    "privacy": "Privacy policy",
+    "terms": "Terms and 18+",
+    "deleteAccount": "Delete account",
+    "contact": "Contact",
+    "madeWithLove": "Made with love",
+    "adults": "18+ only"
   }
 }

@@ -2,84 +2,412 @@
   position: sticky;
   top: 0;
   z-index: 999;
-  padding: 14px 28px;
-  background: var(--nav-bg);
-  backdrop-filter: saturate(180%) blur(18px);
-  -webkit-backdrop-filter: saturate(180%) blur(18px);
-  border-bottom: 1px solid rgba(236, 226, 218, 0.7);
+  padding: 12px 32px;
+  background: rgba(251, 248, 246, 0.94);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
 
 .bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  max-width: 1280px;
+  gap: 24px;
+  max-width: 1240px;
   margin: 0 auto;
+  min-height: 52px;
 }
 
-.nav {
+/* Photo pages: the menu floats over the picture and stays at the top. */
+.overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+/* On the photo: no band at all - white text straight on the picture. */
+.onPhoto {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.overlay:not(.onPhoto) {
+  box-shadow: 0 6px 24px rgba(63, 44, 38, 0.08);
+}
+
+.onPhoto .visitorLink,
+.onPhoto .loginLink,
+.onPhoto .langToggle {
+  color: #fff;
+}
+
+.onPhoto .visitorLink:hover,
+.onPhoto .visitorLink:global(.active) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.onPhoto .loginLink:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.onPhoto .langToggle {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.onPhoto .langToggle:hover,
+.onPhoto .langToggle[aria-expanded="true"] {
+  color: #fff;
+  border-color: #fff;
+}
+
+.onPhoto .joinBtn {
+  color: var(--primary-deep);
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.onPhoto .joinBtn:hover {
+  color: var(--primary-deep);
+  background: #fff;
+}
+
+.onPhoto .menuToggle {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.onPhoto .menuToggleBar {
+  background: #fff;
+}
+
+/* ---- Visitors ------------------------------------------------------------ */
+.visitorLinks {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
-  flex: 1;
-  margin: 0;
+  gap: 2px;
+  margin: 0 0 0 12px;
   padding: 0;
-  gap: 4px;
+  list-style: none;
 }
 
-.nav span {
-  margin: 0 2px;
-  white-space: nowrap;
-}
-
-.nav a {
+.visitorLink,
+.mainLink {
   display: inline-flex;
   align-items: center;
-  padding: 8px 16px;
+  gap: 7px;
+  padding: 9px 15px;
   font-family: var(--font-body);
-  font-size: 14.5px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--text-soft);
-  background-color: transparent;
-  border: 1px solid transparent;
   border-radius: var(--r-pill);
   white-space: nowrap;
   text-decoration: none;
-  transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
+  transition: color 0.18s var(--ease), background-color 0.18s var(--ease), transform 0.18s var(--ease);
 }
 
-.nav a:hover {
-  color: var(--primary);
+.visitorLink:hover,
+.mainLink:hover {
+  color: var(--primary-deep);
   background-color: var(--primary-tint);
 }
 
-.nav :global(.active) {
+.visitorLink:global(.active),
+.mainLink:global(.active) {
   color: var(--primary-deep);
   background-color: var(--primary-soft);
   font-weight: 600;
 }
 
-/* Logged-in and logged-out states now share the same refined light nav,
-   since the nav sits on a solid ivory bar rather than over the hero photo. */
-.navLoggedIn a {
-  color: var(--text-soft);
+/* Date spots + For venues: the two places worth showing off, as tinted chips. */
+.featureLink {
+  color: var(--primary-deep);
+  background-color: var(--primary-tint);
+  box-shadow: inset 0 0 0 1px var(--primary-soft);
 }
 
-.navItemWithBadge {
+.featureLink:hover {
+  color: var(--primary-deep);
+  background-color: var(--primary-soft);
+  transform: translateY(-1px);
+}
+
+.featureLink:global(.active) {
+  color: #fff;
+  background-color: var(--primary);
+  box-shadow: none;
+}
+
+.visitorLinks li + li {
+  margin-left: 6px;
+}
+
+.onPhoto .featureLink {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.onPhoto .featureLink:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.26);
+}
+
+.visitorActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.loginLink {
+  padding: 9px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.loginLink:hover {
+  color: var(--primary-deep);
+}
+
+.joinBtn,
+.mobileJoin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(193, 70, 107, 0.25);
+  transition: background 0.18s var(--ease), transform 0.18s var(--ease);
+}
+
+.joinBtn:hover,
+.mobileJoin:hover {
+  color: #fff;
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* ---- Language picker -------------------------------------------------- */
+.lang {
   position: relative;
+}
+
+.langToggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 7px 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-soft);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
 }
 
-/* ---- Logged in: main links in the bar, account menu on the right ---- */
+.langToggle:hover,
+.langToggle[aria-expanded="true"] {
+  color: var(--primary-deep);
+  border-color: var(--border-strong);
+}
+
+.langMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1000;
+  min-width: 170px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+}
+
+.langItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text);
+  background: none;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.langItem:hover {
+  background: var(--primary-tint);
+}
+
+.langItemActive {
+  color: var(--primary-deep);
+  font-weight: 700;
+}
+
+/* ---- Phones: hamburger + panel ---------------------------------------- */
+.menuToggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menuToggleBar {
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.22s var(--ease), opacity 0.22s var(--ease);
+}
+
+.menuToggleBarTopOpen {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menuToggleBarMidOpen {
+  opacity: 0;
+}
+
+.menuToggleBarBottomOpen {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.mobilePanel {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .visitorLinks,
+  .loginLink {
+    display: none;
+  }
+
+  .menuToggle {
+    display: flex;
+  }
+
+  .mobilePanel {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 1240px;
+    margin: 12px auto 4px;
+    padding: 8px 16px 16px;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-md);
+    animation: navDrop 0.24s var(--ease);
+  }
+
+  .mobileLink {
+    padding: 12px 6px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobileFeature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+    padding: 12px 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary-deep);
+    background: var(--primary-tint);
+    border: 1px solid var(--primary-soft);
+    border-radius: var(--r-md);
+    text-decoration: none;
+  }
+
+  .mobileFeatureIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    background: var(--primary);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .mobileJoin {
+    margin-top: 10px;
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .head {
+    padding: 10px 16px;
+  }
+
+  .bar {
+    gap: 12px;
+  }
+
+  .joinBtn {
+    display: none;
+  }
+}
+
+@keyframes navDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Members: main links in the bar, account menu on the right ------- */
 .mainLinks {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   flex: 1;
   gap: 4px;
   margin: 0;
@@ -93,55 +421,30 @@
   align-items: center;
 }
 
-.mainLink {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 16px;
-  font-family: var(--font-body);
-  font-size: 14.5px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--text-soft);
-  border-radius: var(--r-pill);
-  white-space: nowrap;
-  text-decoration: none;
-  transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
-}
-
-.mainLink:hover {
-  color: var(--primary);
-  background-color: var(--primary-tint);
-}
-
-.mainLink:global(.active) {
-  color: var(--primary-deep);
-  background-color: var(--primary-soft);
-  font-weight: 600;
-}
-
 .account {
   position: relative;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .accountBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--border-strong);
+  width: 40px;
+  height: 40px;
+  border: none;
   border-radius: 50%;
-  background: var(--surface);
-  color: var(--text-soft);
+  background: var(--primary-soft);
+  color: var(--primary-deep);
   cursor: pointer;
-  box-shadow: var(--shadow-xs);
-  transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
+  transition: background 0.18s var(--ease), box-shadow 0.18s var(--ease);
 }
 
-.accountBtn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+.accountBtn:hover,
+.accountBtn[aria-expanded="true"] {
+  background: var(--primary-tint);
+  box-shadow: 0 0 0 2px var(--primary-soft);
 }
 
 .menu {
@@ -149,7 +452,7 @@
   top: calc(100% + 8px);
   right: 0;
   z-index: 1000;
-  min-width: 210px;
+  min-width: 220px;
   padding: 6px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -162,7 +465,7 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 11px 12px;
+  padding: 10px 12px;
   font-family: var(--font-body);
   font-size: 14.5px;
   font-weight: 500;
@@ -180,6 +483,17 @@
   color: var(--primary-deep);
 }
 
+.menuGroup {
+  margin: 6px 0 2px;
+  padding: 8px 12px 4px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
 .menuDanger {
   color: var(--primary-deep);
   border-top: 1px solid var(--border);
@@ -187,7 +501,26 @@
   margin-top: 4px;
 }
 
-/* ---- Phone: the same five tabs the app has, along the bottom ---- */
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+/* ---- Phone: the same five tabs the app has, along the bottom -------- */
 .tabBar {
   display: none;
 }
@@ -243,7 +576,7 @@
     height: 17px;
     padding: 0 4px;
     border-radius: var(--r-pill);
-    background: #ff2d55;
+    background: var(--primary);
     color: #fff;
     font-size: 10.5px;
     font-weight: 700;
@@ -258,186 +591,4 @@
   :global(body.has-tabbar) {
     padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
-}
-
-.badge {
-  position: absolute;
-  top: -4px;
-  right: -6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: var(--r-pill);
-  background: var(--primary);
-  color: white;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
-  box-shadow: 0 0 0 2px var(--surface);
-}
-
-.logout {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 18px;
-  font-family: var(--font-body);
-  font-size: 14.5px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: white;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border: none;
-  border-radius: var(--r-pill);
-  cursor: pointer;
-  box-shadow: var(--shadow-primary);
-  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
-}
-
-.logout:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 40px rgba(193, 70, 107, 0.34);
-}
-
-.logout:active {
-  transform: translateY(0);
-}
-
-.menuToggle {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--surface);
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: var(--shadow-xs);
-  transition: border-color 0.18s var(--ease);
-}
-
-.menuToggle:hover {
-  border-color: var(--primary);
-}
-
-.menuToggleBar {
-  width: 20px;
-  height: 2px;
-  background: var(--primary);
-  border-radius: 2px;
-  transition: transform 0.22s var(--ease), opacity 0.22s var(--ease);
-}
-
-.menuToggleBarTopOpen {
-  transform: translateY(7px) rotate(45deg);
-}
-
-.menuToggleBarMidOpen {
-  opacity: 0;
-}
-
-.menuToggleBarBottomOpen {
-  transform: translateY(-7px) rotate(-45deg);
-}
-
-@media (max-width: 768px) {
-  .head {
-    padding: 10px 16px;
-  }
-
-  .menuToggle {
-    display: flex;
-  }
-
-  .nav {
-    display: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: stretch;
-    width: 100%;
-    margin-top: 12px;
-    gap: 8px;
-  }
-
-  .navOpen {
-    display: flex;
-    animation: navDrop 0.28s var(--ease);
-  }
-
-  @keyframes navDrop {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .nav span {
-    margin: 0;
-    width: calc(50% - 4px);
-  }
-
-  .nav span:last-child {
-    width: 100%;
-  }
-
-  .langSwitcher {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .nav a {
-    width: 100%;
-    justify-content: center;
-    padding: 11px 10px;
-    font-size: 14.5px;
-    border: 1px solid var(--border);
-  }
-
-  .logout {
-    width: 100%;
-    justify-content: center;
-    padding: 11px 10px;
-  }
-}
-
-.langSwitcher {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  margin-left: 8px;
-  padding: 3px;
-  background: var(--surface-muted);
-  border-radius: var(--r-pill);
-}
-
-.langBtn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  border-radius: var(--r-pill);
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.18s var(--ease), color 0.18s var(--ease);
-}
-
-.langBtn:hover {
-  color: var(--primary);
-}
-
-.langBtnActive {
-  background: var(--surface);
-  color: var(--primary-deep);
-  box-shadow: var(--shadow-xs);
 }

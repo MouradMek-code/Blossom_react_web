@@ -3,7 +3,10 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* clip (not hidden): trims the zooming photo without stopping the menu
+     from staying pinned at the top while scrolling. */
   overflow: hidden;
+  overflow: clip;
 }
 
 .head::before {
@@ -21,7 +24,9 @@
   background-repeat: no-repeat;
 }
 
-.head > * {
+/* Lift the content above the photo - but not the menu, which positions
+   itself (pinned at the top) and must stay above everything. */
+.head > :not(nav) {
   position: relative;
   z-index: 1;
 }

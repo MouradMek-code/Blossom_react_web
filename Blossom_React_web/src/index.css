@@ -28,6 +28,8 @@
   --gold: #b08d57;
   --gold-soft: #f3ebdd;
 
+  --danger: #c2413b;
+
   --nav-bg: rgba(255, 255, 255, 0.72);
   --card-bg: #ffffff;
   --input-bg: #ffffff;
@@ -71,7 +73,10 @@ html,
 body {
   margin: 0;
   max-width: 100%;
+  /* clip, not hidden: hidden turns the page into its own scroll box, which
+     stops the menu (position: sticky) from staying at the top. */
   overflow-x: hidden;
+  overflow-x: clip;
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--font-body);

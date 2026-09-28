@@ -11,7 +11,10 @@
     "login": "登录",
     "dateSpots": "约会地点",
     "messages": "消息",
-    "dashboard": "📊 数据面板"
+    "dashboard": "📊 数据面板",
+    "joinFree": "免费加入",
+    "language": "语言",
+    "adminGroup": "管理"
   },
   "home": {
     "title": "今天就找到你的另一半！！",
@@ -20,7 +23,8 @@
     "cta": "开始约会 ❤️",
     "trustLine": "她永远先迈出第一步 💌",
     "carousel": "爱情属于每个人 🌸",
-    "langBadge": "🌍 新功能 · 语言学习约会"
+    "langBadge": "🌍 新功能 · 语言学习约会",
+    "ctaSpots": "浏览约会地点"
   },
   "login": {
     "title": "登录",
@@ -672,5 +676,20 @@
     "markHandled": "标记为已处理",
     "reopen": "未处理",
     "handled": "已处理 ✓"
+  },
+  "footer": {
+    "blurb": "永远由她迈出第一步。",
+    "getItOn": "下载于",
+    "product": "产品",
+    "company": "公司",
+    "browse": "浏览",
+    "signUp": "注册",
+    "logIn": "登录",
+    "privacy": "隐私政策",
+    "terms": "条款与 18+",
+    "deleteAccount": "删除账户",
+    "contact": "联系",
+    "madeWithLove": "用爱打造",
+    "adults": "仅限 18 岁以上"
   }
 }

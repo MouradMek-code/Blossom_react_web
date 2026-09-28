@@ -168,7 +168,7 @@ function Profile() {
 
       <div className="profile-container">
         {error !== "" && (
-          <p style={{ color: "#e11d48", textAlign: "center", marginBottom: "12px" }}>
+          <p style={{ color: "var(--primary)", textAlign: "center", marginBottom: "12px" }}>
             {error}
           </p>
         )}
@@ -245,7 +245,7 @@ function Profile() {
                 border: "none",
                 borderRadius: "999px",
                 padding: "8px 16px",
-                background: "#e11d48",
+                background: "var(--primary)",
                 color: "white",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -298,11 +298,11 @@ function Profile() {
                 type="button"
                 onClick={startEditingBio}
                 style={{
-                  border: "1px solid #e11d48",
+                  border: "1px solid var(--primary)",
                   borderRadius: "999px",
                   padding: "6px 14px",
                   background: "white",
-                  color: "#e11d48",
+                  color: "var(--primary)",
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
@@ -336,7 +336,7 @@ function Profile() {
                     border: "none",
                     borderRadius: "999px",
                     padding: "8px 18px",
-                    background: "#e11d48",
+                    background: "var(--primary)",
                     color: "white",
                     fontWeight: 700,
                     cursor: "pointer",

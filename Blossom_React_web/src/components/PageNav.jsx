@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./PageNav.module.css";
@@ -8,11 +8,83 @@ import { BASE_URL } from "../api/config";
 import i18n from "../i18n";
 
 const LANGUAGES = [
-  { code: "en", label: "EN" },
-  { code: "fr", label: "FR" },
-  { code: "zh", label: "中文" },
-  { code: "ar", label: "عربي" },
+  { code: "en", label: "EN", name: "English" },
+  { code: "fr", label: "FR", name: "Français" },
+  { code: "zh", label: "中文", name: "中文" },
+  { code: "ar", label: "عربي", name: "العربية" },
 ];
+
+function GlobeIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" />
+    </svg>
+  );
+}
+
+// A small "🌐 EN ▾" picker instead of four buttons taking up the bar.
+function LanguageMenu({ lang, onPick, label }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const current = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
+
+  useEffect(() => {
+    if (!open) return undefined;
+    function onPointerDown(event) {
+      if (!ref.current?.contains(event.target)) setOpen(false);
+    }
+    function onKeyDown(event) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div className={styles.lang} ref={ref}>
+      <button
+        type="button"
+        className={styles.langToggle}
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={label}
+      >
+        <GlobeIcon />
+        <span>{current.label}</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {open && (
+        <div className={styles.langMenu} role="menu">
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              type="button"
+              role="menuitemradio"
+              aria-checked={l.code === lang}
+              className={`${styles.langItem} ${l.code === lang ? styles.langItemActive : ""}`}
+              onClick={() => {
+                onPick(l.code);
+                setOpen(false);
+              }}
+            >
+              {l.name}
+              {l.code === lang && <span aria-hidden="true">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // The four places to go once you're logged in, plus your own profile. Shown
 // as links in the bar on a computer and as a bar of tabs at the bottom on a
@@ -29,8 +101,20 @@ const TABS = [
 // links - used during profile creation, where the user should complete the
 // flow rather than be offered Home/Login/Sign-up escape hatches.
 // `hideTabBar` is for the chat page, whose message box needs the bottom.
-function PageNav({ minimal = false, hideTabBar = false }) {
+// `overlay` is for pages whose header sits on the blossom photo (home, sign-up,
+// log in): the bar is see-through with white text, and turns solid on scroll.
+function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
   const { t } = useTranslation();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!overlay) return undefined;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [overlay]);
+  const onPhoto = overlay && !scrolled;
   const [lang, setLang] = useState(i18n.language?.slice(0, 2) || "en");
 
   function switchLang(code) {
@@ -165,15 +249,16 @@ function PageNav({ minimal = false, hideTabBar = false }) {
 
   return (
     <>
-      <nav className={styles.head}>
+      <nav className={`${styles.head} ${overlay ? styles.overlay : ""} ${onPhoto ? styles.onPhoto : ""}`}>
         <div className={styles.bar}>
-          <Logo />
+          <Logo light={onPhoto} />
 
           {isLoggedInNav && (
             <ul className={styles.mainLinks}>
               {TABS.filter((tab) => tab.to !== "/profile").map((tab) => (
                 <li key={tab.to} className={styles.mainLinkItem}>
                   <NavLink to={tab.to} className={styles.mainLink} onClick={closeMenu}>
+                    <NavIcon name={tab.icon} size={18} />
                     {t(tab.label)}
                   </NavLink>
                   {badgeFor(tab) > 0 && (
@@ -209,6 +294,7 @@ function PageNav({ minimal = false, hideTabBar = false }) {
                     <NavIcon name="settings" size={18} />
                     {t("settings.title")}
                   </NavLink>
+                  {isAdmin && <div className={styles.menuGroup}>{t("nav.adminGroup")}</div>}
                   {isAdmin && (
                     <NavLink to="/admin/dashboard" className={styles.menuItem} role="menuitem" onClick={closeMenu}>
                       {t("nav.dashboard")}
@@ -239,98 +325,75 @@ function PageNav({ minimal = false, hideTabBar = false }) {
           )}
 
           {!isLoggedInNav && (
-            <button
-              type="button"
-              className={styles.menuToggle}
-              aria-label="Toggle navigation"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen((open) => !open)}
-              style={minimal ? { display: "none" } : undefined}
-            >
-              <span
-                className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarTopOpen : ""}`}
-              />
-              <span
-                className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarMidOpen : ""}`}
-              />
-              <span
-                className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarBottomOpen : ""}`}
-              />
-            </button>
+            <>
+              {isLoggedOutNav && (
+                <ul className={styles.visitorLinks}>
+                  <li>
+                    <NavLink to="/date-spots" className={`${styles.visitorLink} ${styles.featureLink}`}>
+                      <NavIcon name="spots" size={18} />
+                      {t("nav.dateSpots")}
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/business" className={`${styles.visitorLink} ${styles.featureLink}`}>
+                      <NavIcon name="venue" size={18} />
+                      {t("business.navLink")}
+                    </NavLink>
+                  </li>
+                </ul>
+              )}
+              <div className={styles.visitorActions}>
+                <LanguageMenu lang={lang} onPick={switchLang} label={t("nav.language")} />
+                {isLoggedOutNav && (
+                  <NavLink to="/login" className={styles.loginLink}>
+                    {t("nav.login")}
+                  </NavLink>
+                )}
+                {isLoggedOutNav && (
+                  <Link to="/sign_up" className={styles.joinBtn}>
+                    {t("nav.joinFree")}
+                  </Link>
+                )}
+                {isLoggedOutNav && (
+                  <button
+                    type="button"
+                    className={styles.menuToggle}
+                    aria-label={t("menu.open")}
+                    aria-expanded={menuOpen}
+                    onClick={() => setMenuOpen((open) => !open)}
+                  >
+                    <span className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarTopOpen : ""}`} />
+                    <span className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarMidOpen : ""}`} />
+                    <span className={`${styles.menuToggleBar} ${menuOpen ? styles.menuToggleBarBottomOpen : ""}`} />
+                  </button>
+                )}
+              </div>
+            </>
           )}
         </div>
 
-        {!isLoggedInNav && (
-          <ul className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
-            {isLoggedOutNav && (
-              <span>
-                <NavLink
-                  to="/"
-                  style={{ textDecoration: "none" }}
-                  onClick={closeMenu}
-                >
-                  {t("nav.homePage")}
-                </NavLink>
+        {/* Phones: the visitor links in a panel under the bar. */}
+        {isLoggedOutNav && menuOpen && (
+          <div className={styles.mobilePanel}>
+            <NavLink to="/date-spots" className={styles.mobileFeature} onClick={closeMenu}>
+              <span className={styles.mobileFeatureIcon}>
+                <NavIcon name="spots" size={20} />
               </span>
-            )}
-            {isLoggedOutNav && (
-              <span>
-                <NavLink
-                  to="/date-spots"
-                  style={{ textDecoration: "none" }}
-                  onClick={closeMenu}
-                >
-                  {t("nav.dateSpots")}
-                </NavLink>
+              {t("nav.dateSpots")}
+            </NavLink>
+            <NavLink to="/business" className={styles.mobileFeature} onClick={closeMenu}>
+              <span className={styles.mobileFeatureIcon}>
+                <NavIcon name="venue" size={20} />
               </span>
-            )}
-            {isLoggedOutNav && (
-              <span>
-                <NavLink
-                  to="/business"
-                  style={{ textDecoration: "none" }}
-                  onClick={closeMenu}
-                >
-                  {t("business.navLink")}
-                </NavLink>
-              </span>
-            )}
-            {isLoggedOutNav && (
-              <span>
-                <NavLink
-                  to="/sign_up"
-                  style={{ textDecoration: "none" }}
-                  onClick={closeMenu}
-                >
-                  {t("nav.signUp")}
-                </NavLink>
-              </span>
-            )}
-
-            {isLoggedOutNav && (
-              <span>
-                <NavLink
-                  to="/login"
-                  style={{ textDecoration: "none" }}
-                  onClick={closeMenu}
-                >
-                  {t("nav.login")}
-                </NavLink>
-              </span>
-            )}
-
-            <span className={styles.langSwitcher}>
-              {LANGUAGES.map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => { switchLang(l.code); closeMenu(); }}
-                  className={`${styles.langBtn} ${lang === l.code ? styles.langBtnActive : ""}`}
-                >
-                  {l.label}
-                </button>
-              ))}
-            </span>
-          </ul>
+              {t("business.navLink")}
+            </NavLink>
+            <NavLink to="/login" className={styles.mobileLink} onClick={closeMenu}>
+              {t("nav.login")}
+            </NavLink>
+            <Link to="/sign_up" className={styles.mobileJoin} onClick={closeMenu}>
+              {t("nav.joinFree")}
+            </Link>
+          </div>
         )}
       </nav>
 

@@ -59,7 +59,7 @@ function ForgotPassword() {
 
   return (
     <div className={homeStyles.head}>
-      <PageNav />
+      <PageNav overlay />
 
       <div>
         <h1 className={styles.title}>

@@ -52,6 +52,15 @@ function shapes(name, maskId) {
           <circle cx="12" cy="10.2" r="2.7" />
         </>
       );
+    // A shop front with a scalloped awning - cafés, bars, restaurants.
+    case "venue":
+      return (
+        <>
+          <path d="M4.5 10.2v9.3a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1v-9.3" />
+          <path d="M3 9.2 4.6 4.3a1.2 1.2 0 0 1 1.1-.8h12.6a1.2 1.2 0 0 1 1.1.8L21 9.2a2.25 2.25 0 0 1-4.5 0 2.25 2.25 0 0 1-4.5 0 2.25 2.25 0 0 1-4.5 0 2.25 2.25 0 0 1-4.5 0z" />
+          <path d="M9.8 20.5v-5a1 1 0 0 1 1-1h2.4a1 1 0 0 1 1 1v5" />
+        </>
+      );
     case "chats":
       return (
         <path d="M20.5 11.7c0 4.2-3.8 7.6-8.5 7.6a9.8 9.8 0 0 1-2.9-.4L4.2 20.4l1.4-3.9a7.2 7.2 0 0 1-2.1-4.8c0-4.2 3.8-7.6 8.5-7.6s8.5 3.4 8.5 7.6z" />

@@ -1,13 +1,41 @@
-.image {
+.logo {
   display: inline-flex;
-  position: relative;
-  margin: 0;
-  width: clamp(40px, 6vw, 64px);
+  align-items: center;
+  gap: 9px;
   flex-shrink: 0;
-  z-index: 999;
+  text-decoration: none;
+  color: var(--primary-deep);
+  border-radius: var(--r-sm);
 }
-.image img {
-  width: 100%;
-  border-radius: 50%;
-  z-index: 999;
+
+.logo:hover {
+  color: var(--primary-deep);
+}
+
+.mark {
+  flex-shrink: 0;
+  transition: transform 0.4s var(--ease);
+}
+
+.logo:hover .mark {
+  transform: rotate(-18deg) scale(1.05);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.light,
+.light:hover {
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .wordmark {
+    font-size: 22px;
+  }
 }
