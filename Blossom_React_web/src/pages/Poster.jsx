@@ -51,6 +51,7 @@ export default function Poster() {
         {qr && <img className={styles.qr} src={qr} alt="" />}
         <p className={styles.scan}>{t("offers.posterScan")}</p>
         <p className={styles.site}>{window.location.host}</p>
+        <p className={styles.join}>{t("business.posterJoin", { url: `${window.location.host}/partner` })}</p>
       </article>
     </div>
   );

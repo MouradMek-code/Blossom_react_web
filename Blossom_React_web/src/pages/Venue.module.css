@@ -124,3 +124,16 @@
   color: #8a7e76;
   font-size: 14px;
 }
+
+.links {
+  margin: 22px 0 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #8a7e76;
+  text-align: center;
+}
+
+.links a {
+  color: #7e2a44;
+  font-weight: 700;
+}

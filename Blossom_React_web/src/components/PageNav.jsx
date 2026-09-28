@@ -287,6 +287,17 @@ function PageNav({ minimal = false, hideTabBar = false }) {
             {isLoggedOutNav && (
               <span>
                 <NavLink
+                  to="/business"
+                  style={{ textDecoration: "none" }}
+                  onClick={closeMenu}
+                >
+                  {t("business.navLink")}
+                </NavLink>
+              </span>
+            )}
+            {isLoggedOutNav && (
+              <span>
+                <NavLink
                   to="/sign_up"
                   style={{ textDecoration: "none" }}
                   onClick={closeMenu}

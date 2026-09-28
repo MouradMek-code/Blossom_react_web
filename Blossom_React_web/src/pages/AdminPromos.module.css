@@ -318,3 +318,13 @@
 .venueRow .actions {
   margin-top: 0;
 }
+
+.handled {
+  opacity: 0.6;
+}
+
+.messageText {
+  margin: 10px 0 6px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}

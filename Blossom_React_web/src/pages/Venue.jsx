@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
@@ -46,7 +47,9 @@ export default function Venue() {
       // private browsing: nothing remembered
     }
     if (!response.ok) {
-      setError(response.message);
+      // The server says which part is wrong: show it in the staff's language.
+      const reason = response.data?.detail?.reason;
+      setError(reason ? t(`offers.err_${reason}`) : response.message);
       return null;
     }
     return response.data;
@@ -144,6 +147,12 @@ export default function Venue() {
             </button>
           </div>
         )}
+
+        <p className={styles.links}>
+          {t("business.venueNotPartner")} <Link to="/partner">{t("partners.link")}</Link>
+          <br />
+          {t("business.venueOwner")} <Link to="/business#lost-link">{t("business.lostButton")}</Link>
+        </p>
       </main>
     </div>
   );

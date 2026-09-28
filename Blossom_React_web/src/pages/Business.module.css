@@ -1,0 +1,149 @@
+.page {
+  min-height: 100vh;
+  background: #fbf8f6;
+  color: #2a2420;
+}
+
+.wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 28px 16px 64px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.intro {
+  margin: 10px 0 20px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #574d46;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
+  scroll-margin-top: 80px;
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 19px;
+}
+
+.card p {
+  margin: 0 0 14px;
+  color: #574d46;
+  line-height: 1.5;
+}
+
+.highlight {
+  background: #fff4e5;
+  border: 1px solid #ffd8a3;
+}
+
+.primary,
+.primaryBtn {
+  display: inline-block;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  background: #c1466b;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.6;
+}
+
+.secondary {
+  display: inline-block;
+  border: 1.5px solid #dccec3;
+  border-radius: 999px;
+  padding: 10px 20px;
+  color: #574d46;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inline input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #574d46;
+  min-width: 0;
+}
+
+.card input,
+.card textarea,
+.card select {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  color: #2a2420;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #dccec3;
+  background: #fff;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .row2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.ok {
+  color: #1f7a4d !important;
+  font-weight: 700;
+}
+
+.error {
+  color: #b3261e !important;
+  font-size: 14px;
+}

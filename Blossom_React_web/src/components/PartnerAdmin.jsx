@@ -268,3 +268,65 @@ export function PartnerVenues({ token, refreshKey }) {
     </section>
   );
 }
+
+// "Contact us" messages from businesses: reply by email, mark as handled.
+export function BusinessMessages({ token }) {
+  const { t, i18n } = useTranslation();
+  const [messages, setMessages] = useState(null);
+
+  const load = useCallback(async () => {
+    const result = await postJson(`${BASE_URL}/partners/contact`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (result.ok) setMessages(result.data);
+  }, [token]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  async function setHandled(message, handled) {
+    const result = await postJson(`${BASE_URL}/partners/contact/${message.id}/handled`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ handled }),
+    });
+    if (result.ok) setMessages((cur) => cur.map((m) => (m.id === message.id ? result.data : m)));
+  }
+
+  if (!messages) return null;
+  return (
+    <section className={styles.partnerBlock}>
+      <h2 className={styles.blockTitle}>{t("business.messages")}</h2>
+      {messages.length === 0 && <p className={styles.muted}>{t("business.noMessages")}</p>}
+      {messages.map((m) => (
+        <article key={m.id} className={`${styles.card} ${m.handled ? styles.handled : ""}`}>
+          <div className={styles.cardTop}>
+            <span className={styles.spot}>
+              {m.name}
+              {m.business ? ` · ${m.business}` : ""}
+            </span>
+            <span className={styles.muted}>
+              {t(`business.topic_${m.topic}`)} · {formatDeadline(m.created_at, i18n.language)}
+            </span>
+          </div>
+          <p className={styles.messageText}>{m.message}</p>
+          <p className={styles.muted}>
+            {m.email}
+            {m.phone ? ` · ${m.phone}` : ""}
+          </p>
+          <div className={styles.actions}>
+            <a className={styles.linkBtn} href={`mailto:${m.email}?subject=${encodeURIComponent("Blossom")}`}>
+              {t("business.reply")}
+            </a>
+            <button type="button" onClick={() => setHandled(m, !m.handled)}>
+              {m.handled ? t("business.reopen") : t("business.markHandled")}
+            </button>
+            {m.handled && <span className={styles.muted}>{t("business.handled")}</span>}
+          </div>
+        </article>
+      ))}
+    </section>
+  );
+}

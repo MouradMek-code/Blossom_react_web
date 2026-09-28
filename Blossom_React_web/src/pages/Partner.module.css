@@ -149,3 +149,14 @@
   background: #fff;
   color: #574d46;
 }
+
+.more {
+  margin: 18px 0 0;
+  text-align: center;
+  font-size: 14px;
+}
+
+.more a {
+  color: #7e2a44;
+  font-weight: 700;
+}

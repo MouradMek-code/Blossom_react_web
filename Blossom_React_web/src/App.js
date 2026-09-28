@@ -25,6 +25,7 @@ import Venue from "./pages/Venue";
 import Poster from "./pages/Poster";
 import Partner from "./pages/Partner";
 import VenueManage from "./pages/VenueManage";
+import Business from "./pages/Business";
 import { trackVisit } from "./api/analytics";
 
 // Visits for the admin dashboard (see api/analytics.js).
@@ -77,6 +78,7 @@ function App() {
         {/* "Partner with Blossom": the form, and each venue's private page. */}
         <Route path="/partner" element={<Partner />} />
         <Route path="/venue/manage/:token" element={<VenueManage />} />
+        <Route path="/business" element={<Business />} />
       </Routes>
     </BrowserRouter>
   );

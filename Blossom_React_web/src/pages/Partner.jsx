@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
@@ -235,6 +236,11 @@ export default function Partner() {
             </button>
           </form>
         )}
+        <p className={styles.more}>
+          <Link to="/business#lost-link">🔑 {t("business.lostTitle")}</Link>
+          {" · "}
+          <Link to="/business#contact">📩 {t("business.contactTitle")}</Link>
+        </p>
       </main>
       <Footer />
     </div>

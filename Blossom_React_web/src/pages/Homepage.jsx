@@ -7,6 +7,7 @@ import TrustBadges from "../components/TrustBadges";
 import FAQ from "../components/FAQ";
 import LanguageDating from "../components/LanguageDating";
 import FounderProjects from "../components/FounderProjects";
+import ForVenues from "../components/ForVenues";
 import Footer from "../components/Footer";
 import styles from "./Homepage.module.css";
 
@@ -29,6 +30,7 @@ function Homepage() {
       <LanguageDating />
       <Testimonials />
       <AppBanner />
+      <ForVenues />
       <FAQ />
       <FounderProjects />
       <Footer />

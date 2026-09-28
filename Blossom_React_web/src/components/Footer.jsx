@@ -37,6 +37,7 @@ function Footer() {
           <Link to="/profiles">Browse</Link>
           <Link to="/date-spots">{t("nav.dateSpots")}</Link>
           <Link to="/partner">{t("partners.link")}</Link>
+          <Link to="/business">{t("business.navLink")}</Link>
           <Link to="/sign_up">Sign up</Link>
           <Link to="/login">Log in</Link>
         </nav>
