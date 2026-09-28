@@ -9,10 +9,13 @@ import styles from "./Profiles.module.css";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { isNewMember } from "../api/newMember";
-import { connectionLabel, connectionOf, languagesLine } from "../api/connection";
+import { CONNECTION_DOTS, connectionOf, languagesLine } from "../api/connection";
 
 function Profiles() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  // Small caps with letter spacing for Latin scripts only: spacing breaks
+  // Arabic's joined letters, and Chinese has no capitals.
+  const latinScript = !/^(ar|zh)/.test(i18n.language || "");
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const [profiles, setProfiles] = useState([]);
@@ -198,13 +201,23 @@ function Profiles() {
             />
 
             {/* Joined less than a week ago. */}
-            {isNewMember(profile) && <span className={styles.newBadge}>✨ {t("browse.new")}</span>}
+            {isNewMember(profile) && (
+              <span className={`${styles.newBadge} ${latinScript ? styles.smallCaps : ""}`}>
+                <span className={styles.newDot} aria-hidden="true" />
+                {t("browse.new")}
+              </span>
+            )}
 
             <div className={styles.overlay}>
               <div className={styles.profileInfo}>
                 {/* What they're here for: dating, language exchange or both. */}
                 <span className={styles.connection}>
-                  {connectionLabel(connectionOf(profile), t)}
+                  <span className={styles.dots} aria-hidden="true">
+                    {CONNECTION_DOTS[connectionOf(profile)].map((color) => (
+                      <span key={color} className={styles.dot} style={{ background: color }} />
+                    ))}
+                  </span>
+                  {t(`connection.${connectionOf(profile)}`)}
                 </span>
                 <h3>
                   {profile.first_name}
