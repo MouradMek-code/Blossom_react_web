@@ -79,6 +79,39 @@ function placeLine(spot) {
   return `📍 ${shortPlace(spot)}`;
 }
 
+// A partner café/restaurant's gift: the gift itself is the title, then where,
+// the terms, and the invite right on the card.
+function GiftCard({ spot, t, onOpen, onInvite }) {
+  return (
+    <article className={styles.giftCard} onClick={onOpen}>
+      <div className={styles.giftMedia}>
+        <SpotBackdrop spot={spot} imgClass={styles.giftImage} src={IMG.card(spot.image_url)} lazy />
+        <span className={styles.giftRibbon}>{t("dateSpots.giftRibbon")}</span>
+      </div>
+      <div className={styles.giftBody}>
+        <strong className={styles.giftOffer}>{spot.offer.title}</strong>
+        <span className={styles.giftVenue}>{spot.name}</span>
+        <span className={styles.giftPlace}>{placeLine(spot)}</span>
+        <span className={styles.giftTerms}>{offerTerms(spot.offer, t)}</span>
+        {onInvite ? (
+          <button
+            type="button"
+            className={styles.giftInvite}
+            onClick={(e) => {
+              e.stopPropagation();
+              onInvite();
+            }}
+          >
+            💌 {t("dateSpots.invite")}
+          </button>
+        ) : (
+          <span className={styles.giftSee}>{t("dateSpots.giftSee")} →</span>
+        )}
+      </div>
+    </article>
+  );
+}
+
 // Admin-only editor for a spot's counters, shown right under its photo.
 // Used to seed a venue's numbers or correct them; everyone else never sees it.
 function AdminStatsEditor({ spot, token, t, onSaved }) {
@@ -168,6 +201,7 @@ function DateSpots() {
   const [bestFor, setBestFor] = useState("");
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
+  const [suggestSent, setSuggestSent] = useState(false);
   const [editing, setEditing] = useState(null);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
@@ -284,6 +318,19 @@ function DateSpots() {
     closeSpot();
   }
 
+  // "Suggest a place" (members) / "Add a place" (admins): the form sits at the
+  // bottom of the page - the gifts come first.
+  function openSuggest() {
+    if (!isLoggedIn) {
+      navigate("/sign_up");
+      return;
+    }
+    setEditing(null);
+    setSuggestSent(false);
+    setFormOpen(true);
+    setTimeout(() => document.getElementById("suggest")?.scrollIntoView({ behavior: "smooth" }), 50);
+  }
+
   function startEdit(spot) {
     closeSpot();
     setFormOpen(false);
@@ -355,45 +402,22 @@ function DateSpots() {
           <p className={styles.eyebrow}>{t("dateSpots.eyebrow")}</p>
           <h1 className={styles.title}>{t("dateSpots.title")}</h1>
           <p className={styles.subtitle}>{t("dateSpots.subtitle")}</p>
-          {isLoggedIn ? (
-            <>
-              <button
-                className={styles.addBtn}
-                onClick={() => {
-                  setEditing(null);
-                  setFormOpen((o) => !o);
-                }}
-              >
-                {formOpen ? t("dateSpots.close") : `＋ ${t("dateSpots.share")}`}
-              </button>
-              {/* Promotion codes a match and I got at spots with 🎁. */}
+          <div className={styles.heroLinks}>
+            {/* Promotion codes a match and I got at spots with 🎁. */}
+            {isLoggedIn && (
               <Link to="/promotions" className={styles.myPromos}>
                 {t("offers.myPromos")}
               </Link>
-              <Link to="/partner" className={styles.partnerLink}>
-                {t("partners.link")}
-              </Link>
-            </>
-          ) : (
-            // Visitors get the same button: sharing needs a free account, so
-            // it takes them to sign-up (members can log in from the line below).
-            <div className={styles.guestShare}>
-              <button className={styles.addBtn} onClick={() => navigate("/sign_up")}>
-                ＋ {t("dateSpots.share")}
-              </button>
-              <p className={styles.loginHint}>
-                {t("dateSpots.signUpToShare")}{" "}
-                <Link to="/login" className={styles.loginLink}>
-                  {t("dateSpots.haveAccount")}
-                </Link>
-              </p>
-              <Link to="/partner" className={styles.partnerLink}>
-                {t("partners.link")}
-              </Link>
-            </div>
-          )}
+            )}
+            <Link to="/partner" className={styles.partnerLink}>
+              {t("partners.link")}
+            </Link>
+          </div>
           {isAdmin && (
             <div className={styles.seedRow}>
+              <button className={styles.seedBtn} onClick={openSuggest}>
+                ＋ {t("dateSpots.addPlace")}
+              </button>{" "}
               <button className={styles.seedBtn} onClick={seedStarterSpots} disabled={seeding}>
                 🛠️ {seeding ? t("dateSpots.adminSeeding") : t("dateSpots.adminSeed")}
               </button>
@@ -404,17 +428,6 @@ function DateSpots() {
 
         <div className={styles.body}>
           {error !== "" && <p className={styles.error}>{error}</p>}
-
-          {formOpen && isLoggedIn && !editing && (
-            <AddSpotForm
-              token={token}
-              onCancel={() => setFormOpen(false)}
-              onSaved={() => {
-                setFormOpen(false);
-                load();
-              }}
-            />
-          )}
 
           {editing && (
             <AddSpotForm
@@ -429,29 +442,36 @@ function DateSpots() {
             />
           )}
 
+          {/* The gifts partner cafés and restaurants offer: first, and big. */}
           {promoSpots.length > 0 && !promoOnly && (
-            <section className={styles.promoRow}>
-              <h2 className={styles.promoRowTitle}>{t("offers.promoRow")}</h2>
-              <div className={styles.promoRowList}>
+            <section className={styles.gifts}>
+              <div className={styles.giftsHead}>
+                <h2 className={styles.giftsTitle}>{t("dateSpots.giftsTitle")}</h2>
+                <p className={styles.giftsSubtitle}>{t("dateSpots.giftsSubtitle")}</p>
+              </div>
+              <div className={styles.giftsList}>
                 {promoSpots.map((spot) => (
-                  <button key={spot.id} type="button" className={styles.promoCard} onClick={() => openSpot(spot)}>
-                    {spot.image_url ? (
-                      <img className={styles.promoCardImage} src={IMG.card(spot.image_url)} alt="" loading="lazy" />
-                    ) : (
-                      <span
-                        className={styles.promoCardImage}
-                        style={{ background: `linear-gradient(135deg, ${categoryGradient(spot.category).join(", ")})` }}
-                      >
-                        {categoryEmoji(spot.category)}
-                      </span>
-                    )}
-                    <strong className={styles.promoCardName}>{spot.name}</strong>
-                    <span className={styles.promoCardOffer}>🎁 {spot.offer.title}</span>
-                  </button>
+                  <GiftCard
+                    key={spot.id}
+                    spot={spot}
+                    t={t}
+                    onOpen={() => openSpot(spot)}
+                    onInvite={isLoggedIn ? () => setInviteSpot(spot) : null}
+                  />
                 ))}
               </div>
             </section>
           )}
+          {!loading && promoSpots.length === 0 && (
+            <p className={styles.noGifts}>
+              {t("dateSpots.noGiftsHere")}{" "}
+              <button type="button" className={styles.inlineLink} onClick={openSuggest}>
+                {t("dateSpots.noGiftsLink")} →
+              </button>
+            </p>
+          )}
+
+          <h2 className={styles.sectionTitle}>{t("dateSpots.allSpots")}</h2>
 
           {/* Filter chips - each row is named so it's clear what it filters. */}
           <div className={styles.filterBar}>
@@ -573,12 +593,9 @@ function DateSpots() {
                 {hasFilters ? t("dateSpots.emptyFiltered") : t("dateSpots.emptyAll")}
               </p>
               {!formOpen && (
-                <button
-                  className={styles.emptyBtn}
-                  // Visitors: sharing needs a free account.
-                  onClick={() => (isLoggedIn ? setFormOpen(true) : navigate("/sign_up"))}
-                >
-                  ＋ {t("dateSpots.share")}
+                // Visitors: suggesting needs a free account (openSuggest sends them to sign up).
+                <button className={styles.emptyBtn} onClick={openSuggest}>
+                  ＋ {t("dateSpots.suggestButton")}
                 </button>
               )}
             </div>
@@ -596,7 +613,9 @@ function DateSpots() {
                   src={IMG.full(featured.image_url)}
                 />
                 <div className={styles.scrim} />
-                <span className={styles.featuredFlag}>★ {t("dateSpots.featured")}</span>
+                <span className={`${styles.featuredFlag} ${featured.offer ? styles.featuredFlagGift : ""}`}>
+                  {featured.offer ? t("dateSpots.giftRibbon") : `★ ${t("dateSpots.featured")}`}
+                </span>
                 <div className={styles.featuredInfo}>
                   <OfferPill offer={featured.offer} />
                   {featured.category && (
@@ -617,7 +636,7 @@ function DateSpots() {
                   {rest.map((spot, i) => (
                     <article
                       key={spot.id}
-                      className={styles.card}
+                      className={`${styles.card} ${spot.offer ? styles.cardGift : ""}`}
                       onClick={() => openSpot(spot)}
                       style={{ animationDelay: `${(i + 1) * 60}ms` }}
                     >
@@ -645,6 +664,41 @@ function DateSpots() {
               )}
             </>
           )}
+
+          {/* Members suggest places (an admin approves them); admins add them. */}
+          <section className={styles.suggest} id="suggest">
+            {suggestSent ? (
+              <p className={styles.suggestThanks}>🌸 {t("dateSpots.suggestThanks")}</p>
+            ) : formOpen && isLoggedIn && !editing ? (
+              <AddSpotForm
+                token={token}
+                isAdmin={isAdmin}
+                onCancel={() => setFormOpen(false)}
+                onSaved={(saved) => {
+                  setFormOpen(false);
+                  if (saved?.status === "pending") setSuggestSent(true);
+                  else load();
+                }}
+              />
+            ) : (
+              <>
+                <h2 className={styles.suggestTitle}>{t("dateSpots.suggestTitle")}</h2>
+                <p className={styles.suggestText}>
+                  {isLoggedIn ? t("dateSpots.suggestText") : t("dateSpots.signUpToSuggest")}
+                </p>
+                <button type="button" className={styles.suggestBtn} onClick={openSuggest}>
+                  ＋ {t("dateSpots.suggestButton")}
+                </button>
+                {!isLoggedIn && (
+                  <p className={styles.loginHint}>
+                    <Link to="/login" className={styles.loginLink}>
+                      {t("dateSpots.haveAccount")}
+                    </Link>
+                  </p>
+                )}
+              </>
+            )}
+          </section>
         </div>
       </div>
 
@@ -889,7 +943,7 @@ const GOOGLE_MAPS_LINK = /^https?:\/\/(www\.)?([a-z-]+\.)?(google\.[a-z.]+|goo\.
 // fills in the name and makes "Open in Google Maps" exact), pick a vibe, done.
 // City and country come from the profile; neighborhood and "best for" wait
 // behind "More details".
-function AddSpotForm({ token, initial, onCancel, onSaved }) {
+function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
   const { t } = useTranslation();
   const editing = Boolean(initial);
   const [mapUrl, setMapUrl] = useState(initial?.map_url || "");
@@ -908,6 +962,8 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
   const [preview, setPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  // Members: "I'd love this place to offer a gift to couples".
+  const [wantsGift, setWantsGift] = useState(false);
   // The name we filled in from the link, so a newer link can replace it -
   // but never a name the person typed themselves.
   const autoName = useRef("");
@@ -1008,6 +1064,7 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
     if (category) body.append("category", category);
     if (bestFor.length > 0) body.append("best_for", bestFor.join(","));
     if (file) body.append("image", file);
+    if (!isAdmin && wantsGift) body.append("wants_gift", "true");
     return postJson(`${BASE_URL}/date_spots`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
@@ -1069,7 +1126,7 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
   return (
     <form className={styles.form} onSubmit={submit}>
       <h2 className={styles.formTitle}>
-        {editing ? t("dateSpots.editTitle") : t("dateSpots.formTitle")}
+        {editing ? t("dateSpots.editTitle") : isAdmin ? t("dateSpots.addPlace") : t("dateSpots.suggestFormTitle")}
       </h2>
       {error !== "" && <p className={styles.error}>{error}</p>}
 
@@ -1186,7 +1243,14 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
             ))}
           </div>
         </>
-      )}}
+      )}
+
+      {!editing && !isAdmin && (
+        <label className={styles.giftWish}>
+          <input type="checkbox" checked={wantsGift} onChange={(e) => setWantsGift(e.target.checked)} />
+          <span>🎁 {t("dateSpots.wantsGift")}</span>
+        </label>
+      )}
 
       <p className={styles.safety}>{t("dateSpots.safety")}</p>
 
@@ -1201,7 +1265,9 @@ function AddSpotForm({ token, initial, onCancel, onSaved }) {
               : t("dateSpots.saveChanges")
             : submitting
               ? t("dateSpots.submitting")
-              : t("dateSpots.submit")}
+              : isAdmin
+                ? t("dateSpots.submit")
+                : t("dateSpots.suggestSend")}
         </button>
       </div>
     </form>

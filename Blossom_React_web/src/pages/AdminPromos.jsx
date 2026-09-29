@@ -6,7 +6,7 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { formatDeadline, formatHours } from "../api/offers";
 import styles from "./AdminPromos.module.css";
-import { BusinessMessages, PartnerRequests, PartnerVenues } from "../components/PartnerAdmin";
+import { BusinessMessages, PartnerRequests, PartnerVenues, SpotSuggestions } from "../components/PartnerAdmin";
 
 // Admin: venue promotions for couples - publish one on a date spot, follow
 // how many couples got it and used it, pause, add places, end it.
@@ -105,6 +105,8 @@ export default function AdminPromos() {
             setPartnerKey((k) => k + 1);
           }}
         />
+
+        <SpotSuggestions token={token} onChanged={load} />
 
         {formOpen ? (
           <OfferForm

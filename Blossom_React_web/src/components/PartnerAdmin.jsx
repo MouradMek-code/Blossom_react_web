@@ -3,7 +3,92 @@ import { useTranslation } from "react-i18next";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { formatDeadline, formatHours } from "../api/offers";
+import { IMG } from "../api/images";
 import styles from "../pages/AdminPromos.module.css";
+
+// Admin: places members suggested. Approve publishes one (the member gets a
+// "thank you"); refuse deletes it. "💡 Would love a gift here" = a venue worth
+// asking for a gift.
+export function SpotSuggestions({ token, onChanged }) {
+  const { t, i18n } = useTranslation();
+  const [items, setItems] = useState(null);
+  const [error, setError] = useState("");
+  const [busyId, setBusyId] = useState(null);
+
+  const load = useCallback(async () => {
+    const result = await postJson(`${BASE_URL}/date_spots/admin/suggestions`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (result.ok) setItems(result.data);
+    else setError(result.message || t("partners.failed"));
+  }, [token, t]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  async function answer(spot, approve) {
+    if (!approve && !window.confirm(t("partners.refuseSuggestionConfirm", { name: spot.name }))) return;
+    setBusyId(spot.id);
+    setError("");
+    const result = await postJson(`${BASE_URL}/date_spots/${spot.id}${approve ? "/approve" : ""}`, {
+      method: approve ? "POST" : "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setBusyId(null);
+    if (!result.ok) {
+      setError(result.message || t("partners.failed"));
+      return;
+    }
+    load();
+    onChanged?.();
+  }
+
+  if (items === null) return error ? <p className={styles.error}>{error}</p> : null;
+  return (
+    <section className={styles.partnerBlock}>
+      <h2 className={styles.blockTitle}>{t("partners.suggestionsTitle")}</h2>
+      {error && <p className={styles.error}>{error}</p>}
+      {items.length === 0 && <p className={styles.muted}>{t("partners.suggestionsEmpty")}</p>}
+      {items.map((spot) => (
+        <article key={spot.id} className={styles.card}>
+          <div className={styles.suggestionTop}>
+            {spot.image_url && <img className={styles.suggestionPhoto} src={IMG.thumb(spot.image_url)} alt="" />}
+            <div>
+              <strong className={styles.offerTitle}>{spot.name}</strong>
+              <p className={styles.line}>
+                📍 {[spot.neighborhood, spot.city, spot.country].filter(Boolean).join(", ")}
+                {spot.map_url && (
+                  <>
+                    {" · "}
+                    <a href={spot.map_url} target="_blank" rel="noopener noreferrer">Google Maps</a>
+                  </>
+                )}
+              </p>
+              <p className={styles.muted}>
+                {t("partners.suggestedBy", {
+                  name: spot.profile?.first_name || "?",
+                  date: formatDeadline(spot.created_at, i18n.language),
+                })}
+              </p>
+            </div>
+          </div>
+          {spot.wants_gift && <p className={styles.wantsGift}>{t("partners.wantsGiftAdmin")}</p>}
+          {spot.description && <p className={styles.line}>{spot.description}</p>}
+          <div className={styles.actions}>
+            <button type="button" className={styles.approveBtn} onClick={() => answer(spot, true)} disabled={busyId === spot.id}>
+              {t("partners.approve")}
+            </button>
+            <button type="button" className={styles.danger} onClick={() => answer(spot, false)} disabled={busyId === spot.id}>
+              {t("partners.refuse")}
+            </button>
+          </div>
+        </article>
+      ))}
+    </section>
+  );
+}
 
 // Admin: "Partner with Blossom" requests (approve - after correcting if
 // needed - or refuse) and the partner venues (their private manager link).

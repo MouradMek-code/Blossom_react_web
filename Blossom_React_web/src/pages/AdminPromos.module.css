@@ -328,3 +328,30 @@
   white-space: pre-wrap;
   line-height: 1.5;
 }
+
+/* Places suggested by members */
+.suggestionTop {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.suggestionPhoto {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.wantsGift {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #fff4e5;
+  border: 1px solid #ffd8a3;
+  color: #6b3e00;
+  font-size: 13px;
+  font-weight: 700;
+}
