@@ -204,16 +204,21 @@ function DateSpots() {
     };
   }, [token, isLoggedIn]);
 
+  // Admins: any spot. Members: the spots they shared, until a spot becomes a
+  // partner (venue or gifts) - then only admins (the server says the same).
   function canEdit(spot) {
-    return isAdmin || (me?.profile_id != null && spot?.profile?.id === me.profile_id);
+    if (isAdmin) return true;
+    return me?.profile_id != null && spot?.profile?.id === me.profile_id && !spot?.partner;
   }
 
   // Reflect an admin edit straight away, in the open detail card and in the
   // list behind it, so the new numbers show without a refetch.
   function applyStats(updated) {
     if (!updated?.id) return;
-    setSpots((prev) => prev.map((s) => (s.id === updated.id ? { ...s, ...updated } : s)));
-    setSelected((cur) => (cur && cur.id === updated.id ? { ...cur, ...updated } : cur));
+    // The answer has no `offer` (only the list attaches it): keep the gift box.
+    const merge = (spot) => ({ ...spot, ...updated, offer: updated.offer ?? spot.offer });
+    setSpots((prev) => prev.map((s) => (s.id === updated.id ? merge(s) : s)));
+    setSelected((cur) => (cur && cur.id === updated.id ? merge(cur) : cur));
   }
 
   const load = useCallback(async () => {
