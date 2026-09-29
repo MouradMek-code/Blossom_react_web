@@ -11,6 +11,15 @@ const KEEP_ALIVE_MS = 25 * 60 * 1000;
 let memoryId = null;
 let lastSentAt = 0;
 let lastToken;
+let lastPage;
+
+// /profile/42 -> /profile/:id; a secret link's long random part (a friend's
+// activation link, a venue's manager link) -> :token. The server does it too.
+function pageOf(path) {
+  return (path || "/")
+    .replace(/\/[A-Za-z0-9_-]{16,}(?=\/|$)/g, "/:token")
+    .replace(/\/\d+(?=\/|$)/g, "/:id");
+}
 
 function randomId() {
   if (window.crypto?.randomUUID) return window.crypto.randomUUID();
@@ -44,15 +53,19 @@ function timezone() {
   }
 }
 
-// Called on every page change and when the tab comes back into view; only
-// talks to the server when it matters: the first page, after logging in, or
-// to keep a long visit alive. Never throws.
+// Called on every page change and when the tab comes back into view. Tells
+// the server about each new page (the dashboard's day view shows the path
+// people took), after logging in, and to keep a long visit alive - not about
+// the same page again. Never throws.
 export function trackVisit(path) {
   const token = currentToken();
+  const page = pageOf(path);
   const loggedIn = token && token !== lastToken;
+  const moved = page !== lastPage;
   const due = Date.now() - lastSentAt > KEEP_ALIVE_MS;
   lastToken = token;
-  if (!loggedIn && !due) return;
+  lastPage = page;
+  if (!loggedIn && !moved && !due) return;
   lastSentAt = Date.now();
 
   const headers = { "Content-Type": "application/json" };
@@ -64,7 +77,7 @@ export function trackVisit(path) {
     body: JSON.stringify({
       device_id: deviceId(),
       platform: "web",
-      entry: (path || "/").replace(/\/\d+(?=\/|$)/g, "/:id"), // /profile/42 -> /profile/:id
+      entry: page,
       language: navigator.language,
       timezone: timezone(),
     }),

@@ -3,7 +3,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
-import { breakdownLabel, compact, delta, niceMax, shortDate, tzOffsetMinutes } from "../api/dashboardLabels";
+import { IMG } from "../api/images";
+import {
+  actionChips,
+  breakdownLabel,
+  clockTime,
+  compact,
+  delta,
+  durationLabel,
+  localDay,
+  longDate,
+  niceMax,
+  placeLabel,
+  shiftDay,
+  shortDate,
+  tzOffsetMinutes,
+} from "../api/dashboardLabels";
 import styles from "./AdminDashboard.module.css";
 
 const PERIODS = [7, 30, 90];
@@ -15,6 +30,8 @@ export default function AdminDashboard() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [days, setDays] = useState(30);
+  // "period": the overview over 7/30/90 days; "day": one day in detail.
+  const [mode, setMode] = useState("period");
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -70,90 +87,108 @@ export default function AdminDashboard() {
                   key={p}
                   type="button"
                   role="tab"
-                  aria-selected={days === p}
-                  className={days === p ? styles.segActive : styles.seg}
-                  onClick={() => setDays(p)}
+                  aria-selected={mode === "period" && days === p}
+                  className={mode === "period" && days === p ? styles.segActive : styles.seg}
+                  onClick={() => {
+                    setMode("period");
+                    setDays(p);
+                  }}
                 >
                   {t("dashboard.periodDays", { count: p })}
                 </button>
               ))}
+              <button
+                type="button"
+                role="tab"
+                aria-selected={mode === "day"}
+                className={mode === "day" ? styles.segActive : styles.seg}
+                onClick={() => setMode("day")}
+              >
+                {t("dashboard.dayTab")}
+              </button>
             </div>
           </div>
         </header>
 
-        {error && (
-          <p className={styles.error}>
-            {error}{" "}
-            <button type="button" className={styles.retry} onClick={load}>{t("dashboard.retry")}</button>
-          </p>
-        )}
-
-        {!data ? (
-          <p className={styles.loading}>{t("dashboard.loading")}</p>
+        {mode === "day" ? (
+          <DayView t={t} language={i18n.language} />
         ) : (
-          <div className={loading ? styles.refreshing : undefined}>
-            {/* Hero + today */}
-            <section className={`${styles.card} ${styles.hero}`}>
-              <div>
-                <p className={styles.heroLabel}>{t("dashboard.visitors")} · {t("dashboard.periodDays", { count: days })}</p>
-                <p className={styles.heroValue}>{compact(k.visitors.value)}</p>
-                <Delta d={delta(k.visitors.value, k.visitors.previous, { t })} days={days} t={t} />
-                <p className={styles.heroExplain}>
-                  {t("dashboard.visitorsExplain", { members: k.members.value, visits: k.anonymous.value })}
+          <>
+            {error && (
+              <p className={styles.error}>
+                {error}{" "}
+                <button type="button" className={styles.retry} onClick={load}>{t("dashboard.retry")}</button>
+              </p>
+            )}
+
+            {!data ? (
+              <p className={styles.loading}>{t("dashboard.loading")}</p>
+            ) : (
+              <div className={loading ? styles.refreshing : undefined}>
+                {/* Hero + today */}
+                <section className={`${styles.card} ${styles.hero}`}>
+                  <div>
+                    <p className={styles.heroLabel}>{t("dashboard.visitors")} · {t("dashboard.periodDays", { count: days })}</p>
+                    <p className={styles.heroValue}>{compact(k.visitors.value)}</p>
+                    <Delta d={delta(k.visitors.value, k.visitors.previous, { t })} days={days} t={t} />
+                    <p className={styles.heroExplain}>
+                      {t("dashboard.visitorsExplain", { members: k.members.value, visits: k.anonymous.value })}
+                    </p>
+                  </div>
+                  <div className={styles.today}>
+                    <p className={styles.todayLabel}>{t("dashboard.today")}</p>
+                    <p className={styles.todayValue}>{data.today.visitors}</p>
+                    <p className={styles.todayLine}>
+                      {t("dashboard.todayLine", {
+                        members: data.today.members,
+                        visits: data.today.anonymous,
+                        newProfiles: data.today.new_profiles,
+                      })}
+                    </p>
+                  </div>
+                </section>
+
+                {/* KPI tiles */}
+                <section className={styles.tiles}>
+                  <Tile label={t("dashboard.members")} hint={t("dashboard.membersHint")} value={compact(k.members.value)}
+                    d={delta(k.members.value, k.members.previous, { t })} days={days} t={t} />
+                  <Tile label={t("dashboard.anonymous")} hint={t("dashboard.anonymousHint")} value={compact(k.anonymous.value)}
+                    d={delta(k.anonymous.value, k.anonymous.previous, { t })} days={days} t={t} />
+                  <Tile label={t("dashboard.newProfiles")} hint={t("dashboard.newProfilesHint")} value={compact(k.new_profiles.value)}
+                    d={delta(k.new_profiles.value, k.new_profiles.previous, { t })} days={days} t={t} />
+                  <Tile label={t("dashboard.signupRate")} hint={t("dashboard.signupRateHint")}
+                    value={k.signup_rate.value == null ? "—" : `${k.signup_rate.value}%`}
+                    d={delta(k.signup_rate.value, k.signup_rate.previous, { points: true, t })} days={days} t={t} />
+                </section>
+
+                <DailyChart daily={data.daily} t={t} language={i18n.language} />
+
+                <div className={styles.grid2}>
+                  <NewProfilesChart daily={data.daily} t={t} language={i18n.language} />
+                  <HoursChart hours={data.hours} t={t} />
+                </div>
+
+                <div className={styles.grid2}>
+                  <Funnel steps={data.funnel} t={t} />
+                  <Community c={data.community} t={t} />
+                </div>
+
+                <div className={styles.grid2}>
+                  <Breakdown title={t("dashboard.platforms")} kind="platforms" items={data.platforms} t={t} />
+                  <Breakdown title={t("dashboard.languages")} kind="languages" items={data.languages} t={t} />
+                  <Breakdown title={t("dashboard.regions")} kind="timezones" items={data.timezones} t={t} />
+                  <Breakdown title={t("dashboard.entries")} kind="entries" items={data.entries} t={t} />
+                </div>
+
+                <p className={styles.footnote}>
+                  {t("dashboard.footnote")}
+                  {updatedAt && <> · {t("dashboard.updated", { time: updatedAt.toLocaleTimeString(i18n.language, { hour: "2-digit", minute: "2-digit" }) })}</>}
+                  {" · "}
+                  <button type="button" className={styles.retry} onClick={load}>{t("dashboard.refresh")}</button>
                 </p>
               </div>
-              <div className={styles.today}>
-                <p className={styles.todayLabel}>{t("dashboard.today")}</p>
-                <p className={styles.todayValue}>{data.today.visitors}</p>
-                <p className={styles.todayLine}>
-                  {t("dashboard.todayLine", {
-                    members: data.today.members,
-                    visits: data.today.anonymous,
-                    newProfiles: data.today.new_profiles,
-                  })}
-                </p>
-              </div>
-            </section>
-
-            {/* KPI tiles */}
-            <section className={styles.tiles}>
-              <Tile label={t("dashboard.members")} hint={t("dashboard.membersHint")} value={compact(k.members.value)}
-                d={delta(k.members.value, k.members.previous, { t })} days={days} t={t} />
-              <Tile label={t("dashboard.anonymous")} hint={t("dashboard.anonymousHint")} value={compact(k.anonymous.value)}
-                d={delta(k.anonymous.value, k.anonymous.previous, { t })} days={days} t={t} />
-              <Tile label={t("dashboard.newProfiles")} hint={t("dashboard.newProfilesHint")} value={compact(k.new_profiles.value)}
-                d={delta(k.new_profiles.value, k.new_profiles.previous, { t })} days={days} t={t} />
-              <Tile label={t("dashboard.signupRate")} hint={t("dashboard.signupRateHint")}
-                value={k.signup_rate.value == null ? "—" : `${k.signup_rate.value}%`}
-                d={delta(k.signup_rate.value, k.signup_rate.previous, { points: true, t })} days={days} t={t} />
-            </section>
-
-            <DailyChart daily={data.daily} t={t} language={i18n.language} />
-
-            <div className={styles.grid2}>
-              <NewProfilesChart daily={data.daily} t={t} language={i18n.language} />
-              <HoursChart hours={data.hours} t={t} />
-            </div>
-
-            <div className={styles.grid2}>
-              <Funnel steps={data.funnel} t={t} />
-              <Community c={data.community} t={t} />
-            </div>
-
-            <div className={styles.grid2}>
-              <Breakdown title={t("dashboard.platforms")} kind="platforms" items={data.platforms} t={t} />
-              <Breakdown title={t("dashboard.languages")} kind="languages" items={data.languages} t={t} />
-              <Breakdown title={t("dashboard.regions")} kind="timezones" items={data.timezones} t={t} />
-              <Breakdown title={t("dashboard.entries")} kind="entries" items={data.entries} t={t} />
-            </div>
-
-            <p className={styles.footnote}>
-              {t("dashboard.footnote")}
-              {updatedAt && <> · {t("dashboard.updated", { time: updatedAt.toLocaleTimeString(i18n.language, { hour: "2-digit", minute: "2-digit" }) })}</>}
-              {" · "}
-              <button type="button" className={styles.retry} onClick={load}>{t("dashboard.refresh")}</button>
-            </p>
-          </div>
+            )}
+          </>
         )}
       </main>
     </div>
@@ -439,5 +474,275 @@ function Community({ c, t }) {
         ))}
       </dl>
     </section>
+  );
+}
+
+// ---- One day in detail -----------------------------------------------------------
+
+const FILTERS = ["all", "members", "visitors"];
+
+// Everyone who came on one day: who they are, when, how long, the pages they
+// saw, and what members did (counts only). GET /analytics/day.
+function DayView({ t, language }) {
+  const navigate = useNavigate();
+  const today = localDay();
+  const [day, setDay] = useState(today);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
+
+  const load = useCallback(async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token || token === "null") {
+      navigate("/login");
+      return;
+    }
+    setLoading(true);
+    try {
+      const resp = await fetch(`${BASE_URL}/analytics/day?day=${day}&tz_offset=${tzOffsetMinutes()}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (resp.status === 401 || resp.status === 403) {
+        navigate("/");
+        return;
+      }
+      if (!resp.ok) throw new Error(`day ${resp.status}`);
+      setData(await resp.json());
+      setError("");
+    } catch {
+      setError(t("dashboard.loadError"));
+    } finally {
+      setLoading(false);
+    }
+  }, [day, navigate, t]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const people = data?.people || [];
+  const counts = {
+    all: people.length,
+    members: people.filter((p) => p.member).length,
+    visitors: people.filter((p) => !p.member).length,
+  };
+  const shown = people.filter((p) => filter === "all" || (filter === "members" ? p.member : !p.member));
+  const totals = data?.totals;
+
+  return (
+    <div>
+      <div className={styles.dayNav}>
+        <button
+          type="button"
+          className={styles.dayArrow}
+          onClick={() => setDay(shiftDay(day, -1))}
+          aria-label={t("dashboard.dayPrev")}
+          title={t("dashboard.dayPrev")}
+        >
+          ‹
+        </button>
+        <div className={styles.dayCenter}>
+          <strong className={styles.dayTitle}>{longDate(day, language)}</strong>
+          <input
+            type="date"
+            className={styles.dayInput}
+            value={day}
+            max={today}
+            onChange={(e) => e.target.value && setDay(e.target.value)}
+          />
+        </div>
+        <button
+          type="button"
+          className={styles.dayArrow}
+          onClick={() => setDay(shiftDay(day, 1))}
+          disabled={day >= today}
+          aria-label={t("dashboard.dayNext")}
+          title={t("dashboard.dayNext")}
+        >
+          ›
+        </button>
+        {day !== today && (
+          <button type="button" className={styles.linkBtn} onClick={() => setDay(today)}>
+            {t("dashboard.dayToday")}
+          </button>
+        )}
+      </div>
+
+      {error && (
+        <p className={styles.error}>
+          {error}{" "}
+          <button type="button" className={styles.retry} onClick={load}>{t("dashboard.retry")}</button>
+        </p>
+      )}
+
+      {!data ? (
+        <p className={styles.loading}>{t("dashboard.loading")}</p>
+      ) : (
+        <div className={loading ? styles.refreshing : undefined}>
+          <section className={styles.tiles}>
+            <DayTile label={t("dashboard.dayPeople")} value={totals.people}
+              line={t("dashboard.dayPeopleLine", { members: totals.members, visitors: totals.visitors })} />
+            <DayTile label={t("dashboard.dayVisits")} value={totals.visits}
+              line={t("dashboard.dayVisitsLine", { app: totals.app, web: totals.web })} />
+            <DayTile label={t("dashboard.dayTime")} value={durationLabel(totals.seconds, t)}
+              line={t("dashboard.dayTimeLine", { pages: totals.pages })} />
+            <DayTile label={t("dashboard.dayNew")} value={totals.new_profiles}
+              line={t("dashboard.dayNewLine", { accounts: totals.new_accounts })} />
+          </section>
+
+          <ColumnChart
+            title={t("dashboard.dayHours")}
+            hint={t("dashboard.hoursHint")}
+            values={data.hours}
+            labels={data.hours.map((_, h) => `${String(h).padStart(2, "0")}h`)}
+            labelEvery={6}
+            tooltip={(h) => `${String(h).padStart(2, "0")}:00–${String(h).padStart(2, "0")}:59 · ${t("dashboard.visitsCount", { count: data.hours[h] })}`}
+            className={styles.segAll}
+          />
+
+          <section className={styles.card}>
+            <div className={styles.cardHead}>
+              <h2 className={styles.cardTitle}>{t("dashboard.dayWho")}</h2>
+              <div className={styles.segmented} role="tablist">
+                {FILTERS.map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    role="tab"
+                    aria-selected={filter === key}
+                    className={filter === key ? styles.segActive : styles.seg}
+                    onClick={() => setFilter(key)}
+                  >
+                    {t(`dashboard.filter${key[0].toUpperCase()}${key.slice(1)}`)} · {counts[key]}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {shown.length === 0 ? (
+              <p className={styles.empty}>{t("dashboard.dayEmpty")}</p>
+            ) : (
+              <div className={styles.people}>
+                {shown.map((person) => (
+                  <PersonCard key={person.key} person={person} t={t} language={language} />
+                ))}
+              </div>
+            )}
+            {data.truncated && <p className={styles.cardHint}>{t("dashboard.dayTruncated")}</p>}
+          </section>
+
+          <p className={styles.footnote}>
+            {t("dashboard.dayPrivacy")}{" · "}
+            <button type="button" className={styles.retry} onClick={load}>{t("dashboard.refresh")}</button>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DayTile({ label, value, line }) {
+  return (
+    <div className={styles.tile}>
+      <p className={styles.tileLabel}>{label}</p>
+      <p className={styles.tileValue}>{value}</p>
+      <p className={styles.tileHint}>{line}</p>
+    </div>
+  );
+}
+
+// One person on that day: who, when, how long, what they did, and each visit's path.
+function PersonCard({ person, t, language }) {
+  const member = person.member;
+  const chips = actionChips(person.actions, t);
+  const range =
+    person.first_at && clockTime(person.first_at, language) !== clockTime(person.last_at, language)
+      ? `${clockTime(person.first_at, language)}–${clockTime(person.last_at, language)}`
+      : clockTime(person.first_at, language);
+  return (
+    <article className={styles.person}>
+      <div className={styles.personHead}>
+        {member?.photo ? (
+          <img className={styles.personAvatar} src={IMG.thumb(member.photo)} alt="" />
+        ) : (
+          <span className={`${styles.personAvatar} ${styles.personAvatarEmpty}`} aria-hidden="true">
+            {member ? "🌸" : "👤"}
+          </span>
+        )}
+        <div className={styles.personWho}>
+          {member ? (
+            <Link to={`/profile/${member.id}`} className={styles.personName}>
+              {member.first_name}
+            </Link>
+          ) : (
+            <span className={styles.personName}>{t("dashboard.visitor", { id: person.device || "—" })}</span>
+          )}
+          <span className={styles.personMeta}>
+            {member
+              ? [member.age, member.city].filter(Boolean).join(" · ")
+              : person.returning
+                ? t("dashboard.dayReturning")
+                : t("dashboard.dayFirstTime")}
+          </span>
+        </div>
+        {person.first_at && (
+          <div className={styles.personWhen}>
+            <strong>{range}</strong>
+            <span>
+              {durationLabel(person.seconds, t)} · {person.platforms.map((p) => t(`dashboard.${p}`)).join(" + ")}
+              {person.language ? ` · ${person.language.toUpperCase()}` : ""}
+            </span>
+          </div>
+        )}
+      </div>
+      {chips.length > 0 && (
+        <div className={styles.chips}>
+          {chips.map((chip) => (
+            <span key={chip} className={styles.chip}>{chip}</span>
+          ))}
+        </div>
+      )}
+      {person.visits.length === 0 ? (
+        <p className={styles.cardHint}>{t("dashboard.noVisit")}</p>
+      ) : (
+        person.visits.map((visit) => <VisitPath key={visit.start} visit={visit} t={t} language={language} />)
+      )}
+    </article>
+  );
+}
+
+// "📱 14:05  Home → Browse → A profile → A chat" - long paths folded in the middle.
+function VisitPath({ visit, t, language }) {
+  const [open, setOpen] = useState(false);
+  const pages = visit.pages;
+  const long = pages.length > 10;
+  const shown = long && !open ? [...pages.slice(0, 4), null, ...pages.slice(-4)] : pages;
+  return (
+    <div className={styles.visitRow}>
+      <span className={styles.visitWhen}>
+        {visit.platform === "app" ? "📱" : "💻"} {clockTime(visit.start, language)}
+      </span>
+      <ol className={styles.path}>
+        {shown.map((page, i) =>
+          page ? (
+            <li key={`${page.at}-${i}`} className={styles.pathStep} title={clockTime(page.at, language)}>
+              {placeLabel(page.path)}
+            </li>
+          ) : (
+            <li key="more" className={styles.pathStep}>
+              <button type="button" className={styles.pathMore} onClick={() => setOpen(true)}
+                title={t("dashboard.showAllPages", { count: pages.length })}>
+                +{pages.length - 8}
+              </button>
+            </li>
+          ),
+        )}
+      </ol>
+      {long && open && (
+        <button type="button" className={styles.tableToggle} onClick={() => setOpen(false)}>
+          {t("dashboard.showLess")}
+        </button>
+      )}
+    </div>
   );
 }
