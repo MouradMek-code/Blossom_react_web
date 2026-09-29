@@ -247,7 +247,23 @@
     "haveAccount": "Déjà membre ? Se connecter",
     "delete": "Supprimer",
     "deleteConfirm": "Supprimer « {{name}} » ? Le lieu disparaît pour tout le monde, avec ses cadeaux et les codes reçus par les couples. Action définitive.",
-    "deleting": "Suppression…"
+    "deleting": "Suppression…",
+    "giftsTitle": "🎁 Cadeaux pour les couples",
+    "giftsSubtitle": "Des cafés et restaurants partenaires offrent un cadeau aux couples Blossom qui viennent ensemble.",
+    "giftRibbon": "🎁 Cadeau partenaire",
+    "giftSee": "Voir le cadeau",
+    "noGiftsHere": "Pas encore de cadeau ici. Vous connaissez un café ou un restaurant qui en offrirait un ?",
+    "noGiftsLink": "Suggérez-le",
+    "allSpots": "Tous les spots",
+    "suggestTitle": "Vous connaissez un super spot ?",
+    "suggestText": "Suggérez-le-nous : nous vérifions chaque suggestion avant qu'elle n'apparaisse.",
+    "suggestButton": "Suggérer un lieu",
+    "suggestFormTitle": "Suggérer un lieu",
+    "suggestSend": "Envoyer ma suggestion",
+    "wantsGift": "J'aimerais que ce lieu offre un cadeau aux couples",
+    "suggestThanks": "Merci ! Nous vérifions votre suggestion avant qu'elle n'apparaisse.",
+    "addPlace": "Ajouter un lieu",
+    "signUpToSuggest": "Créez un compte gratuit pour suggérer un lieu."
   },
   "founder": {
     "eyebrow": "Du même fondateur",
@@ -683,7 +699,12 @@
     "getLink": "Envoyer le lien de gestion",
     "spotGone": "Cet établissement n'est plus sur Blossom. Ajoutez-le ci-dessous.",
     "spotLink": "C'est votre café ou votre restaurant ? Offrez un cadeau aux couples",
-    "chosenByVenue": "choisi par l'établissement"
+    "chosenByVenue": "choisi par l'établissement",
+    "suggestionsTitle": "📍 Lieux suggérés par les membres",
+    "suggestionsEmpty": "Aucune suggestion en attente.",
+    "suggestedBy": "Suggéré par {{name}} · {{date}}",
+    "wantsGiftAdmin": "💡 Aimerait un cadeau ici",
+    "refuseSuggestionConfirm": "Refuser « {{name}} » ? La suggestion est supprimée."
   },
   "business": {
     "navLink": "Pour les établissements",

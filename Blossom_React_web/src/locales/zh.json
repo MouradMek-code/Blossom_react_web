@@ -247,7 +247,23 @@
     "haveAccount": "已经是会员？登录",
     "delete": "删除",
     "deleteConfirm": "删除“{{name}}”？它将对所有人消失，连同它的礼物和情侣已获得的码。此操作无法撤销。",
-    "deleting": "正在删除…"
+    "deleting": "正在删除…",
+    "giftsTitle": "🎁 情侣礼物",
+    "giftsSubtitle": "合作咖啡馆和餐厅为一起到店的 Blossom 情侣准备了礼物。",
+    "giftRibbon": "🎁 合作礼物",
+    "giftSee": "查看礼物",
+    "noGiftsHere": "这里还没有礼物。你知道愿意提供礼物的咖啡馆或餐厅吗？",
+    "noGiftsLink": "推荐给我们",
+    "allSpots": "所有约会地点",
+    "suggestTitle": "知道一个很棒的约会地点吗？",
+    "suggestText": "推荐给我们：每个推荐在上线前都会经过审核。",
+    "suggestButton": "推荐地点",
+    "suggestFormTitle": "推荐地点",
+    "suggestSend": "发送我的推荐",
+    "wantsGift": "希望这个地方为情侣提供礼物",
+    "suggestThanks": "谢谢！你的推荐会在审核后上线。",
+    "addPlace": "添加地点",
+    "signUpToSuggest": "创建免费账户即可推荐地点。"
   },
   "founder": {
     "eyebrow": "来自创始人",
@@ -683,7 +699,12 @@
     "getLink": "发送管理链接",
     "spotGone": "这家店已不在 Blossom 上。请在下面添加。",
     "spotLink": "这是你的咖啡馆或餐厅吗？为情侣提供一份礼物",
-    "chosenByVenue": "由店家选择"
+    "chosenByVenue": "由店家选择",
+    "suggestionsTitle": "📍 会员推荐的地点",
+    "suggestionsEmpty": "没有待审核的推荐。",
+    "suggestedBy": "由 {{name}} 推荐 · {{date}}",
+    "wantsGiftAdmin": "💡 希望这里有礼物",
+    "refuseSuggestionConfirm": "拒绝“{{name}}”？该推荐将被删除。"
   },
   "business": {
     "navLink": "商家合作",
