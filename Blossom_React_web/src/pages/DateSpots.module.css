@@ -1428,17 +1428,6 @@
   color: #7e2a44;
 }
 
-.noGifts {
-  margin: 4px 0 24px;
-  padding: 12px 16px;
-  border-radius: var(--r-md);
-  background: #fff6e6;
-  border: 1px dashed #ffcf80;
-  color: #5c3a0a;
-  font-size: 0.95rem;
-  text-align: center;
-}
-
 .inlineLink {
   border: none;
   background: none;
@@ -1463,13 +1452,9 @@
   box-shadow: 0 0 0 3px #ffb547, var(--shadow-md);
 }
 
-/* ---- "Know a great date spot? Suggest it" --------------------------------- */
+/* ---- "Know a great date spot? Suggest a place" - discreet, at the bottom --- */
 .suggest {
-  margin-top: 40px;
-  padding: 26px 20px;
-  border-radius: var(--r-lg);
-  background: var(--surface);
-  border: 1px solid var(--border);
+  margin-top: 36px;
   text-align: center;
   scroll-margin-top: 90px;
 }
@@ -1478,33 +1463,17 @@
   text-align: start;
 }
 
-.suggestTitle {
+.suggestLine {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
 }
 
-.suggestText {
-  margin: 8px auto 16px;
-  max-width: 480px;
-  color: var(--text-soft);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.suggestBtn {
-  padding: 11px 22px;
-  border: 1.5px solid var(--primary);
-  border-radius: var(--r-pill);
-  background: var(--surface);
-  color: var(--primary-deep);
-  font-family: var(--font-body);
-  font-size: 0.95rem;
+.suggestLine .inlineLink {
   font-weight: 700;
-  cursor: pointer;
-}
-
-.suggestBtn:hover {
-  background: var(--primary-tint);
+  color: var(--text-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .suggestThanks {

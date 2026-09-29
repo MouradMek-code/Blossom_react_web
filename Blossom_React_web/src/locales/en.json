@@ -252,18 +252,15 @@
     "giftsSubtitle": "Partner cafés and restaurants offer a gift to Blossom couples who come together.",
     "giftRibbon": "🎁 Partner gift",
     "giftSee": "See the gift",
-    "noGiftsHere": "No gifts here yet. Know a café or restaurant that would offer one?",
-    "noGiftsLink": "Suggest it",
     "allSpots": "All date spots",
     "suggestTitle": "Know a great date spot?",
-    "suggestText": "Suggest it to us: we check every suggestion before it appears.",
     "suggestButton": "Suggest a place",
     "suggestFormTitle": "Suggest a place",
     "suggestSend": "Send my suggestion",
     "wantsGift": "I'd love this place to offer a gift to couples",
     "suggestThanks": "Thank you! We'll check your suggestion before it appears.",
     "addPlace": "Add a place",
-    "signUpToSuggest": "Create a free account to suggest a place."
+    "offerGiftLink": "🎁 Offer a gift · Partner with Blossom"
   },
   "founder": {
     "eyebrow": "From the founder",

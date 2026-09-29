@@ -252,18 +252,15 @@
     "giftsSubtitle": "Des cafés et restaurants partenaires offrent un cadeau aux couples Blossom qui viennent ensemble.",
     "giftRibbon": "🎁 Cadeau partenaire",
     "giftSee": "Voir le cadeau",
-    "noGiftsHere": "Pas encore de cadeau ici. Vous connaissez un café ou un restaurant qui en offrirait un ?",
-    "noGiftsLink": "Suggérez-le",
     "allSpots": "Tous les spots",
     "suggestTitle": "Vous connaissez un super spot ?",
-    "suggestText": "Suggérez-le-nous : nous vérifions chaque suggestion avant qu'elle n'apparaisse.",
     "suggestButton": "Suggérer un lieu",
     "suggestFormTitle": "Suggérer un lieu",
     "suggestSend": "Envoyer ma suggestion",
     "wantsGift": "J'aimerais que ce lieu offre un cadeau aux couples",
     "suggestThanks": "Merci ! Nous vérifions votre suggestion avant qu'elle n'apparaisse.",
     "addPlace": "Ajouter un lieu",
-    "signUpToSuggest": "Créez un compte gratuit pour suggérer un lieu."
+    "offerGiftLink": "🎁 Offrir un cadeau · Devenir partenaire de Blossom"
   },
   "founder": {
     "eyebrow": "Du même fondateur",

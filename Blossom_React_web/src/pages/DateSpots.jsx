@@ -410,7 +410,7 @@ function DateSpots() {
               </Link>
             )}
             <Link to="/partner" className={styles.partnerLink}>
-              {t("partners.link")}
+              {t("dateSpots.offerGiftLink")}
             </Link>
           </div>
           {isAdmin && (
@@ -461,14 +461,6 @@ function DateSpots() {
                 ))}
               </div>
             </section>
-          )}
-          {!loading && promoSpots.length === 0 && (
-            <p className={styles.noGifts}>
-              {t("dateSpots.noGiftsHere")}{" "}
-              <button type="button" className={styles.inlineLink} onClick={openSuggest}>
-                {t("dateSpots.noGiftsLink")} →
-              </button>
-            </p>
           )}
 
           <h2 className={styles.sectionTitle}>{t("dateSpots.allSpots")}</h2>
@@ -592,12 +584,6 @@ function DateSpots() {
               <p className={styles.emptyText}>
                 {hasFilters ? t("dateSpots.emptyFiltered") : t("dateSpots.emptyAll")}
               </p>
-              {!formOpen && (
-                // Visitors: suggesting needs a free account (openSuggest sends them to sign up).
-                <button className={styles.emptyBtn} onClick={openSuggest}>
-                  ＋ {t("dateSpots.suggestButton")}
-                </button>
-              )}
             </div>
           ) : (
             <>
@@ -665,8 +651,9 @@ function DateSpots() {
             </>
           )}
 
-          {/* Members suggest places (an admin approves them); admins add them. */}
-          <section className={styles.suggest} id="suggest">
+          {/* Members suggest places (an admin approves them): a discreet line at
+              the very bottom - the gifts come first. Admins add places here too. */}
+          <div className={styles.suggest} id="suggest">
             {suggestSent ? (
               <p className={styles.suggestThanks}>🌸 {t("dateSpots.suggestThanks")}</p>
             ) : formOpen && isLoggedIn && !editing ? (
@@ -681,24 +668,14 @@ function DateSpots() {
                 }}
               />
             ) : (
-              <>
-                <h2 className={styles.suggestTitle}>{t("dateSpots.suggestTitle")}</h2>
-                <p className={styles.suggestText}>
-                  {isLoggedIn ? t("dateSpots.suggestText") : t("dateSpots.signUpToSuggest")}
-                </p>
-                <button type="button" className={styles.suggestBtn} onClick={openSuggest}>
-                  ＋ {t("dateSpots.suggestButton")}
+              <p className={styles.suggestLine}>
+                {t("dateSpots.suggestTitle")}{" "}
+                <button type="button" className={styles.inlineLink} onClick={openSuggest}>
+                  {t("dateSpots.suggestButton")} →
                 </button>
-                {!isLoggedIn && (
-                  <p className={styles.loginHint}>
-                    <Link to="/login" className={styles.loginLink}>
-                      {t("dateSpots.haveAccount")}
-                    </Link>
-                  </p>
-                )}
-              </>
+              </p>
             )}
-          </section>
+          </div>
         </div>
       </div>
 

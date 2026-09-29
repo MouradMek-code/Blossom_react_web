@@ -252,18 +252,15 @@
     "giftsSubtitle": "مقاهٍ ومطاعم شريكة تقدّم هدية لأزواج Blossom الذين يأتون معًا.",
     "giftRibbon": "🎁 هدية شريك",
     "giftSee": "عرض الهدية",
-    "noGiftsHere": "لا توجد هدايا هنا بعد. هل تعرف مقهى أو مطعمًا قد يقدّم واحدة؟",
-    "noGiftsLink": "اقترحه",
     "allSpots": "كل أماكن المواعيد",
     "suggestTitle": "هل تعرف مكانًا رائعًا للمواعيد؟",
-    "suggestText": "اقترحه علينا: نراجع كل اقتراح قبل ظهوره.",
     "suggestButton": "اقتراح مكان",
     "suggestFormTitle": "اقتراح مكان",
     "suggestSend": "إرسال اقتراحي",
     "wantsGift": "أتمنى أن يقدّم هذا المكان هدية للأزواج",
     "suggestThanks": "شكرًا! سنراجع اقتراحك قبل ظهوره.",
     "addPlace": "إضافة مكان",
-    "signUpToSuggest": "أنشئ حسابًا مجانيًا لاقتراح مكان."
+    "offerGiftLink": "🎁 قدّم هدية · كن شريكًا لـ Blossom"
   },
   "founder": {
     "eyebrow": "من المؤسس",
