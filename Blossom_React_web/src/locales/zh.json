@@ -476,7 +476,7 @@
     "showLess": "收起",
     "dayEmpty": "这一天没有人来。",
     "dayTruncated": "显示最近的 300 人。",
-    "dayPrivacy": "行为只显示次数：消息内容和喜欢了谁保持私密。页面记录来自最新版本的应用和网站。",
+    "dayPrivacy": "行为只显示次数：消息内容和喜欢了谁保持私密。页面记录来自最新版本的应用和网站，保留 7 天。",
     "act_signed_up": "注册",
     "act_profile_created": "创建了资料",
     "act_profile_finished": "完成了资料",

@@ -476,7 +476,7 @@
     "showLess": "Show less",
     "dayEmpty": "Nobody came this day.",
     "dayTruncated": "Showing the 300 latest people.",
-    "dayPrivacy": "Actions are counts only: messages and whom people liked stay private. Pages are recorded from the latest app and website versions.",
+    "dayPrivacy": "Actions are counts only: messages and whom people liked stay private. Pages are recorded from the latest app and website versions, and kept for 7 days.",
     "act_signed_up": "Signed up",
     "act_profile_created": "Created a profile",
     "act_profile_finished": "Finished profile",

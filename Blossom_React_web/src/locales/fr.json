@@ -476,7 +476,7 @@
     "showLess": "Voir moins",
     "dayEmpty": "Personne n'est venu ce jour-là.",
     "dayTruncated": "Les 300 personnes les plus récentes sont affichées.",
-    "dayPrivacy": "Les actions sont des nombres seulement : les messages et les personnes aimées restent privés. Les pages sont enregistrées depuis les dernières versions de l'app et du site.",
+    "dayPrivacy": "Les actions sont des nombres seulement : les messages et les personnes aimées restent privés. Les pages sont enregistrées depuis les dernières versions de l'app et du site, et conservées 7 jours.",
     "act_signed_up": "Inscription",
     "act_profile_created": "Profil créé",
     "act_profile_finished": "Profil terminé",
