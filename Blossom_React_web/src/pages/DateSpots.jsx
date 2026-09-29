@@ -173,6 +173,7 @@ function DateSpots() {
   const [selected, setSelected] = useState(null);
   const [inviteSpot, setInviteSpot] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [seeding, setSeeding] = useState(false);
   const [seedStatus, setSeedStatus] = useState("");
   const { id: routeId } = useParams();
@@ -258,6 +259,24 @@ function DateSpots() {
     setSelected(null);
     setCopied(false);
     if (routeId) navigate("/date-spots", { replace: true });
+  }
+
+  // Admins (any spot) and whoever shared it. Its gifts and the codes couples
+  // got there go with it, so the confirmation says so.
+  async function deleteSpot(spot) {
+    if (deleting || !window.confirm(t("dateSpots.deleteConfirm", { name: spot.name }))) return;
+    setDeleting(true);
+    const result = await postJson(`${BASE_URL}/date_spots/${spot.id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setDeleting(false);
+    if (!result.ok) {
+      window.alert(result.message);
+      return;
+    }
+    setSpots((prev) => prev.filter((s) => s.id !== spot.id));
+    closeSpot();
   }
 
   function startEdit(spot) {
@@ -715,7 +734,22 @@ function DateSpots() {
                     ✏️ {t("dateSpots.edit")}
                   </button>
                 )}
+                {canEdit(selected) && (
+                  <button
+                    className={`${styles.shareBtn} ${styles.deleteBtn}`}
+                    onClick={() => deleteSpot(selected)}
+                    disabled={deleting}
+                  >
+                    🗑️ {deleting ? t("dateSpots.deleting") : t("dateSpots.delete")}
+                  </button>
+                )}
               </div>
+              {/* The café's staff: ask for a gift on this very spot. */}
+              {!selected.offer && (
+                <Link to={`/partner?spot=${selected.id}`} className={styles.venueLink}>
+                  🏪 {t("partners.spotLink")} →
+                </Link>
+              )}
             </div>
           </div>
         </div>

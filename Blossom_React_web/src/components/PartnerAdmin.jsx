@@ -157,7 +157,12 @@ function RequestCard({ request: r, token, language, onDone }) {
         </p>
       )}
       {r.message && <p className={styles.muted}>💬 {r.message}</p>}
-      {r.suggested_spot && <p className={styles.line}>🔗 {t("partners.existingSpot", { name: r.suggested_spot.name })}</p>}
+      {r.suggested_spot && (
+        <p className={styles.line}>
+          🔗 {t("partners.existingSpot", { name: r.suggested_spot.name })}
+          {r.spot_chosen && <> ({t("partners.chosenByVenue")})</>}
+        </p>
+      )}
 
       {editing && (
         <div className={styles.editBox}>

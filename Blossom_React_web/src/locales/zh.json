@@ -244,7 +244,10 @@
     "moreDetails": "更多详情（可选）",
     "lessDetails": "收起详情",
     "signUpToShare": "创建免费账号，分享你喜欢的地点。",
-    "haveAccount": "已经是会员？登录"
+    "haveAccount": "已经是会员？登录",
+    "delete": "删除",
+    "deleteConfirm": "删除“{{name}}”？它将对所有人消失，连同它的礼物和情侣已获得的码。此操作无法撤销。",
+    "deleting": "正在删除…"
   },
   "founder": {
     "eyebrow": "来自创始人",
@@ -628,7 +631,20 @@
     "linkCopied": "链接已复制 ✓",
     "openMaps": "在地图中打开",
     "defaults": "留空 = 开放 30 天，使用期限 7 天。",
-    "failed": "出了点问题，请重试。"
+    "failed": "出了点问题，请重试。",
+    "searchLabel": "你的店已经在 Blossom 上了吗？",
+    "searchHint": "输入店名。如果已存在，选择它：你的礼物会直接显示在它的页面上。",
+    "searchPlaceholder": "例如：玫瑰咖啡馆",
+    "searchNone": "没有找到。没关系：在下面添加你的店。",
+    "orNew": "还不在 Blossom 上？添加你的店：",
+    "yourPlace": "你的店",
+    "change": "更换",
+    "partnerTag": "合作伙伴",
+    "alreadyPartner": "这家店已经是 Blossom 的合作伙伴。新礼物需要在它的管理页面申请：请联系管理该页面的人，或把链接发送到店铺的邮箱。",
+    "getLink": "发送管理链接",
+    "spotGone": "这家店已不在 Blossom 上。请在下面添加。",
+    "spotLink": "这是你的咖啡馆或餐厅吗？为情侣提供一份礼物",
+    "chosenByVenue": "由店家选择"
   },
   "business": {
     "navLink": "商家合作",

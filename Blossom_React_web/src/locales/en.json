@@ -244,7 +244,10 @@
     "moreDetails": "More details (optional)",
     "lessDetails": "Hide details",
     "signUpToShare": "Create a free account to share your favorite places.",
-    "haveAccount": "Already a member? Log in"
+    "haveAccount": "Already a member? Log in",
+    "delete": "Delete",
+    "deleteConfirm": "Delete “{{name}}”? It disappears for everyone, with its gifts and the codes couples got there. This can't be undone.",
+    "deleting": "Deleting…"
   },
   "founder": {
     "eyebrow": "From the founder",
@@ -628,7 +631,20 @@
     "linkCopied": "Link copied ✓",
     "openMaps": "Open in Maps",
     "defaults": "Empty = open 30 days, 7 days to use it.",
-    "failed": "Something went wrong. Please try again."
+    "failed": "Something went wrong. Please try again.",
+    "searchLabel": "Is your place already on Blossom?",
+    "searchHint": "Type its name. If it's there, pick it: your gift will go straight on its page.",
+    "searchPlaceholder": "e.g. Café Rose",
+    "searchNone": "Not found. No problem: add your place below.",
+    "orNew": "Not on Blossom yet? Add your place:",
+    "yourPlace": "Your place",
+    "change": "Change",
+    "partnerTag": "Partner",
+    "alreadyPartner": "This place is already a Blossom partner. New gifts are asked for from its manager page: ask the person who manages it, or have the link sent to the venue's email.",
+    "getLink": "Send the manager link",
+    "spotGone": "This place isn't on Blossom anymore. Please add it below.",
+    "spotLink": "Is this your café or restaurant? Offer a gift to couples",
+    "chosenByVenue": "chosen by the venue"
   },
   "business": {
     "navLink": "For venues",

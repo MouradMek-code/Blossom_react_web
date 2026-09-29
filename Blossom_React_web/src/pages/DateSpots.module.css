@@ -1243,3 +1243,34 @@
   font-weight: 700;
   color: #7e2a44;
 }
+
+/* Delete (admins and whoever shared the spot). */
+.deleteBtn {
+  color: var(--danger);
+  border-color: #f0c9c6;
+}
+
+.deleteBtn:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: #fdecea;
+}
+
+.deleteBtn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* "Is this your café or restaurant? Offer a gift to couples" */
+.venueLink {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary-deep);
+}
+
+.venueLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
