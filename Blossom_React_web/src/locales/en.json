@@ -129,7 +129,11 @@
       "q": "How do I delete my account?",
       "a": "Go to your profile settings and tap 'Delete Account'. Your data is permanently removed within 24 hours."
     },
-    "heading": "Frequently asked questions"
+    "heading": "Frequently asked questions",
+    "6": {
+      "q": "What are the gifts at date spots?",
+      "a": "Some partner cafés and restaurants offer a gift to Blossom couples. Invite your match to a spot marked 🎁; when they tap “I'm in”, you get a code to show at the venue before its deadline. It's free, places are limited, and it's one gift per person per month."
+    }
   },
   "languageDating": {
     "badge": "NEW FEATURE",
@@ -762,5 +766,23 @@
     "notFound": "This link doesn't work anymore. It may have been used already: try logging in.",
     "expired": "This link has expired. Ask your friend to send you a new one.",
     "home": "Home"
+  },
+  "gifts": {
+    "eyebrow": "Partner cafés & restaurants",
+    "title": "Your first date, with a little gift 🎁",
+    "subtitle": "Some cafés and restaurants offer a gift to Blossom couples: a drink, a dessert, a discount… Here's how to get it.",
+    "step1Title": "Match",
+    "step1Text": "You like each other, so you can start chatting.",
+    "step2Title": "Invite them to a spot with 🎁",
+    "step2Text": "From the chat, invite your match to a partner café or restaurant.",
+    "step3Title": "They tap “I'm in”",
+    "step3Text": "You get one code for the two of you.",
+    "step4Title": "Show your code",
+    "step4Text": "At the venue, before the deadline. Enjoy your gift!",
+    "nowTitle": "Gifts available now",
+    "button": "See spots with gifts",
+    "fine": "Free for you · limited places · one gift per person per month",
+    "owner": "You run a café or restaurant? Offer a gift",
+    "heroLine": "Gifts for couples at partner cafés"
   }
 }

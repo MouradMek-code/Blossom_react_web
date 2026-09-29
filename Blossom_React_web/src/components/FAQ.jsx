@@ -10,7 +10,7 @@ export default function FAQ() {
     <section className={styles.section}>
       <h2 className={styles.heading}>{t("faq.heading")}</h2>
       <div className={styles.list}>
-        {[0, 1, 2, 3, 4, 5].map((i) => (
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className={`${styles.item} ${open === i ? styles.itemOpen : ""}`}>
             <button className={styles.question} onClick={() => setOpen(open === i ? null : i)}>
               <span>{t(`faq.${i}.q`)}</span>

@@ -27,6 +27,19 @@ function StartHome() {
           {t("home.ctaSpots")}
         </Link>
       </div>
+      {/* The venue gifts, explained further down (DateGifts). */}
+      <a
+        href="#gifts"
+        className={styles.giftLine}
+        onClick={(e) => {
+          const section = document.getElementById("gifts");
+          if (!section) return;
+          e.preventDefault();
+          section.scrollIntoView({ behavior: "smooth" });
+        }}
+      >
+        🎁 {t("gifts.heroLine")} <span aria-hidden="true">↓</span>
+      </a>
       <p className={styles.trustLine}>{t("home.trustLine")}</p>
     </div>
   );

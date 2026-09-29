@@ -313,7 +313,11 @@ function DateSpots() {
   // The first spot gets the full-width featured treatment; the rest tile
   // below. The API lists spots with photos first, so the hero has one.
   // Spots with a venue promotion for couples: their own row, and a filter.
-  const [promoOnly, setPromoOnly] = useState(false);
+  // /date-spots?gifts=1 (the homepage's "See spots with gifts") opens with
+  // the filter on.
+  const [promoOnly, setPromoOnly] = useState(
+    () => new URLSearchParams(window.location.search).get("gifts") === "1",
+  );
   const promoSpots = spots.filter((s) => s.offer);
   const shownSpots = promoOnly ? promoSpots : spots;
   const [featured, ...rest] = shownSpots;
