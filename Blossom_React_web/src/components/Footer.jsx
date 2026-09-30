@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import styles from "./Footer.module.css";
 import { BlossomMark } from "./Logo";
 
-import { PLAY_STORE_URL, SUPPORT_EMAIL } from "../api/links";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, PLAY_STORE_URL, SUPPORT_EMAIL } from "../api/links";
+import { InstagramIcon } from "./InstagramBand";
 
 function Footer() {
   const { t } = useTranslation();
@@ -30,6 +31,10 @@ function Footer() {
               <small>{t("footer.getItOn")}</small>
               <strong>Google Play</strong>
             </span>
+          </a>
+          <a className={styles.instagram} href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+            <InstagramIcon size={18} />
+            <span>@{INSTAGRAM_HANDLE}</span>
           </a>
         </div>
 

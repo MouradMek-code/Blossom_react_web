@@ -1500,3 +1500,52 @@
   margin-top: 3px;
   accent-color: var(--primary);
 }
+
+/* "All spots · 12 | 🎁 With a gift · 3" */
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 12px;
+}
+
+.listHead .sectionTitle {
+  margin: 0;
+}
+
+.giftToggle {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+}
+
+.giftToggleOn,
+.giftToggleOff {
+  border: none;
+  border-radius: var(--r-pill);
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.giftToggleOff {
+  background: transparent;
+  color: var(--text-soft);
+}
+
+.giftToggleOn {
+  background: var(--text);
+  color: #fff;
+}
+
+.giftToggleGift {
+  background: #ffb547;
+  color: #3d2300;
+}

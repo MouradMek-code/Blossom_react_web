@@ -260,7 +260,10 @@
     "wantsGift": "J'aimerais que ce lieu offre un cadeau aux couples",
     "suggestThanks": "Merci ! Nous vérifions votre suggestion avant qu'elle n'apparaisse.",
     "addPlace": "Ajouter un lieu",
-    "offerGiftLink": "🎁 Offrir un cadeau · Devenir partenaire de Blossom"
+    "offerGiftLink": "🎁 Offrir un cadeau · Devenir partenaire de Blossom",
+    "filterAllSpots": "Tous les spots",
+    "filterGifts": "🎁 Avec cadeau",
+    "emptyGifts": "Pas encore de cadeau dans cette sélection."
   },
   "founder": {
     "eyebrow": "Du même fondateur",
@@ -767,7 +770,8 @@
     "deleteAccount": "Supprimer le compte",
     "contact": "Contact",
     "madeWithLove": "Fait avec amour",
-    "adults": "Réservé aux 18+"
+    "adults": "Réservé aux 18+",
+    "instagram": "Instagram"
   },
   "friends": {
     "backToAdmin": "Panneau d'administration",
@@ -857,5 +861,10 @@
     "fine": "Gratuit pour vous · places limitées · un cadeau par personne et par mois",
     "owner": "Vous tenez un café ou un restaurant ? Offrez un cadeau",
     "heroLine": "Des cadeaux pour les couples dans les cafés partenaires"
+  },
+  "social": {
+    "title": "Suivez Blossom sur Instagram",
+    "text": "Actus, idées de rendez-vous et cadeaux de nos cafés partenaires.",
+    "button": "Suivre @blossomfordate"
   }
 }

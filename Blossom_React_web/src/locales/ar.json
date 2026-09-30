@@ -260,7 +260,10 @@
     "wantsGift": "أتمنى أن يقدّم هذا المكان هدية للأزواج",
     "suggestThanks": "شكرًا! سنراجع اقتراحك قبل ظهوره.",
     "addPlace": "إضافة مكان",
-    "offerGiftLink": "🎁 قدّم هدية · كن شريكًا لـ Blossom"
+    "offerGiftLink": "🎁 قدّم هدية · كن شريكًا لـ Blossom",
+    "filterAllSpots": "كل الأماكن",
+    "filterGifts": "🎁 مع هدية",
+    "emptyGifts": "لا توجد هدايا في هذا الاختيار بعد."
   },
   "founder": {
     "eyebrow": "من المؤسس",
@@ -767,7 +770,8 @@
     "deleteAccount": "حذف الحساب",
     "contact": "تواصل",
     "madeWithLove": "صُنع بحب",
-    "adults": "للبالغين 18+ فقط"
+    "adults": "للبالغين 18+ فقط",
+    "instagram": "Instagram"
   },
   "friends": {
     "backToAdmin": "لوحة الإدارة",
@@ -857,5 +861,10 @@
     "fine": "مجاني لك · أماكن محدودة · هدية واحدة لكل شخص شهريًا",
     "owner": "تدير مقهى أو مطعمًا؟ قدّم هدية",
     "heroLine": "هدايا للأزواج في المقاهي الشريكة"
+  },
+  "social": {
+    "title": "تابع Blossom على إنستغرام",
+    "text": "أخبار وأفكار لأماكن المواعيد وهدايا من مقاهينا الشريكة.",
+    "button": "تابِع ‎@blossomfordate"
   }
 }

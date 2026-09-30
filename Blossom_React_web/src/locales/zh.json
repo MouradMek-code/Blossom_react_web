@@ -260,7 +260,10 @@
     "wantsGift": "希望这个地方为情侣提供礼物",
     "suggestThanks": "谢谢！你的推荐会在审核后上线。",
     "addPlace": "添加地点",
-    "offerGiftLink": "🎁 提供礼物 · 成为 Blossom 合作伙伴"
+    "offerGiftLink": "🎁 提供礼物 · 成为 Blossom 合作伙伴",
+    "filterAllSpots": "全部地点",
+    "filterGifts": "🎁 有礼物",
+    "emptyGifts": "这个筛选下还没有礼物。"
   },
   "founder": {
     "eyebrow": "来自创始人",
@@ -767,7 +770,8 @@
     "deleteAccount": "删除账户",
     "contact": "联系",
     "madeWithLove": "用爱打造",
-    "adults": "仅限 18 岁以上"
+    "adults": "仅限 18 岁以上",
+    "instagram": "Instagram"
   },
   "friends": {
     "backToAdmin": "管理面板",
@@ -857,5 +861,10 @@
     "fine": "对你免费 · 名额有限 · 每人每月一份礼物",
     "owner": "你经营咖啡馆或餐厅？来提供一份礼物",
     "heroLine": "合作咖啡馆为情侣准备的礼物"
+  },
+  "social": {
+    "title": "在 Instagram 上关注 Blossom",
+    "text": "最新动态、约会地点灵感和合作咖啡馆的礼物。",
+    "button": "关注 @blossomfordate"
   }
 }

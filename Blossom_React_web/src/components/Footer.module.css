@@ -144,3 +144,19 @@
     text-align: center;
   }
 }
+
+/* Instagram @blossomfordate, under the store button */
+.instagram {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-top: 14px;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.instagram:hover {
+  color: #fff;
+}

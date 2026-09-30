@@ -463,22 +463,33 @@ function DateSpots() {
             </section>
           )}
 
-          <h2 className={styles.sectionTitle}>{t("dateSpots.allSpots")}</h2>
+          <div className={styles.listHead}>
+            <h2 className={styles.sectionTitle}>{t("dateSpots.allSpots")}</h2>
+            {/* All spots / only those with a gift from a partner café. */}
+            <div className={styles.giftToggle} role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={!promoOnly}
+                className={!promoOnly ? styles.giftToggleOn : styles.giftToggleOff}
+                onClick={() => setPromoOnly(false)}
+              >
+                {t("dateSpots.filterAllSpots")} · {spots.length}
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={promoOnly}
+                className={promoOnly ? `${styles.giftToggleOn} ${styles.giftToggleGift}` : styles.giftToggleOff}
+                onClick={() => setPromoOnly(true)}
+              >
+                {t("dateSpots.filterGifts")} · {promoSpots.length}
+              </button>
+            </div>
+          </div>
 
           {/* Filter chips - each row is named so it's clear what it filters. */}
           <div className={styles.filterBar}>
-            {(promoSpots.length > 0 || promoOnly) && (
-              <div className={styles.filterGroup}>
-                <div className={styles.chipRow}>
-                  <button
-                    className={`${styles.chip} ${styles.chipSmall} ${promoOnly ? styles.chipActive : ""}`}
-                    onClick={() => setPromoOnly((v) => !v)}
-                  >
-                    {t("offers.onlyPromos")}
-                  </button>
-                </div>
-              </div>
-            )}
             <div className={styles.filterGroup}>
               <span className={styles.filterLabel}>{t("dateSpots.country")}</span>
               <div className={styles.chipRow}>
@@ -582,7 +593,11 @@ function DateSpots() {
               <div className={styles.emptyIcon}>📍</div>
               <p className={styles.emptyTitle}>{t("dateSpots.emptyTitle")}</p>
               <p className={styles.emptyText}>
-                {hasFilters ? t("dateSpots.emptyFiltered") : t("dateSpots.emptyAll")}
+                {promoOnly
+                  ? t("dateSpots.emptyGifts")
+                  : hasFilters
+                    ? t("dateSpots.emptyFiltered")
+                    : t("dateSpots.emptyAll")}
               </p>
             </div>
           ) : (
