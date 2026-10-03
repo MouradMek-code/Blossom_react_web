@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
@@ -19,6 +19,15 @@ function Messages() {
   const [items, setItems] = useState(null); // null while loading
   const [error, setError] = useState("");
   const [openingId, setOpeningId] = useState(null);
+  const [newLikes, setNewLikes] = useState(0);
+
+  // "Likes you" lives here now (Events took its tab): a banner with the count.
+  useEffect(() => {
+    fetch(`${BASE_URL}/user/badges`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => data && setNewLikes(data.likes || 0))
+      .catch(() => {});
+  }, [token]);
 
   const load = useCallback(async () => {
     try {
@@ -88,6 +97,12 @@ function Messages() {
       <div className={styles.container}>
         <h1 className={styles.title}>{t("messages.title")}</h1>
         <p className={styles.subtitle}>{t("messages.subtitle")}</p>
+
+        <Link to="/liked_you" className={styles.likesBanner}>
+          <span>{t("events.likesBanner")}</span>
+          {newLikes > 0 && <span className={styles.likesNew}>{t("events.likesBannerNew", { count: newLikes })}</span>}
+          <span className={styles.likesArrow} aria-hidden="true">›</span>
+        </Link>
 
         {error !== "" && <p className={styles.error}>{error}</p>}
 

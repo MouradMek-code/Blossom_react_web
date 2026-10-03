@@ -28,6 +28,9 @@ import Poster from "./pages/Poster";
 import Partner from "./pages/Partner";
 import VenueManage from "./pages/VenueManage";
 import Business from "./pages/Business";
+import Events from "./pages/Events";
+import EventDetail from "./pages/EventDetail";
+import EventForm from "./pages/EventForm";
 import { trackVisit } from "./api/analytics";
 
 // Visits for the admin dashboard (see api/analytics.js).
@@ -69,6 +72,10 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/date-spots" element={<DateSpots />} />
         <Route path="/date-spots/:id" element={<DateSpots />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/new" element={<EventForm />} />
+        <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/events/:id/edit" element={<EventForm />} />
         <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />

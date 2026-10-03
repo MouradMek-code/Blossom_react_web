@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import styles from "./LikedYou.module.css";
 import { BASE_URL } from "../api/config";
@@ -17,6 +18,7 @@ function extractId(entry) {
 
 function LikedYou() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const token = sessionStorage.getItem("token");
   const [likedByProfiles, setLikedByProfiles] = useState([]);
   const [matchedProfile, setMatchedProfile] = useState(null);
@@ -113,6 +115,8 @@ function LikedYou() {
         </div>
       )}
 
+      {/* Reached from the banner at the top of Messages. */}
+      <Link to="/messages" className={styles.backLink}>← {t("messages.back")}</Link>
       <h1 className={styles.title}>People who like you</h1>
 
       <div className={styles.container}>

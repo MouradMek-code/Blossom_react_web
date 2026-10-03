@@ -394,6 +394,12 @@ function ChatPage() {
           )}
         </div>
 
+        {details?.event && (
+          <Link to={`/events/${details.event.id}`} className={styles.eventBanner}>
+            {t("events.matchedThrough", { title: details.event.title })}
+          </Link>
+        )}
+
         <div className={styles.messagesContainer}>
           {messages.map((message) => {
             const isMine =

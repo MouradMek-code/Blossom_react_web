@@ -52,6 +52,15 @@ function shapes(name, maskId) {
           <circle cx="12" cy="10.2" r="2.7" />
         </>
       );
+    // A calendar with a heart - events organised by members.
+    case "events":
+      return (
+        <>
+          <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+          <path d="M3.5 9.5h17M8 3v4M16 3v4" />
+          <path d="M12 18.2s-3.2-1.9-3.2-4a1.6 1.6 0 0 1 3.2-.5 1.6 1.6 0 0 1 3.2.5c0 2.1-3.2 4-3.2 4z" />
+        </>
+      );
     // A shop front with a scalloped awning - cafés, bars, restaurants.
     case "venue":
       return (

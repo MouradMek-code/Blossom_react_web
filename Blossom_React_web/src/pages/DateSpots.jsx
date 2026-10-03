@@ -7,6 +7,7 @@ import LocationPicker from "../components/LocationPicker";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { offerTerms } from "../api/offers";
+import { KIND_EMOJI, eventDay, eventWhen } from "../api/events";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
 import {
   BEST_FOR,
@@ -795,6 +796,7 @@ function DateSpots() {
                   </button>
                 )}
               </div>
+              <SpotEvents spotId={selected.id} isLoggedIn={isLoggedIn} t={t} />
               {/* The café's staff: ask for a gift on this very spot. */}
               {!selected.offer && (
                 <Link to={`/partner?spot=${selected.id}`} className={styles.venueLink}>
@@ -822,6 +824,55 @@ function DateSpots() {
 // Pick a match to send this spot to. The invite lands in your conversation as
 // a card ("Want to go to ... together?") - for a woman opening the chat, it's
 // a ready-made first message.
+// "Upcoming events here" in a spot's card, and a way to organise one there.
+function SpotEvents({ spotId, isLoggedIn, t }) {
+  const { i18n } = useTranslation();
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    let alive = true;
+    fetch(`${BASE_URL}/events?spot_id=${spotId}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => alive && setEvents(Array.isArray(data) ? data : []))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [spotId]);
+
+  return (
+    <div className={styles.spotEvents}>
+      {events.length > 0 && (
+        <>
+          <p className={styles.spotEventsTitle}>{t("events.upcomingHere")}</p>
+          <ul className={styles.spotEventsList}>
+            {events.slice(0, 3).map((event) => {
+              const { day, month } = eventDay(event.starts_at, i18n.language);
+              return (
+                <li key={event.id}>
+                  <Link to={`/events/${event.id}`} className={styles.spotEvent}>
+                    <span className={styles.spotEventDate}>
+                      <strong>{day}</strong>
+                      {month}
+                    </span>
+                    <span className={styles.spotEventText}>
+                      <strong>{KIND_EMOJI[event.kind]} {event.title}</strong>
+                      <small>{eventWhen(event.starts_at, i18n.language)} · 🙋 {event.interested_count}</small>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
+      <Link to={isLoggedIn ? `/events/new?spot=${spotId}` : "/sign_up"} className={styles.spotEventCreate}>
+        📅 {t("events.eventsAtSpot")} →
+      </Link>
+    </div>
+  );
+}
+
 function InvitePicker({ spot, token, onClose, onSent }) {
   const { t } = useTranslation();
   const [matches, setMatches] = useState(null); // null while loading

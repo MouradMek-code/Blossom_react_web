@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { formatDeadline, formatHours } from "../api/offers";
@@ -82,6 +83,97 @@ export function SpotSuggestions({ token, onChanged }) {
             </button>
             <button type="button" className={styles.danger} onClick={() => answer(spot, false)} disabled={busyId === spot.id}>
               {t("partners.refuse")}
+            </button>
+          </div>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+// Admin: events and comments members reported. Remove the event, delete the
+// comment, or "nothing to do" - each closes the report.
+export function EventReports({ token }) {
+  const { t, i18n } = useTranslation();
+  const [items, setItems] = useState(null);
+  const [error, setError] = useState("");
+  const [busyId, setBusyId] = useState(null);
+  const auth = { Authorization: `Bearer ${token}` };
+
+  const load = useCallback(async () => {
+    const result = await postJson(`${BASE_URL}/events/admin/reports`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (result.ok) setItems(result.data);
+    else setError(result.message || t("partners.failed"));
+  }, [token, t]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  async function handle(report, action) {
+    if (action === "event" && !window.confirm(t("events.adminRemoveConfirm"))) return;
+    setBusyId(report.id);
+    setError("");
+    let result = { ok: true };
+    if (action === "event") {
+      result = await postJson(`${BASE_URL}/events/${report.event.id}`, { method: "DELETE", headers: auth });
+    } else if (action === "comment") {
+      result = await postJson(`${BASE_URL}/events/comments/${report.comment.id}`, { method: "DELETE", headers: auth });
+    }
+    // Already removed counts as done.
+    if (result.ok || result.resp?.status === 404) {
+      result = await postJson(`${BASE_URL}/events/admin/reports/${report.id}/handled`, { method: "POST", headers: auth });
+    }
+    setBusyId(null);
+    if (!result.ok) {
+      setError(result.message || t("partners.failed"));
+      return;
+    }
+    load();
+  }
+
+  if (items === null) return error ? <p className={styles.error}>{error}</p> : null;
+  return (
+    <section className={styles.partnerBlock}>
+      <h2 className={styles.blockTitle}>{t("events.reportsTitle")}</h2>
+      {error && <p className={styles.error}>{error}</p>}
+      {items.length === 0 && <p className={styles.muted}>{t("events.reportsEmpty")}</p>}
+      {items.map((report) => (
+        <article key={report.id} className={styles.card}>
+          {report.event && (
+            <p className={styles.line}>
+              📅 <Link to={`/events/${report.event.id}`}><strong>{report.event.title}</strong></Link>
+              {" · "}{report.event.city} · {t("events.organisedBy", { name: report.event.organizer || "?" })}
+              {report.event.status !== "active" && ` · ${report.event.status}`}
+            </p>
+          )}
+          {report.comment && (
+            <blockquote className={styles.reportQuote}>
+              <strong>{report.comment.author || "?"}:</strong> {report.comment.text}
+              {report.comment.deleted && <em> ({t("events.deletedComment")})</em>}
+            </blockquote>
+          )}
+          {report.reason && <p className={styles.line}>“{report.reason}”</p>}
+          <p className={styles.muted}>
+            {t("events.reportBy", { name: report.reporter || "?", date: formatDeadline(report.created_at, i18n.language) })}
+          </p>
+          <div className={styles.actions}>
+            {report.comment && !report.comment.deleted ? (
+              <button type="button" className={styles.danger} onClick={() => handle(report, "comment")} disabled={busyId === report.id}>
+                {t("events.removeComment")}
+              </button>
+            ) : (
+              report.event?.status === "active" && (
+                <button type="button" className={styles.danger} onClick={() => handle(report, "event")} disabled={busyId === report.id}>
+                  {t("events.adminRemove")}
+                </button>
+              )
+            )}
+            <button type="button" className={styles.approveBtn} onClick={() => handle(report, "done")} disabled={busyId === report.id}>
+              {t("events.reportDone")}
             </button>
           </div>
         </article>

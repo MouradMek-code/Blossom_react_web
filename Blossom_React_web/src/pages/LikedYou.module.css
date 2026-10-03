@@ -222,3 +222,16 @@
     height: 200px;
   }
 }
+
+.backLink {
+  display: block;
+  width: fit-content;
+  margin: 18px auto 0;
+  color: var(--text-soft);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: var(--primary);
+}

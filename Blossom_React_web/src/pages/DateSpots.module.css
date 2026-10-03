@@ -1549,3 +1549,90 @@
   background: #ffb547;
   color: #3d2300;
 }
+
+/* Upcoming events at this spot (in the detail card). */
+.spotEvents {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.spotEventsTitle {
+  margin: 0 0 8px;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.spotEventsList {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spotEvent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  background: var(--bg);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.spotEvent:hover {
+  color: var(--text);
+  background: var(--primary-tint);
+}
+
+.spotEventDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 42px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.spotEventDate strong {
+  font-size: 1.1rem;
+  color: var(--primary-deep);
+}
+
+.spotEventText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.spotEventText strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spotEventText small {
+  color: var(--text-soft);
+}
+
+.spotEventCreate {
+  display: inline-block;
+  color: var(--primary-deep);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.spotEventCreate:hover {
+  text-decoration: underline;
+}

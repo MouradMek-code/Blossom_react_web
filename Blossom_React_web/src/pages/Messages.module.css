@@ -287,3 +287,38 @@
   cursor: pointer;
   box-shadow: var(--shadow-primary);
 }
+
+/* "See who likes you" - Likes you moved here from the tabs. */
+.likesBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 14px 18px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--primary-tint), var(--surface));
+  border: 1px solid var(--primary-soft);
+  color: var(--primary-deep);
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.likesBanner:hover {
+  color: var(--primary-deep);
+  border-color: var(--primary);
+}
+
+.likesNew {
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.likesArrow {
+  margin-left: auto;
+  font-size: 1.4rem;
+  line-height: 1;
+}

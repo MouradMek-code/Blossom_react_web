@@ -86,13 +86,14 @@ function LanguageMenu({ lang, onPick, label }) {
   );
 }
 
-// The four places to go once you're logged in, plus your own profile. Shown
+// The four places to go once you're logged in, plus your own profile ("Likes
+// you" is a banner at the top of Messages, so its count is on Chats). Shown
 // as links in the bar on a computer and as a bar of tabs at the bottom on a
 // phone - the same five the app has.
 const TABS = [
   { to: "/profiles", icon: "browse", label: "tabs.browse" },
-  { to: "/liked_you", icon: "likes", label: "tabs.likes", badge: "likes" },
   { to: "/date-spots", icon: "spots", label: "tabs.spots" },
+  { to: "/events", icon: "events", label: "tabs.events" },
   { to: "/messages", icon: "chats", label: "tabs.chats", badge: "chats" },
   { to: "/profile", icon: "profile", label: "tabs.profile" },
 ];
@@ -138,7 +139,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
   const isLoggedOutNav = !minimal && istokenundefined === true;
   const showTabBar = isLoggedInNav && !hideTabBar;
   // New matches and unread chats both live on the chats tab.
-  const chatsBadge = counts.messages + counts.matches;
+  const chatsBadge = counts.messages + counts.matches + counts.likes;
 
   function HandleLogOut() {
     if (!window.confirm(t("settings.logoutTitle"))) return;
@@ -335,6 +336,12 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
                     </NavLink>
                   </li>
                   <li>
+                    <NavLink to="/events" className={`${styles.visitorLink} ${styles.featureLink}`}>
+                      <NavIcon name="events" size={18} />
+                      {t("nav.events")}
+                    </NavLink>
+                  </li>
+                  <li>
                     <NavLink to="/business" className={`${styles.visitorLink} ${styles.featureLink}`}>
                       <NavIcon name="venue" size={18} />
                       {t("business.navLink")}
@@ -380,6 +387,12 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
                 <NavIcon name="spots" size={20} />
               </span>
               {t("nav.dateSpots")}
+            </NavLink>
+            <NavLink to="/events" className={styles.mobileFeature} onClick={closeMenu}>
+              <span className={styles.mobileFeatureIcon}>
+                <NavIcon name="events" size={20} />
+              </span>
+              {t("nav.events")}
             </NavLink>
             <NavLink to="/business" className={styles.mobileFeature} onClick={closeMenu}>
               <span className={styles.mobileFeatureIcon}>
