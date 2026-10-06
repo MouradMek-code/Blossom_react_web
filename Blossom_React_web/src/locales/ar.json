@@ -264,7 +264,11 @@
     "offerGiftLink": "🎁 قدّم هدية · كن شريكًا لـ Blossom",
     "filterAllSpots": "كل الأماكن",
     "filterGifts": "🎁 مع هدية",
-    "emptyGifts": "لا توجد هدايا في هذا الاختيار بعد."
+    "emptyGifts": "لا توجد هدايا في هذا الاختيار بعد.",
+    "searchPlaceholder": "ابحث عن مكان بالاسم…",
+    "searchEmpty": "لا يوجد مكان يطابق «{{query}}». جرّب اسمًا آخر أو أزل عوامل التصفية.",
+    "clearSearch": "مسح البحث",
+    "newBadge": "جديد"
   },
   "founder": {
     "eyebrow": "من المؤسس",

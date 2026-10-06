@@ -264,7 +264,11 @@
     "offerGiftLink": "🎁 提供礼物 · 成为 Blossom 合作伙伴",
     "filterAllSpots": "全部地点",
     "filterGifts": "🎁 有礼物",
-    "emptyGifts": "这个筛选下还没有礼物。"
+    "emptyGifts": "这个筛选下还没有礼物。",
+    "searchPlaceholder": "按名称搜索地点…",
+    "searchEmpty": "没有与“{{query}}”匹配的地点。试试其他名称，或清除筛选条件。",
+    "clearSearch": "清除搜索",
+    "newBadge": "新"
   },
   "founder": {
     "eyebrow": "来自创始人",

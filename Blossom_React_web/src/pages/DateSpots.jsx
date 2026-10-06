@@ -8,6 +8,7 @@ import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { offerTerms } from "../api/offers";
 import { KIND_EMOJI, eventDay, eventWhen } from "../api/events";
+import { isNewSpot, matchesName, orderSpots } from "../api/spotOrder";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
 import {
   BEST_FOR,
@@ -383,15 +384,21 @@ function DateSpots() {
 
   const hasFilters = Boolean(country || city || category || bestFor);
   // The first spot gets the full-width featured treatment; the rest tile
-  // below. The API lists spots with photos first, so the hero has one.
+  // below. Newest spots first, then a random order (see orderSpots).
   // Spots with a venue promotion for couples: their own row, and a filter.
   // /date-spots?gifts=1 (the homepage's "See spots with gifts") opens with
   // the filter on.
   const [promoOnly, setPromoOnly] = useState(
     () => new URLSearchParams(window.location.search).get("gifts") === "1",
   );
+  const [query, setQuery] = useState("");
+  // Picked once per visit: the random part of the order stays put while the
+  // page is open (refreshes, edits) and changes on the next visit.
+  const [seed] = useState(() => Math.random());
+  const searching = query.trim() !== "";
   const promoSpots = spots.filter((s) => s.offer);
-  const shownSpots = promoOnly ? promoSpots : spots;
+  const ordered = orderSpots(promoOnly ? promoSpots : spots, seed);
+  const shownSpots = searching ? ordered.filter((s) => matchesName(s, query)) : ordered;
   const [featured, ...rest] = shownSpots;
 
   return (
@@ -444,7 +451,7 @@ function DateSpots() {
           )}
 
           {/* The gifts partner cafés and restaurants offer: first, and big. */}
-          {promoSpots.length > 0 && !promoOnly && (
+          {promoSpots.length > 0 && !promoOnly && !searching && (
             <section className={styles.gifts}>
               <div className={styles.giftsHead}>
                 <h2 className={styles.giftsTitle}>{t("dateSpots.giftsTitle")}</h2>
@@ -487,6 +494,22 @@ function DateSpots() {
                 {t("dateSpots.filterGifts")} · {promoSpots.length}
               </button>
             </div>
+          </div>
+
+          <div className={styles.search}>
+            <span className={styles.searchIcon} aria-hidden="true">🔎</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("dateSpots.searchPlaceholder")}
+              aria-label={t("dateSpots.searchPlaceholder")}
+            />
+            {searching && (
+              <button type="button" onClick={() => setQuery("")} aria-label={t("dateSpots.clearSearch")}>
+                ✕
+              </button>
+            )}
           </div>
 
           {/* Filter chips - each row is named so it's clear what it filters. */}
@@ -594,7 +617,9 @@ function DateSpots() {
               <div className={styles.emptyIcon}>📍</div>
               <p className={styles.emptyTitle}>{t("dateSpots.emptyTitle")}</p>
               <p className={styles.emptyText}>
-                {promoOnly
+                {searching
+                  ? t("dateSpots.searchEmpty", { query: query.trim() })
+                  : promoOnly
                   ? t("dateSpots.emptyGifts")
                   : hasFilters
                     ? t("dateSpots.emptyFiltered")
@@ -616,7 +641,11 @@ function DateSpots() {
                 />
                 <div className={styles.scrim} />
                 <span className={`${styles.featuredFlag} ${featured.offer ? styles.featuredFlagGift : ""}`}>
-                  {featured.offer ? t("dateSpots.giftRibbon") : `★ ${t("dateSpots.featured")}`}
+                  {featured.offer
+                    ? t("dateSpots.giftRibbon")
+                    : isNewSpot(featured)
+                      ? `🆕 ${t("dateSpots.newBadge")}`
+                      : `★ ${t("dateSpots.featured")}`}
                 </span>
                 <div className={styles.featuredInfo}>
                   <OfferPill offer={featured.offer} />
@@ -651,6 +680,9 @@ function DateSpots() {
                       <div className={styles.scrim} />
                       <div className={styles.cardInfo}>
                         <OfferPill offer={spot.offer} />
+                        {isNewSpot(spot) && (
+                          <span className={`${styles.tag} ${styles.newTag}`}>🆕 {t("dateSpots.newBadge")}</span>
+                        )}
                         {spot.category && (
                           <span className={styles.tag}>
                             {categoryLabel(spot.category, t)}

@@ -264,7 +264,11 @@
     "offerGiftLink": "🎁 Offrir un cadeau · Devenir partenaire de Blossom",
     "filterAllSpots": "Tous les spots",
     "filterGifts": "🎁 Avec cadeau",
-    "emptyGifts": "Pas encore de cadeau dans cette sélection."
+    "emptyGifts": "Pas encore de cadeau dans cette sélection.",
+    "searchPlaceholder": "Rechercher un lieu par son nom…",
+    "searchEmpty": "Aucun lieu ne correspond à « {{query}} ». Essaie un autre nom, ou enlève les filtres.",
+    "clearSearch": "Effacer la recherche",
+    "newBadge": "Nouveau"
   },
   "founder": {
     "eyebrow": "Du même fondateur",
