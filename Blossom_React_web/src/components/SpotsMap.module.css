@@ -1,0 +1,55 @@
+.map {
+  width: 100%;
+  height: min(560px, 70vh);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  /* Leaflet's panes use z-index up to 1000: keep them under the page's
+     menus and the spot card. */
+  position: relative;
+  z-index: 0;
+  background: #e8e4dc;
+}
+
+.pinWrap {
+  background: none;
+  border: none;
+}
+
+/* A rose drop with the spot's emoji; 🎁 spots in gold, drawn above the rest. */
+.pin {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--surface, #fff);
+  border: 3px solid var(--primary, #c1466b);
+  box-shadow: 0 4px 10px rgba(40, 20, 15, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.pin:hover {
+  transform: rotate(-45deg) scale(1.12);
+}
+
+.pinGift {
+  border-color: #f0a020;
+  background: #fff4e0;
+}
+
+.pinEmoji {
+  transform: rotate(45deg);
+  font-size: 17px;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .map {
+    height: 62vh;
+  }
+}

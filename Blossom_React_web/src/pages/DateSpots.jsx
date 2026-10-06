@@ -4,11 +4,13 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import LocationPicker from "../components/LocationPicker";
+import SpotsMap from "../components/SpotsMap";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { offerTerms } from "../api/offers";
 import { KIND_EMOJI, eventDay, eventWhen } from "../api/events";
 import { isNewSpot, matchesName, orderSpots } from "../api/spotOrder";
+import { mapPoints } from "../api/spotMap";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
 import {
   BEST_FOR,
@@ -377,9 +379,13 @@ function DateSpots() {
     load();
   }
 
-  const citiesForCountry = useMemo(() => {
-    const entry = locations.find((l) => l.country === country);
-    return entry ? entry.cities : [];
+  // Every city with spots (or only the chosen country's), A to Z. Picking a
+  // city picks its country too.
+  const cityChoices = useMemo(() => {
+    const list = country ? locations.filter((l) => l.country === country) : locations;
+    return list
+      .flatMap((l) => l.cities.map((name) => ({ name, country: l.country })))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [locations, country]);
 
   const hasFilters = Boolean(country || city || category || bestFor);
@@ -392,6 +398,7 @@ function DateSpots() {
     () => new URLSearchParams(window.location.search).get("gifts") === "1",
   );
   const [query, setQuery] = useState("");
+  const [view, setView] = useState("list"); // "list" | "map"
   // Picked once per visit: the random part of the order stays put while the
   // page is open (refreshes, edits) and changes on the next visit.
   const [seed] = useState(() => Math.random());
@@ -496,6 +503,7 @@ function DateSpots() {
             </div>
           </div>
 
+          <div className={styles.searchRow}>
           <div className={styles.search}>
             <span className={styles.searchIcon} aria-hidden="true">🔎</span>
             <input
@@ -510,6 +518,27 @@ function DateSpots() {
                 ✕
               </button>
             )}
+          </div>
+          <div className={styles.viewSwitch} role="tablist">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "list"}
+              className={view === "list" ? styles.viewOn : styles.viewOff}
+              onClick={() => setView("list")}
+            >
+              📋 {t("dateSpots.viewList")}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "map"}
+              className={view === "map" ? styles.viewOn : styles.viewOff}
+              onClick={() => setView("map")}
+            >
+              🗺️ {t("dateSpots.viewMap")}
+            </button>
+          </div>
           </div>
 
           {/* Filter chips - each row is named so it's clear what it filters. */}
@@ -541,7 +570,7 @@ function DateSpots() {
               </div>
             </div>
 
-            {country && citiesForCountry.length > 0 && (
+            {cityChoices.length > 0 && (
               <div className={styles.filterGroup}>
                 <span className={styles.filterLabel}>{t("dateSpots.city")}</span>
                 <div className={styles.chipRow}>
@@ -551,13 +580,16 @@ function DateSpots() {
                   >
                     {t("dateSpots.allCities")}
                   </button>
-                  {citiesForCountry.map((c) => (
+                  {cityChoices.map((c) => (
                     <button
-                      key={c}
-                      className={`${styles.chip} ${styles.chipSmall} ${city === c ? styles.chipActive : ""}`}
-                      onClick={() => setCity(c)}
+                      key={`${c.country}|${c.name}`}
+                      className={`${styles.chip} ${styles.chipSmall} ${city === c.name ? styles.chipActive : ""}`}
+                      onClick={() => {
+                        setCountry(c.country);
+                        setCity(c.name);
+                      }}
                     >
-                      📍 {c}
+                      📍 {c.name}
                     </button>
                   ))}
                 </div>
@@ -625,6 +657,18 @@ function DateSpots() {
                     ? t("dateSpots.emptyFiltered")
                     : t("dateSpots.emptyAll")}
               </p>
+            </div>
+          ) : view === "map" ? (
+            <div className={styles.mapBlock}>
+              <SpotsMap spots={shownSpots} onOpen={openSpot} />
+              {shownSpots.length > mapPoints(shownSpots).length && (
+                <p className={styles.mapNote}>
+                  {t("dateSpots.mapMissing", { count: shownSpots.length - mapPoints(shownSpots).length })}{" "}
+                  <button type="button" className={styles.inlineLink} onClick={() => setView("list")}>
+                    {t("dateSpots.viewList")} →
+                  </button>
+                </p>
+              )}
             </div>
           ) : (
             <>
