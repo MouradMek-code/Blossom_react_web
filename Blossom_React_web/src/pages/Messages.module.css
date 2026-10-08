@@ -288,37 +288,77 @@
   box-shadow: var(--shadow-primary);
 }
 
-/* "See who likes you" - Likes you moved here from the tabs. */
-.likesBanner {
+/* The "Likes you" circle: their photo blurred, a heart, how many - gold ring
+   when someone likes you, a soft dashed one when nobody does yet. The count
+   sits on the wrapper, outside the round clip. */
+.likesWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.likesCircle {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 0 0 22px;
-  padding: 14px 18px;
-  border-radius: var(--r-lg);
-  background: linear-gradient(135deg, var(--primary-tint), var(--surface));
-  border: 1px solid var(--primary-soft);
-  color: var(--primary-deep);
-  font-weight: 800;
-  text-decoration: none;
-  box-shadow: var(--shadow-sm);
+  justify-content: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-tint), var(--primary-soft));
+  border: 2px dashed var(--border-strong);
+  box-sizing: border-box;
 }
 
-.likesBanner:hover {
-  color: var(--primary-deep);
-  border-color: var(--primary);
+.likesCircleOn {
+  border: 3px solid #e0a43a;
+  box-shadow: 0 0 0 2px var(--surface), 0 4px 12px rgba(224, 164, 58, 0.35);
 }
 
-.likesNew {
-  padding: 3px 10px;
+.likesBlur {
+  position: absolute;
+  inset: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  object-fit: cover;
+  filter: blur(6px) saturate(1.1);
+}
+
+.likesHeart {
+  position: relative;
+  font-size: 1.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+}
+
+.likesCount {
+  position: absolute;
+  right: -4px;
+  bottom: -2px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
   border-radius: var(--r-pill);
   background: var(--primary);
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 2px var(--surface);
 }
 
-.likesArrow {
-  margin-left: auto;
-  font-size: 1.4rem;
-  line-height: 1;
+.likesNewLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.rowHint {
+  align-self: center;
+  max-width: 260px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
 }

@@ -19,26 +19,22 @@ function Messages() {
   const [items, setItems] = useState(null); // null while loading
   const [error, setError] = useState("");
   const [openingId, setOpeningId] = useState(null);
-  const [newLikes, setNewLikes] = useState(0);
-
-  // "Likes you" lives here now (Events took its tab): a banner with the count.
-  useEffect(() => {
-    fetch(`${BASE_URL}/user/badges`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => data && setNewLikes(data.likes || 0))
-      .catch(() => {});
-  }, [token]);
+  // The "Likes you" circle: how many, how many new, a few photos to blur.
+  const [likes, setLikes] = useState({ total: 0, new: 0, photos: [] });
 
   const load = useCallback(async () => {
+    const headers = { Authorization: `Bearer ${token}` };
     try {
-      const resp = await fetch(`${BASE_URL}/messages/inbox`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const [resp, likesResp] = await Promise.all([
+        fetch(`${BASE_URL}/messages/inbox`, { headers }),
+        fetch(`${BASE_URL}/likes/profile_likes/summary`, { headers }).catch(() => null),
+      ]);
       if (resp.status === 401) {
         navigate("/login");
         return;
       }
       setItems(resp.ok ? await resp.json() : []);
+      if (likesResp?.ok) setLikes(await likesResp.json());
       setError("");
     } catch {
       setError(NETWORK_ERROR);
@@ -98,18 +94,36 @@ function Messages() {
         <h1 className={styles.title}>{t("messages.title")}</h1>
         <p className={styles.subtitle}>{t("messages.subtitle")}</p>
 
-        <Link to="/liked_you" className={styles.likesBanner}>
-          <span>{t("events.likesBanner")}</span>
-          {newLikes > 0 && <span className={styles.likesNew}>{t("events.likesBannerNew", { count: newLikes })}</span>}
-          <span className={styles.likesArrow} aria-hidden="true">›</span>
-        </Link>
-
         {error !== "" && <p className={styles.error}>{error}</p>}
 
-        {newMatches.length > 0 && (
-          <section className={styles.matchesBlock}>
-            <h2 className={styles.sectionTitle}>{t("messages.newMatches")}</h2>
-            <ul className={styles.matchesRow}>
+        {/* Likes and new matches, always on top: the "Likes you" circle
+            first (their photos blurred - tap to see who), then the faces of
+            new matches nobody has written to yet. */}
+        <section className={styles.matchesBlock}>
+          <h2 className={styles.sectionTitle}>{t("messages.circlesTitle")}</h2>
+          <ul className={styles.matchesRow}>
+            <li>
+              <Link to="/liked_you" className={styles.matchItem}>
+                <span className={styles.likesWrap} aria-hidden="true">
+                  <span className={`${styles.likesCircle} ${likes.total > 0 ? styles.likesCircleOn : ""}`}>
+                    {likes.photos[0] && <img className={styles.likesBlur} src={IMG.thumb(likes.photos[0])} alt="" />}
+                    <span className={styles.likesHeart}>❤️</span>
+                  </span>
+                  {likes.total > 0 && (
+                    <span className={styles.likesCount}>{likes.total > 99 ? "99+" : likes.total}</span>
+                  )}
+                </span>
+                <span className={styles.matchName}>{t("messages.likesCircle")}</span>
+                {likes.new > 0 && (
+                  <span className={styles.likesNewLabel}>{t("events.likesBannerNew", { count: likes.new })}</span>
+                )}
+              </Link>
+            </li>
+            {newMatches.length === 0 && items !== null && (
+              <li className={styles.rowHint}>
+                {likes.total > 0 ? t("messages.circlesLikeBack") : t("messages.circlesEmpty")}
+              </li>
+            )}
               {newMatches.map((item) => (
                 <li key={item.profile.id}>
                   <button
@@ -135,9 +149,8 @@ function Messages() {
                   </button>
                 </li>
               ))}
-            </ul>
-          </section>
-        )}
+          </ul>
+        </section>
 
         {items === null ? (
           <p className={styles.muted}>{t("messages.loading")}</p>

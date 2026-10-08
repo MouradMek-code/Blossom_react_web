@@ -304,7 +304,12 @@
     "unmatchTitle": "Unmatch {{name}}?",
     "unmatchMessage": "Your conversation will be deleted and you won't see each other in your chats any more.",
     "unmatchFailed": "Couldn't unmatch. Check your connection and try again.",
-    "options": "More options"
+    "options": "More options",
+    "circlesTitle": "Likes & new matches",
+    "likesCircle": "Likes you",
+    "circlesLikeBack": "Like them back to match 💞",
+    "circlesEmpty": "When someone likes you or you match, they'll appear here.",
+    "heartLabel": "People who like you"
   },
   "location": {
     "title": "Where do you live?",

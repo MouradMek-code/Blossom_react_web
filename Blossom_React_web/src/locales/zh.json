@@ -304,7 +304,12 @@
     "unmatchTitle": "取消与{{name}}的配对？",
     "unmatchMessage": "你们的对话将被删除，并且不会再在聊天里看到对方。",
     "unmatchFailed": "取消配对失败。请检查网络后重试。",
-    "options": "更多选项"
+    "options": "更多选项",
+    "circlesTitle": "喜欢与新配对",
+    "likesCircle": "喜欢你",
+    "circlesLikeBack": "回赞即可配对 💞",
+    "circlesEmpty": "有人喜欢你或配对成功时，会显示在这里。",
+    "heartLabel": "喜欢你的人"
   },
   "location": {
     "title": "你住在哪里？",

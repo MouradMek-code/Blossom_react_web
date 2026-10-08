@@ -304,7 +304,12 @@
     "unmatchTitle": "Annuler le match avec {{name}} ?",
     "unmatchMessage": "Votre conversation sera supprimée et vous ne vous verrez plus dans vos messages.",
     "unmatchFailed": "Impossible d'annuler le match. Vérifiez votre connexion et réessayez.",
-    "options": "Plus d'options"
+    "options": "Plus d'options",
+    "circlesTitle": "Likes & nouveaux matchs",
+    "likesCircle": "Likes reçus",
+    "circlesLikeBack": "Like en retour pour matcher 💞",
+    "circlesEmpty": "Quand quelqu'un te like ou que vous matchez, ça apparaît ici.",
+    "heartLabel": "Les personnes qui t'ont liké"
   },
   "location": {
     "title": "Où habitez-vous ?",

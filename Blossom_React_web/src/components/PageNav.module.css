@@ -592,3 +592,30 @@
     padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
 }
+
+/* ❤️ next to the account button: who likes you, with the new ones. */
+.heartBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  transition: background 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.heartBtn:hover,
+.heartBtn[aria-current="page"] {
+  background: var(--primary-tint);
+  box-shadow: 0 0 0 2px var(--primary-soft);
+}
+
+/* The bar spaces its items 24px apart; these two sit closer together. */
+.heartBtn + .account {
+  margin-left: -14px;
+}

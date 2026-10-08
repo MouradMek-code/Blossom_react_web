@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./PageNav.module.css";
@@ -86,8 +86,8 @@ function LanguageMenu({ lang, onPick, label }) {
   );
 }
 
-// The four places to go once you're logged in, plus your own profile ("Likes
-// you" is a banner at the top of Messages, so its count is on Chats). Shown
+// The four places to go once you're logged in, plus your own profile. "Likes
+// you" is the heart next to the account button (and a circle atop Chats). Shown
 // as links in the bar on a computer and as a bar of tabs at the bottom on a
 // phone - the same five the app has.
 const TABS = [
@@ -139,7 +139,10 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
   const isLoggedOutNav = !minimal && istokenundefined === true;
   const showTabBar = isLoggedInNav && !hideTabBar;
   // New matches and unread chats both live on the chats tab.
-  const chatsBadge = counts.messages + counts.matches + counts.likes;
+  const chatsBadge = counts.messages + counts.matches;
+  // On the Likes page they're being seen: no number on the heart.
+  const onLikesPage = useLocation().pathname === "/liked_you";
+  const likesBadge = onLikesPage ? 0 : counts.likes;
 
   function HandleLogOut() {
     if (!window.confirm(t("settings.logoutTitle"))) return;
@@ -270,6 +273,19 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
                 </li>
               ))}
             </ul>
+          )}
+
+          {isLoggedInNav && (
+            <NavLink
+              to="/liked_you"
+              className={styles.heartBtn}
+              aria-label={t("messages.heartLabel")}
+              title={t("messages.heartLabel")}
+              onClick={closeMenu}
+            >
+              <NavIcon name="likes" size={20} />
+              {likesBadge > 0 && <span className={styles.badge}>{likesBadge > 9 ? "9+" : likesBadge}</span>}
+            </NavLink>
           )}
 
           {isLoggedInNav && (
