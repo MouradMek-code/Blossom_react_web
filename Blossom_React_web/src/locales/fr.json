@@ -372,7 +372,9 @@
     "deleteMessage": "Cela supprime définitivement votre profil, vos photos, vos matchs et vos messages. C'est irréversible.",
     "delete": "Supprimer",
     "deleteFailed": "Impossible de supprimer votre compte. Vérifiez votre connexion et réessayez.",
-    "footnote": "© {{year}} Blossom · 18+ uniquement"
+    "footnote": "© {{year}} Blossom · 18+ uniquement",
+    "deleteButton": "Supprimer mon compte",
+    "deleteYes": "Oui, supprimer mon compte définitivement"
   },
   "menu": {
     "open": "Votre compte",

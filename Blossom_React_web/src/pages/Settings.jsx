@@ -30,6 +30,8 @@ function Settings() {
   const [locationDraft, setLocationDraft] = useState({ country: "", city: "" });
   const [savingLocation, setSavingLocation] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  // Deleting takes two deliberate clicks: open the box, then the red button.
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -88,7 +90,6 @@ function Settings() {
   }
 
   async function handleDeleteAccount() {
-    if (!window.confirm(`${t("settings.deleteTitle")}\n\n${t("settings.deleteMessage")}`)) return;
     setDeleting(true);
     setError("");
     try {
@@ -192,15 +193,33 @@ function Settings() {
             {t("settings.logout")}
             <span aria-hidden="true">›</span>
           </button>
-          <button
-            type="button"
-            className={`${styles.linkRow} ${styles.danger}`}
-            onClick={handleDeleteAccount}
-            disabled={deleting}
-          >
-            {deleting ? t("location.saving") : t("settings.deleteAccount")}
-            <span aria-hidden="true">›</span>
-          </button>
+        </section>
+
+        {/* Apart from "Log out", so a slip can't delete an account: its own
+            section, and two deliberate clicks. */}
+        <section className={`${styles.card} ${styles.deleteZone}`}>
+          <h2 className={styles.cardTitle}>{t("settings.deleteAccount")}</h2>
+          <p className={styles.deleteText}>{t("settings.deleteMessage")}</p>
+          {!confirmingDelete ? (
+            <button type="button" className={styles.deleteOpen} onClick={() => setConfirmingDelete(true)}>
+              {t("settings.deleteButton")}
+            </button>
+          ) : (
+            <div className={styles.deleteConfirm}>
+              <strong>{t("settings.deleteTitle")}</strong>
+              <button type="button" className={styles.deleteYes} onClick={handleDeleteAccount} disabled={deleting}>
+                {deleting ? "…" : t("settings.deleteYes")}
+              </button>
+              <button
+                type="button"
+                className={styles.deleteCancel}
+                onClick={() => setConfirmingDelete(false)}
+                disabled={deleting}
+              >
+                {t("settings.cancel")}
+              </button>
+            </div>
+          )}
         </section>
 
         <p className={styles.footnote}>

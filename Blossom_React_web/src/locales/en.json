@@ -372,7 +372,9 @@
     "deleteMessage": "This permanently removes your profile, photos, matches and messages. It can't be undone.",
     "delete": "Delete",
     "deleteFailed": "Couldn't delete your account. Check your connection and try again.",
-    "footnote": "© {{year}} Blossom · 18+ only"
+    "footnote": "© {{year}} Blossom · 18+ only",
+    "deleteButton": "Delete my account",
+    "deleteYes": "Yes, delete my account forever"
   },
   "menu": {
     "open": "Your account",

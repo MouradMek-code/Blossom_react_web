@@ -372,7 +372,9 @@
     "deleteMessage": "这将永久删除你的资料、照片、配对和消息，且无法恢复。",
     "delete": "删除",
     "deleteFailed": "删除账户失败。请检查网络后重试。",
-    "footnote": "© {{year}} Blossom · 仅限 18 岁以上"
+    "footnote": "© {{year}} Blossom · 仅限 18 岁以上",
+    "deleteButton": "删除我的账户",
+    "deleteYes": "是的，永久删除我的账户"
   },
   "menu": {
     "open": "你的账户",
