@@ -1265,20 +1265,6 @@
   cursor: progress;
 }
 
-/* "Is this your café or restaurant? Offer a gift to couples" */
-.venueLink {
-  display: inline-block;
-  margin-top: 16px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--primary-deep);
-}
-
-.venueLink:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 /* ---- The page, gifts first ------------------------------------------------ */
 .heroLinks {
   display: flex;
@@ -1629,17 +1615,6 @@
   color: var(--text-soft);
 }
 
-.spotEventCreate {
-  display: inline-block;
-  color: var(--primary-deep);
-  font-weight: 700;
-  font-size: 0.92rem;
-  text-decoration: none;
-}
-
-.spotEventCreate:hover {
-  text-decoration: underline;
-}
 
 /* Search by name, above the filters. */
 .search {
@@ -1747,4 +1722,88 @@
   margin: 0;
   font-size: 0.88rem;
   color: var(--text-muted);
+}
+
+/* The two actions under a spot's name: create an event, offer a gift. */
+.quickRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+
+.quickBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  border: 1.5px solid var(--primary);
+  background: var(--primary-tint);
+  color: var(--primary-deep);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.quickBtn:hover {
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+}
+
+.quickGift {
+  border-color: #f0a020;
+  background: #fff4e0;
+  color: #6b3e00;
+}
+
+.quickGift:hover {
+  background: #ffe6bd;
+  color: #6b3e00;
+}
+
+/* ♡ in the top-right corner of a spot's card. */
+.saveHeart {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--text-soft);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s var(--ease), color 0.15s var(--ease);
+}
+
+.saveHeart:hover {
+  transform: scale(1.08);
+  color: var(--primary);
+}
+
+.saveHeartOn {
+  color: var(--primary);
+}
+
+.quickSave {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.quickSaveOn {
+  background: var(--primary);
+  color: #fff;
+}
+
+.quickSaveOn:hover {
+  background: var(--primary-dark);
+  color: #fff;
 }

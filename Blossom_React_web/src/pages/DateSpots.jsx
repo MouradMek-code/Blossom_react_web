@@ -84,14 +84,34 @@ function placeLine(spot) {
   return `📍 ${shortPlace(spot)}`;
 }
 
+// ♡ / ♥ in a card's corner. Its own click: it never opens the card.
+function SaveHeart({ saved, onToggle, t }) {
+  return (
+    <button
+      type="button"
+      className={`${styles.saveHeart} ${saved ? styles.saveHeartOn : ""}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      aria-pressed={saved}
+      aria-label={saved ? t("dateSpots.saved") : t("dateSpots.save")}
+      title={saved ? t("dateSpots.saved") : t("dateSpots.save")}
+    >
+      {saved ? "♥" : "♡"}
+    </button>
+  );
+}
+
 // A partner café/restaurant's gift: the gift itself is the title, then where,
 // the terms, and the invite right on the card.
-function GiftCard({ spot, t, onOpen, onInvite }) {
+function GiftCard({ spot, t, onOpen, onInvite, saved, onToggleSave }) {
   return (
     <article className={styles.giftCard} onClick={onOpen}>
       <div className={styles.giftMedia}>
         <SpotBackdrop spot={spot} imgClass={styles.giftImage} src={IMG.card(spot.image_url)} lazy />
         <span className={styles.giftRibbon}>{t("dateSpots.giftRibbon")}</span>
+        <SaveHeart saved={saved} onToggle={onToggleSave} t={t} />
       </div>
       <div className={styles.giftBody}>
         <strong className={styles.giftOffer}>{spot.offer.title}</strong>
@@ -211,6 +231,8 @@ function DateSpots() {
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
   const [inviteSpot, setInviteSpot] = useState(null);
+  // ♡ The spots I saved (the list says so when I'm logged in).
+  const [savedIds, setSavedIds] = useState(() => new Set());
   // "📸 Photo mode": the spot as a clean poster, for a screenshot.
   const [photoSpot, setPhotoSpot] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -272,17 +294,50 @@ function DateSpots() {
     const qs = params.toString();
     try {
       const [spotsResp, locResp] = await Promise.all([
-        fetch(`${BASE_URL}/date_spots${qs ? `?${qs}` : ""}`),
+        fetch(`${BASE_URL}/date_spots${qs ? `?${qs}` : ""}`, {
+          headers: isLoggedIn ? { Authorization: `Bearer ${token}` } : {},
+        }),
         fetch(`${BASE_URL}/date_spots/locations`),
       ]);
-      setSpots(spotsResp.ok ? await spotsResp.json() : []);
+      const list = spotsResp.ok ? await spotsResp.json() : [];
+      setSpots(list);
+      setSavedIds(new Set(list.filter((s) => s.saved).map((s) => s.id)));
       setLocations(locResp.ok ? await locResp.json() : []);
     } catch {
       setError(NETWORK_ERROR);
     } finally {
       setLoading(false);
     }
-  }, [country, city, category, bestFor]);
+  }, [country, city, category, bestFor, isLoggedIn, token]);
+
+  // ♡ / ♥ - straight away on screen, undone if the server says no.
+  async function toggleSave(spot) {
+    if (!isLoggedIn) {
+      navigate("/sign_up");
+      return;
+    }
+    const was = savedIds.has(spot.id);
+    const flip = (cur) => {
+      const next = new Set(cur);
+      if (was) next.delete(spot.id);
+      else next.add(spot.id);
+      return next;
+    };
+    setSavedIds(flip);
+    const result = await postJson(`${BASE_URL}/date_spots/${spot.id}/save`, {
+      method: was ? "DELETE" : "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!result.ok) {
+      setSavedIds((cur) => {
+        const next = new Set(cur);
+        if (was) next.add(spot.id);
+        else next.delete(spot.id);
+        return next;
+      });
+      setError(result.message);
+    }
+  }
 
   useEffect(() => {
     load();
@@ -475,6 +530,8 @@ function DateSpots() {
                     t={t}
                     onOpen={() => openSpot(spot)}
                     onInvite={isLoggedIn ? () => setInviteSpot(spot) : null}
+                    saved={savedIds.has(spot.id)}
+                    onToggleSave={() => toggleSave(spot)}
                   />
                 ))}
               </div>
@@ -687,6 +744,7 @@ function DateSpots() {
                   src={IMG.full(featured.image_url)}
                 />
                 <div className={styles.scrim} />
+                <SaveHeart saved={savedIds.has(featured.id)} onToggle={() => toggleSave(featured)} t={t} />
                 <span className={`${styles.featuredFlag} ${featured.offer ? styles.featuredFlagGift : ""}`}>
                   {featured.offer
                     ? t("dateSpots.giftRibbon")
@@ -725,6 +783,7 @@ function DateSpots() {
                         lazy
                       />
                       <div className={styles.scrim} />
+                      <SaveHeart saved={savedIds.has(spot.id)} onToggle={() => toggleSave(spot)} t={t} />
                       <div className={styles.cardInfo}>
                         <OfferPill offer={spot.offer} />
                         {isNewSpot(spot) && (
@@ -823,6 +882,29 @@ function DateSpots() {
               )}
               <h2 className={styles.detailTitle}>{selected.name}</h2>
               <p className={styles.detailPlace}>📍 {fullPlace(selected)}</p>
+              {/* Right away, no scrolling: organise something here, or (for
+                  the café's staff) offer couples a gift here. */}
+              <div className={styles.quickRow}>
+                <button
+                  type="button"
+                  className={`${styles.quickBtn} ${styles.quickSave} ${savedIds.has(selected.id) ? styles.quickSaveOn : ""}`}
+                  onClick={() => toggleSave(selected)}
+                  aria-pressed={savedIds.has(selected.id)}
+                >
+                  {savedIds.has(selected.id) ? `♥ ${t("dateSpots.saved")}` : `♡ ${t("dateSpots.save")}`}
+                </button>
+                <Link
+                  to={isLoggedIn ? `/events/new?spot=${selected.id}` : "/sign_up"}
+                  className={styles.quickBtn}
+                >
+                  📅 {t("events.eventsAtSpot")}
+                </Link>
+                {!selected.offer && (
+                  <Link to={`/partner?spot=${selected.id}`} className={`${styles.quickBtn} ${styles.quickGift}`}>
+                    🎁 {t("dateSpots.offerGiftShort")}
+                  </Link>
+                )}
+              </div>
               <SpotStats spot={selected} t={t} className={styles.detailStats} />
               {selected.offer && (
                 <div className={styles.offerBox}>
@@ -878,13 +960,7 @@ function DateSpots() {
                   </button>
                 )}
               </div>
-              <SpotEvents spotId={selected.id} isLoggedIn={isLoggedIn} t={t} />
-              {/* The café's staff: ask for a gift on this very spot. */}
-              {!selected.offer && (
-                <Link to={`/partner?spot=${selected.id}`} className={styles.venueLink}>
-                  🏪 {t("partners.spotLink")} →
-                </Link>
-              )}
+              <SpotEvents spotId={selected.id} t={t} />
             </div>
           </div>
         </div>
@@ -908,8 +984,8 @@ function DateSpots() {
 // Pick a match to send this spot to. The invite lands in your conversation as
 // a card ("Want to go to ... together?") - for a woman opening the chat, it's
 // a ready-made first message.
-// "Upcoming events here" in a spot's card, and a way to organise one there.
-function SpotEvents({ spotId, isLoggedIn, t }) {
+// "Upcoming events here" in a spot's card (creating one is at the top).
+function SpotEvents({ spotId, t }) {
   const { i18n } = useTranslation();
   const [events, setEvents] = useState([]);
 
@@ -924,6 +1000,7 @@ function SpotEvents({ spotId, isLoggedIn, t }) {
     };
   }, [spotId]);
 
+  if (events.length === 0) return null;
   return (
     <div className={styles.spotEvents}>
       {events.length > 0 && (
@@ -950,9 +1027,6 @@ function SpotEvents({ spotId, isLoggedIn, t }) {
           </ul>
         </>
       )}
-      <Link to={isLoggedIn ? `/events/new?spot=${spotId}` : "/sign_up"} className={styles.spotEventCreate}>
-        📅 {t("events.eventsAtSpot")} →
-      </Link>
     </div>
   );
 }

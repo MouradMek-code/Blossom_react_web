@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import NavIcon from "../components/NavIcon";
+import SavedSpots from "../components/SavedSpots";
 import "./profile.css";
 
 import { BASE_URL } from "../api/config";
@@ -203,6 +204,9 @@ function Profile() {
             </div>
           </div>
         </section>
+
+        {/* ♡ The date spots I saved */}
+        <SavedSpots />
 
         {/* DATING / LANGUAGE EXCHANGE / BOTH */}
         <section className="card">

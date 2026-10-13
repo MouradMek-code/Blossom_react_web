@@ -89,12 +89,13 @@ function SpotSuggester({ partner, token, onClose, onSent }) {
   const [sending, setSending] = useState(null);
   const [error, setError] = useState("");
 
+  // Logged in, the list says which spots I saved (♡): those come first.
   useEffect(() => {
-    fetch(`${BASE_URL}/date_spots`)
+    fetch(`${BASE_URL}/date_spots`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => (r.ok ? r.json() : []))
       .then(setSpots)
       .catch(() => setSpots([]));
-  }, []);
+  }, [token]);
 
   const shown = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -102,6 +103,26 @@ function SpotSuggester({ partner, token, onClose, onSent }) {
       .filter((s) => !q || `${s.name} ${s.city} ${s.neighborhood || ""}`.toLowerCase().includes(q))
       .sort((a, b) => Number(Boolean(b.offer)) - Number(Boolean(a.offer)));
   }, [spots, search]);
+  const savedShown = shown.filter((s) => s.saved);
+  const otherShown = shown.filter((s) => !s.saved);
+
+  function row(spot) {
+    return (
+      <button key={spot.id} type="button" className={styles.suggestRow} onClick={() => suggest(spot)} disabled={!!sending}>
+        {spot.image_url ? (
+          <img className={styles.suggestImage} src={IMG.thumb(spot.image_url)} alt="" />
+        ) : (
+          <span className={styles.suggestImage}>{categoryEmoji(spot.category)}</span>
+        )}
+        <span className={styles.suggestText}>
+          <strong>{spot.name}</strong>
+          <span>📍 {shortPlace(spot)}</span>
+          {spot.offer && <span className={styles.suggestOffer}>🎁 {spot.offer.title}</span>}
+        </span>
+        <span aria-hidden="true">{sending === spot.id ? "…" : "💌"}</span>
+      </button>
+    );
+  }
 
   async function suggest(spot) {
     if (sending) return;
@@ -137,23 +158,18 @@ function SpotSuggester({ partner, token, onClose, onSent }) {
         />
         {error && <p className={styles.suggestError}>{error}</p>}
         <div className={styles.suggestList}>
-          {spots === null
-            ? "…"
-            : shown.map((spot) => (
-                <button key={spot.id} type="button" className={styles.suggestRow} onClick={() => suggest(spot)} disabled={!!sending}>
-                  {spot.image_url ? (
-                    <img className={styles.suggestImage} src={IMG.thumb(spot.image_url)} alt="" />
-                  ) : (
-                    <span className={styles.suggestImage}>{categoryEmoji(spot.category)}</span>
-                  )}
-                  <span className={styles.suggestText}>
-                    <strong>{spot.name}</strong>
-                    <span>📍 {shortPlace(spot)}</span>
-                    {spot.offer && <span className={styles.suggestOffer}>🎁 {spot.offer.title}</span>}
-                  </span>
-                  <span aria-hidden="true">{sending === spot.id ? "…" : "💌"}</span>
-                </button>
-              ))}
+          {spots === null ? (
+            "…"
+          ) : (
+            <>
+              {savedShown.length > 0 && <p className={styles.suggestGroup}>{t("offers.suggestSaved")}</p>}
+              {savedShown.map(row)}
+              {savedShown.length > 0 && otherShown.length > 0 && (
+                <p className={styles.suggestGroup}>{t("offers.suggestAll")}</p>
+              )}
+              {otherShown.map(row)}
+            </>
+          )}
         </div>
       </div>
     </div>

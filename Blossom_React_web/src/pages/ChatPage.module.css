@@ -553,3 +553,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* "♡ Your saved places" / "All places" in the spot picker. */
+.suggestGroup {
+  margin: 10px 4px 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+}

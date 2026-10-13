@@ -277,7 +277,13 @@
     "whereTitle": "📍 Where is this place?",
     "whereHint": "The city and country of the place itself, not where you live.",
     "wherePrefilled": "We filled in your city. Change it if the place is somewhere else.",
-    "whereSummary": "It will be listed in {{place}}"
+    "whereSummary": "It will be listed in {{place}}",
+    "offerGiftShort": "Your place? Offer a gift",
+    "save": "Save",
+    "saved": "Saved",
+    "savedTitle": "♡ My saved places",
+    "savedEmpty": "Tap ♡ on a place to keep it here, then invite a match there in one tap.",
+    "savedSeeAll": "See all places →"
   },
   "founder": {
     "eyebrow": "From the founder",
@@ -638,7 +644,9 @@
     "err_other_place": "This code is for another place.",
     "err_too_many": "Too many wrong tries from this device. Please wait a little and try again.",
     "err_used": "This code was already used.",
-    "err_expired": "This code has expired."
+    "err_expired": "This code has expired.",
+    "suggestSaved": "♡ Your saved places",
+    "suggestAll": "All places"
   },
   "partners": {
     "link": "🏪 Partner with Blossom",

@@ -277,7 +277,13 @@
     "whereTitle": "📍 Où se trouve ce lieu ?",
     "whereHint": "La ville et le pays du lieu lui-même, pas là où tu habites.",
     "wherePrefilled": "On a mis ta ville. Change-la si le lieu est ailleurs.",
-    "whereSummary": "Il sera affiché à {{place}}"
+    "whereSummary": "Il sera affiché à {{place}}",
+    "offerGiftShort": "Ton lieu ? Offre un cadeau",
+    "save": "Enregistrer",
+    "saved": "Enregistré",
+    "savedTitle": "♡ Mes lieux enregistrés",
+    "savedEmpty": "Touche ♡ sur un lieu pour le garder ici, puis invite un match en un geste.",
+    "savedSeeAll": "Voir tous les lieux →"
   },
   "founder": {
     "eyebrow": "Du même fondateur",
@@ -638,7 +644,9 @@
     "err_other_place": "Ce code est pour un autre établissement.",
     "err_too_many": "Trop d'essais incorrects depuis cet appareil. Patientez un peu et réessayez.",
     "err_used": "Ce code a déjà été utilisé.",
-    "err_expired": "Ce code a expiré."
+    "err_expired": "Ce code a expiré.",
+    "suggestSaved": "♡ Tes lieux enregistrés",
+    "suggestAll": "Tous les lieux"
   },
   "partners": {
     "link": "🏪 Devenir partenaire de Blossom",
