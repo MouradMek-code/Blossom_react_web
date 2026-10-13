@@ -5,6 +5,7 @@ import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import LocationPicker from "../components/LocationPicker";
 import SpotsMap from "../components/SpotsMap";
+import SpotPhotoMode from "../components/SpotPhotoMode";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { offerTerms } from "../api/offers";
@@ -210,6 +211,8 @@ function DateSpots() {
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
   const [inviteSpot, setInviteSpot] = useState(null);
+  // "📸 Photo mode": the spot as a clean poster, for a screenshot.
+  const [photoSpot, setPhotoSpot] = useState(null);
   const [copied, setCopied] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [seeding, setSeeding] = useState(false);
@@ -857,6 +860,9 @@ function DateSpots() {
                 <button className={styles.shareBtn} onClick={() => shareSpot(selected)}>
                   🔗 {copied ? t("dateSpots.linkCopied") : t("dateSpots.shareLink")}
                 </button>
+                <button className={styles.shareBtn} onClick={() => setPhotoSpot(selected)}>
+                  📸 {t("photoMode.button")}
+                </button>
                 {canEdit(selected) && (
                   <button className={styles.shareBtn} onClick={() => startEdit(selected)}>
                     ✏️ {t("dateSpots.edit")}
@@ -883,6 +889,8 @@ function DateSpots() {
           </div>
         </div>
       )}
+
+      {photoSpot && <SpotPhotoMode spot={photoSpot} onClose={() => setPhotoSpot(null)} />}
 
       {inviteSpot && (
         <InvitePicker
@@ -1069,7 +1077,11 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
   const [linkStatus, setLinkStatus] = useState(""); // "" | "reading" | "noName"
   const [name, setName] = useState(initial?.name || "");
   const [place, setPlace] = useState({ country: initial?.country || "", city: initial?.city || "" });
-  const [editingPlace, setEditingPlace] = useState(false);
+  // Filled in from the person's profile (not chosen): say so, so a café in
+  // another city doesn't end up listed in theirs.
+  const [placeFromProfile, setPlaceFromProfile] = useState(false);
+  const placeTouched = useRef(false);
+  const [placeMissing, setPlaceMissing] = useState(false);
   const [neighborhood, setNeighborhood] = useState(initial?.neighborhood || "");
   const [description, setDescription] = useState(initial?.description || "");
   const [category, setCategory] = useState(initial?.category || "");
@@ -1100,8 +1112,9 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
     fetch(`${BASE_URL}/profile`, { headers: { Authorization: `Bearer ${token}` } })
       .then((resp) => (resp.ok ? resp.json() : null))
       .then((profile) => {
-        if (alive && profile?.country) {
-          setPlace((cur) => (cur.country ? cur : { country: profile.country, city: profile.city || "" }));
+        if (alive && profile?.country && !placeTouched.current) {
+          setPlace({ country: profile.country, city: profile.city || "" });
+          setPlaceFromProfile(true);
         }
       })
       .catch(() => {});
@@ -1230,7 +1243,10 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
     if (mapUrl.trim() && !GOOGLE_MAPS_LINK.test(mapUrl.trim()))
       return setError(t("dateSpots.errMapUrl"));
     if (!name.trim()) return setError(t("dateSpots.errName"));
-    if (!place.city.trim() || !place.country.trim()) return setError(t("dateSpots.errPlace"));
+    if (!place.city.trim() || !place.country.trim()) {
+      setPlaceMissing(true);
+      return setError(t("dateSpots.errPlace"));
+    }
 
     setSubmitting(true);
     const result = editing ? await saveEdit() : await create();
@@ -1277,7 +1293,26 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
         />
       </label>
 
-      {/* 3. Vibe - one click. */}
+      {/* 3. Where - its own city and country, always in view. */}
+      <div className={`${styles.where} ${placeMissing ? styles.whereMissing : ""}`}>
+        <p className={styles.whereTitle}>
+          {t("dateSpots.whereTitle")} <span className={styles.req}>*</span>
+        </p>
+        <p className={styles.hint}>{t("dateSpots.whereHint")}</p>
+        <LocationPicker
+          country={place.country}
+          city={place.city}
+          onChange={(next) => {
+            placeTouched.current = true;
+            setPlace(next);
+            setPlaceFromProfile(false);
+            if (next.city && next.country) setPlaceMissing(false);
+          }}
+        />
+        {placeFromProfile && <p className={styles.wherePrefilled}>ℹ️ {t("dateSpots.wherePrefilled")}</p>}
+      </div>
+
+      {/* 4. Vibe - one click. */}
       <p className={styles.label}>{t("dateSpots.category")}</p>
       <div className={styles.pickRow}>
         {CATEGORIES.map((c) => (
@@ -1291,25 +1326,6 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
           </button>
         ))}
       </div>
-
-      {/* Where: their own city, changeable. */}
-      <div className={styles.placeRow}>
-        <span className={styles.placeText}>
-          📍 {[place.city, place.country].filter(Boolean).join(", ") || t("location.notSet")}
-        </span>
-        <button
-          type="button"
-          className={styles.placeChange}
-          onClick={() => setEditingPlace((open) => !open)}
-        >
-          {editingPlace ? t("dateSpots.close") : t("location.change")}
-        </button>
-      </div>
-      {editingPlace && (
-        <div className={styles.placePicker}>
-          <LocationPicker country={place.country} city={place.city} onChange={setPlace} />
-        </div>
-      )}
 
       <label className={styles.label}>
         {editing ? t("dateSpots.photoReplace") : t("dateSpots.photo")}
@@ -1372,6 +1388,13 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
       )}
 
       <p className={styles.safety}>{t("dateSpots.safety")}</p>
+
+      {/* A last look at where it goes, right by the button. */}
+      {place.city && place.country && (
+        <p className={styles.whereSummary}>
+          📍 {t("dateSpots.whereSummary", { place: `${place.city}, ${place.country}` })}
+        </p>
+      )}
 
       <div className={styles.formActions}>
         <button type="button" className={styles.cancelBtn} onClick={onCancel}>

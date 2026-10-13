@@ -273,7 +273,11 @@
     "viewMap": "地图",
     "mapMissing": "尚未显示在地图上（没有确切地址）：{{count}} 个。你可以在列表中找到它们。",
     "mapLoading": "正在加载地图…",
-    "mapOffline": "地图无法加载。请检查你的网络连接。"
+    "mapOffline": "地图无法加载。请检查你的网络连接。",
+    "whereTitle": "📍 这个地点在哪里？",
+    "whereHint": "地点本身所在的城市和国家，而不是你住的地方。",
+    "wherePrefilled": "我们已填入你的城市。如果地点在别处，请修改。",
+    "whereSummary": "将显示在 {{place}}"
   },
   "founder": {
     "eyebrow": "来自创始人",
@@ -996,5 +1000,18 @@
     "reportBy": "{{name}} 举报 · {{date}}",
     "removeComment": "删除评论",
     "reportDone": "无需处理"
+  },
+  "photoMode": {
+    "button": "拍照模式",
+    "hint": "截屏 📸 · 点击关闭",
+    "couplesGet": "通过 Blossom，情侣可获得",
+    "giftHow": "在 Blossom 上邀请你的配对来这里，然后在柜台出示你的代码。",
+    "perfectFor": "适合",
+    "views": "👀 {{count}} 人在 Blossom 上看过",
+    "tagline": "真实地点的约会灵感",
+    "venueTitle": "这是你的店吗？为情侣送上一份小礼物",
+    "venueTitleOther": "你的咖啡馆或餐厅也想加入？为情侣送上一份小礼物",
+    "venueIdeas": "免费甜点、饮品买一送一、两人85折…",
+    "venueCta": "从这里开始 →"
   }
 }

@@ -273,7 +273,11 @@
     "viewMap": "Carte",
     "mapMissing": "Pas encore sur la carte (pas d'adresse exacte) : {{count}}. Tu les trouveras dans la liste.",
     "mapLoading": "Chargement de la carte…",
-    "mapOffline": "La carte n'a pas pu se charger. Vérifie ta connexion."
+    "mapOffline": "La carte n'a pas pu se charger. Vérifie ta connexion.",
+    "whereTitle": "📍 Où se trouve ce lieu ?",
+    "whereHint": "La ville et le pays du lieu lui-même, pas là où tu habites.",
+    "wherePrefilled": "On a mis ta ville. Change-la si le lieu est ailleurs.",
+    "whereSummary": "Il sera affiché à {{place}}"
   },
   "founder": {
     "eyebrow": "Du même fondateur",
@@ -996,5 +1000,18 @@
     "reportBy": "Signalé par {{name}} · {{date}}",
     "removeComment": "Supprimer le commentaire",
     "reportDone": "Rien à faire"
+  },
+  "photoMode": {
+    "button": "Mode photo",
+    "hint": "Fais une capture d'écran 📸 · touche pour fermer",
+    "couplesGet": "Avec Blossom, les couples reçoivent",
+    "giftHow": "Invite ton match ici sur Blossom, puis montre ton code au comptoir.",
+    "perfectFor": "Idéal pour",
+    "views": "👀 {{count}} personnes l'ont regardé sur Blossom",
+    "tagline": "Des idées de dates dans de vrais lieux",
+    "venueTitle": "C'est ton établissement ? Offre un petit cadeau aux couples",
+    "venueTitleOther": "Ton café ou ton resto aussi ? Offre un petit cadeau aux couples",
+    "venueIdeas": "Un dessert offert, 2 boissons pour 1, -15 % pour deux…",
+    "venueCta": "C'est par ici →"
   }
 }

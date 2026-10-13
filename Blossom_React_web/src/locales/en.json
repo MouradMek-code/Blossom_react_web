@@ -273,7 +273,11 @@
     "viewMap": "Map",
     "mapMissing": "Not on the map yet (no exact address): {{count}}. You'll find them in the list.",
     "mapLoading": "Loading the map…",
-    "mapOffline": "The map couldn't load. Check your connection."
+    "mapOffline": "The map couldn't load. Check your connection.",
+    "whereTitle": "📍 Where is this place?",
+    "whereHint": "The city and country of the place itself, not where you live.",
+    "wherePrefilled": "We filled in your city. Change it if the place is somewhere else.",
+    "whereSummary": "It will be listed in {{place}}"
   },
   "founder": {
     "eyebrow": "From the founder",
@@ -996,5 +1000,18 @@
     "reportBy": "Reported by {{name}} · {{date}}",
     "removeComment": "Delete the comment",
     "reportDone": "Nothing to do"
+  },
+  "photoMode": {
+    "button": "Photo mode",
+    "hint": "Take a screenshot 📸 · tap to close",
+    "couplesGet": "With Blossom, couples get",
+    "giftHow": "Invite your match here on Blossom, then show your code at the counter.",
+    "perfectFor": "Perfect for",
+    "views": "👀 {{count}} people looked at it on Blossom",
+    "tagline": "Date ideas in real places",
+    "venueTitle": "Is this your place? Offer couples a treat",
+    "venueTitleOther": "Your café or restaurant too? Offer couples a treat",
+    "venueIdeas": "A free dessert, 2 drinks for 1, -15% for two…",
+    "venueCta": "Start here →"
   }
 }
