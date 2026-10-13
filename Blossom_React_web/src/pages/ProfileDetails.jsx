@@ -112,16 +112,24 @@ function ProfileDetails() {
     <div className={styles.page}>
       <PageNav />
 
-      {/* HERO */}
+      {/* HERO: the photo whole and sharp in a portrait frame (a blurred copy
+          fills the sides), the name and badges on a dark fade. */}
       <div className={styles.hero}>
-        {coverPhoto ? (
-          <img src={coverPhoto} alt={profile.first_name} className={styles.heroCover} />
-        ) : (
-          <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg,#fde4ef,#d6336c)" }} />
-        )}
-        <div className={styles.heroGradient} />
+        {coverPhoto && <img src={coverPhoto} alt="" aria-hidden="true" className={styles.heroBackdrop} />}
 
         <button className={styles.backBtn} onClick={() => navigate(-1)}>← {t("safety.back")}</button>
+
+        <div
+          className={`${styles.heroFrame} ${coverPhoto ? styles.heroFrameZoom : ""}`}
+          onClick={() => coverPhoto && setLightboxPhoto(profile.photos[0].image_url)}
+        >
+          {coverPhoto ? (
+            <img src={coverPhoto} alt={profile.first_name} className={styles.heroCover} />
+          ) : (
+            <div className={styles.heroNoPhoto} />
+          )}
+          <div className={styles.heroGradient} />
+          {profile.photos?.length > 1 && <span className={styles.heroCount}>📷 {profile.photos.length}</span>}
 
         <div className={styles.heroInfo}>
           <h1 className={styles.heroName}>
@@ -136,6 +144,7 @@ function ProfileDetails() {
             {profile.relationship_goal && <span className={styles.heroBadge}>💘 {profile.relationship_goal}</span>}
             {profile.occupation && <span className={styles.heroBadge}>💼 {profile.occupation}</span>}
           </div>
+        </div>
         </div>
       </div>
 

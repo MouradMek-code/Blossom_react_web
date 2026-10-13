@@ -173,8 +173,11 @@ function Profile() {
             {error}
           </p>
         )}
-        {/* HERO */}
-        <section className="hero-card">
+        {/* HERO: your main photo (whole, portrait) next to your name. */}
+        <section className={`hero-card ${profile.photos?.length ? "has-photo" : ""}`}>
+          {profile.photos?.length > 0 && (
+            <img className="hero-photo" src={IMG.full(profile.photos[0].image_url)} alt={profile.first_name} />
+          )}
           <div className="hero-content">
             <h1 className="name">
               {profile.first_name}
@@ -273,20 +276,11 @@ function Profile() {
                 <button
                   type="button"
                   onClick={() => handleDeletePhoto(p.id)}
-                  style={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    width: 28,
-                    height: 28,
-                    borderRadius: "50%",
-                    border: "none",
-                    background: "rgba(0,0,0,0.6)",
-                    color: "white",
-                    cursor: "pointer",
-                  }}
+                  className="photo-delete"
+                  aria-label={t("photos.remove")}
+                  title={t("photos.remove")}
                 >
-                  ✕
+                  🗑
                 </button>
               </div>
             ))}

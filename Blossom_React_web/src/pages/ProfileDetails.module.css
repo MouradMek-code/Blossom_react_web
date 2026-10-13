@@ -6,47 +6,102 @@
 /* HERO */
 .hero {
   position: relative;
-  height: 500px;
+  display: flex;
+  justify-content: center;
+  padding: 28px 16px;
   overflow: hidden;
+  background: #2a2420;
+}
+
+/* The same photo, blurred, filling the width behind the sharp one. */
+.heroBackdrop {
+  position: absolute;
+  inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  object-fit: cover;
+  filter: blur(30px) brightness(0.55) saturate(1.15);
+}
+
+.heroFrame {
+  position: relative;
+  width: min(100%, 500px);
+  aspect-ratio: 4 / 5;
+  max-height: 78vh;
+  overflow: hidden;
+  border-radius: 26px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.heroFrameZoom {
+  cursor: zoom-in;
 }
 
 .heroCover {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 30%;
 }
 
+.heroNoPhoto {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #fde4ef, #c1466b);
+}
+
+/* Dark at the bottom so the name and badges read on any photo. */
 .heroGradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 55%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(20, 14, 12, 0.94) 0%,
+    rgba(20, 14, 12, 0.6) 26%,
+    rgba(20, 14, 12, 0) 52%,
+    rgba(20, 14, 12, 0) 80%,
+    rgba(20, 14, 12, 0.3) 100%
+  );
+  pointer-events: none;
+}
+
+.heroCount {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(20, 14, 12, 0.6);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .backBtn {
   position: absolute;
   top: 20px;
   left: 20px;
-  background: rgba(255,255,255,0.18);
+  background: rgba(20, 14, 12, 0.5);
   backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(255,255,255,0.35);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
   color: #fff;
   border-radius: 999px;
   padding: 8px 18px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
   z-index: 10;
 }
 
-.backBtn:hover { background: rgba(255,255,255,0.3); }
+.backBtn:hover { background: rgba(20, 14, 12, 0.7); }
 
 .heroInfo {
   position: absolute;
-  bottom: 28px;
-  left: 28px;
-  right: 28px;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
   color: #fff;
 }
 
@@ -56,41 +111,37 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0 0 6px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
 }
 
 .heroAge {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 400;
-  opacity: 0.9;
-}
-
-.card {
-  border: 1px solid var(--border);
 }
 
 .heroMeta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   margin-top: 10px;
 }
 
+/* Dark glass: readable on a white wall or a blue sky alike. */
 .heroBadge {
-  background: rgba(255,255,255,0.18);
+  background: rgba(20, 14, 12, 0.55);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
-  padding: 5px 14px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 700;
   color: #fff;
 }
 
 /* Dating / language exchange / both. */
 .heroConnection {
-  background: rgba(193, 70, 107, 0.85);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: var(--primary);
+  border-color: rgba(255, 255, 255, 0.55);
 }
 
 /* BODY */
@@ -133,19 +184,17 @@
 }
 
 .cardTitle {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #1a1a2a;
   margin: 0 0 16px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.8rem;
-  color: var(--primary);
+  letter-spacing: 0.06em;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--primary-deep);
 }
 
 .bio {
-  color: #444;
-  font-size: 1rem;
+  color: var(--text);
+  font-size: 1.06rem;
   line-height: 1.75;
   margin: 0;
 }
@@ -168,17 +217,17 @@
 .fact:nth-child(even) { padding-left: 16px; border-left: 1px solid #f0e8f0; }
 
 .factLabel {
-  font-size: 0.75rem;
-  color: #aaa;
+  font-size: 0.8rem;
+  color: var(--text-soft);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 3px;
 }
 
 .factValue {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: #1a1a2a;
+  color: var(--text);
 }
 
 /* TAGS */
@@ -189,11 +238,11 @@
 }
 
 .tag {
-  background: #fbe4ec;
-  color: var(--primary);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 14px;
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 7px 15px;
   border-radius: 999px;
 }
 
@@ -217,36 +266,39 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: flex-end;
+}
+
+.safetyRow button {
+  flex: 1 1 140px;
 }
 
 .reportBtn {
-  border: 1.5px solid #ddd;
-  background: none;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
   border-radius: 999px;
-  padding: 8px 18px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #888;
+  padding: 11px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-soft);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
 
-.reportBtn:hover { background: #fafafa; border-color: #aaa; }
+.reportBtn:hover { background: var(--bg); border-color: var(--text-muted); }
 
 .blockBtn {
-  border: none;
-  background: #fee2e2;
-  color: #dc2626;
+  border: 1.5px solid #f3b7b0;
+  background: #fdf1ef;
+  color: var(--danger);
   border-radius: 999px;
-  padding: 8px 18px;
-  font-size: 13px;
+  padding: 11px 18px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s;
 }
 
-.blockBtn:hover { background: #fecaca; }
+.blockBtn:hover { background: #fbe1dd; }
 
 /* Shown for a match (opened from the chat): the clear way out. */
 .unmatchBtn {
@@ -254,8 +306,8 @@
   background: var(--primary-tint);
   color: var(--primary-deep);
   border-radius: 999px;
-  padding: 8px 18px;
-  font-size: 13px;
+  padding: 11px 18px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s;
@@ -434,8 +486,10 @@
 .lightboxClose:hover { background: rgba(255,255,255,0.3); }
 
 @media (max-width: 600px) {
-  .hero { height: 380px; }
-  .heroName { font-size: 1.8rem; }
+  .hero { padding: 0; }
+  .heroFrame { width: 100%; max-height: 80vh; border-radius: 0; box-shadow: none; }
+  .heroBackdrop { display: none; }
+  .heroName { font-size: 2.1rem; }
   .grid { grid-template-columns: 1fr; }
   .fact:nth-child(even) { border-left: none; padding-left: 0; }
 }
