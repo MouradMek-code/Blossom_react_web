@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { formatDeadline, formatHours } from "../api/offers";
+import { parseServerDate } from "../api/chatTime";
 import styles from "./VenueManage.module.css";
 
 // datetime-local wants "YYYY-MM-DDTHH:MM" in local time.
@@ -14,9 +15,18 @@ function localInputValue(value) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
+const MONTH_MS = 30 * 24 * 3600 * 1000;
+const IDEAS = [
+  { key: "coffee", emoji: "☕" },
+  { key: "dessert", emoji: "🍰" },
+  { key: "drink", emoji: "🥂" },
+  { key: "discount", emoji: "💸" },
+];
+
 // blossom-date.com/venue/manage/<private link> - the venue owner's page, no
-// account: pause, resume, add places, change the end date (at once), see the
-// numbers, and propose a new offer (checked by Blossom first).
+// account: pause, resume, add places, +1 month or any end date, repeat an
+// old offer, see the numbers, and publish a new gift (live at once; Blossom
+// is told and can pause it).
 export default function VenueManage() {
   const { t, i18n } = useTranslation();
   const { token } = useParams();
@@ -25,8 +35,10 @@ export default function VenueManage() {
   const [busy, setBusy] = useState(null);
   const [endDates, setEndDates] = useState({});
   const [saved, setSaved] = useState(null);
-  const [newOffer, setNewOffer] = useState({ offer_title: "", offer_details: "", max_couples: "" });
+  const [newOffer, setNewOffer] = useState({ offer_title: "", offer_details: "", max_couples: "", valid_hours: null });
   const [sentNew, setSentNew] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const newOfferForm = useRef(null);
 
   const base = `${BASE_URL}/partners/manage/${encodeURIComponent(token)}`;
 
@@ -61,9 +73,29 @@ export default function VenueManage() {
     setTimeout(() => setSaved(null), 2000);
   }
 
-  async function proposeOffer(e) {
+  // +1 month from the current end (or from now, for an offer that ended).
+  function plusMonth(offer) {
+    const end = parseServerDate(offer.ends_at);
+    const from = Math.max(Date.now(), end ? end.getTime() : 0);
+    change(offer, { ends_at: new Date(from + MONTH_MS).toISOString() });
+  }
+
+  // An old offer, again: its words and limits fill in the new gift.
+  function repeat(offer) {
+    setSentNew(false);
+    setNewOffer({
+      offer_title: offer.title,
+      offer_details: offer.details || "",
+      max_couples: offer.max_couples ? String(offer.max_couples) : "",
+      valid_hours: offer.valid_hours || null,
+    });
+    newOfferForm.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  async function publishOffer(e) {
     e.preventDefault();
     setError("");
+    setPublishing(true);
     const result = await postJson(`${base}/requests`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -71,14 +103,16 @@ export default function VenueManage() {
         offer_title: newOffer.offer_title,
         offer_details: newOffer.offer_details || null,
         max_couples: newOffer.max_couples ? parseInt(newOffer.max_couples, 10) : null,
+        valid_hours: newOffer.valid_hours,
       }),
     });
+    setPublishing(false);
     if (!result.ok) {
       setError(result.message || t("partners.failed"));
       return;
     }
     setSentNew(true);
-    setNewOffer({ offer_title: "", offer_details: "", max_couples: "" });
+    setNewOffer({ offer_title: "", offer_details: "", max_couples: "", valid_hours: null });
     load();
   }
 
@@ -129,6 +163,14 @@ export default function VenueManage() {
             </p>
             <p className={styles.stats}>{t("offers.stats", o.stats)}</p>
 
+            <div className={styles.actions}>
+              <button type="button" onClick={() => plusMonth(o)} disabled={busy === o.id}>
+                {t("partners.plusMonth")}
+              </button>
+              <button type="button" onClick={() => repeat(o)}>
+                {t("partners.repeatOffer")}
+              </button>
+            </div>
             {o.state !== "ended" && (
               <div className={styles.actions}>
                 <button type="button" onClick={() => change(o, { active: !o.active })} disabled={busy === o.id}>
@@ -176,8 +218,25 @@ export default function VenueManage() {
         )}
 
         <h2 className={styles.section}>{t("partners.newOffer")}</h2>
-        <form className={styles.card} onSubmit={proposeOffer}>
-          <p className={styles.muted}>{t("partners.newOfferHint")}</p>
+        <form className={styles.card} onSubmit={publishOffer} ref={newOfferForm}>
+          <p className={styles.muted}>{t("partners.newOfferLive")}</p>
+          <div className={styles.ideas}>
+            {IDEAS.map((idea) => (
+              <button
+                type="button"
+                key={idea.key}
+                onClick={() =>
+                  setNewOffer((n) => ({
+                    ...n,
+                    offer_title: t(`partners.tpl_${idea.key}`),
+                    offer_details: t(`partners.tpl_${idea.key}_details`),
+                  }))
+                }
+              >
+                {idea.emoji} {t(`partners.tpl_${idea.key}`)}
+              </button>
+            ))}
+          </div>
           <label className={styles.field}>
             <span>{t("partners.offerTitle")}</span>
             <input
@@ -206,9 +265,9 @@ export default function VenueManage() {
               placeholder="10"
             />
           </label>
-          {sentNew && <p className={styles.ok}>{t("partners.requestSent")}</p>}
-          <button type="submit" className={styles.primary}>
-            {t("partners.send")}
+          {sentNew && <p className={styles.ok}>{t("partners.publishedNow")}</p>}
+          <button type="submit" className={styles.primary} disabled={publishing}>
+            {publishing ? t("partners.sending") : t("partners.publishNow")}
           </button>
         </form>
 

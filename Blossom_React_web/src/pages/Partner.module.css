@@ -300,3 +300,280 @@
   font-weight: 800;
   color: #7e2a44;
 }
+
+/* ---- ① ② ③ progress ---- */
+.progress {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.progressStep {
+  flex: 1;
+}
+
+.progressStep button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 4px 0;
+  border: none;
+  border-top: 4px solid #efe7e1;
+  background: none;
+  font: inherit;
+  color: #8a7e76;
+  cursor: default;
+}
+
+.stepDone button {
+  border-top-color: #c1466b;
+  color: #7e2a44;
+  cursor: pointer;
+}
+
+.stepNow button {
+  border-top-color: #c1466b;
+  color: #2a2420;
+}
+
+.progressDot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #efe7e1;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.stepNow .progressDot,
+.stepDone .progressDot {
+  background: #c1466b;
+  color: #fff;
+}
+
+.progressName {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.optional {
+  font-style: normal;
+  font-weight: 400;
+  color: #8a7e76;
+}
+
+/* ---- ② ready-made gifts ---- */
+.tplTitle {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #574d46;
+}
+
+.templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.template {
+  padding: 10px 14px;
+  border: 1.5px solid #dccec3;
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a2420;
+  cursor: pointer;
+}
+
+.template:hover {
+  border-color: #c1466b;
+}
+
+.templateOn {
+  border-color: #c1466b;
+  background: #fbf1f4;
+  color: #7e2a44;
+}
+
+.defaults {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fbf8f6;
+  font-size: 13.5px;
+  color: #574d46;
+}
+
+.defaults button {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 800;
+  color: #c1466b;
+  cursor: pointer;
+}
+
+/* ---- ② live preview ---- */
+.preview {
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px dashed #dccec3;
+}
+
+.previewTitle {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #7e2a44;
+}
+
+.previewCard {
+  display: flex;
+  max-width: 420px;
+  overflow: hidden;
+  border: 1.5px solid #f0c27a;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(63, 44, 38, 0.12);
+}
+
+.previewMedia {
+  position: relative;
+  flex: 0 0 38%;
+  min-height: 170px;
+  background: linear-gradient(135deg, #fde4ef, #c1466b);
+}
+
+.previewMedia img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.previewNoPhoto {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.previewRibbon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #ffb547;
+  color: #3d2300;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.previewBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  min-width: 0;
+}
+
+.previewOffer {
+  font-size: 16px;
+  line-height: 1.25;
+  color: #3d2300;
+}
+
+.previewEmpty {
+  color: #b5a99f;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.previewDetails {
+  font-size: 12.5px;
+  color: #574d46;
+}
+
+.previewVenue {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.previewPlace,
+.previewTerms {
+  font-size: 12px;
+  color: #8a7e76;
+}
+
+.previewInvite {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #c1466b;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+/* ---- Back / Next ---- */
+.nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.nav .primary,
+.nav .secondary {
+  flex: 1;
+  width: auto;
+}
+
+/* ---- sent: what happens next ---- */
+.nextTitle {
+  margin: 18px 0 8px;
+  font-size: 15px;
+  color: #7e2a44;
+}
+
+.nextList {
+  margin: 0 auto 14px;
+  padding: 0;
+  max-width: 440px;
+  list-style: none;
+  text-align: left;
+  line-height: 1.6;
+  color: #574d46;
+}
+
+.nextList li {
+  margin-bottom: 8px;
+}
+
+.inbox {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #8a7e76;
+}

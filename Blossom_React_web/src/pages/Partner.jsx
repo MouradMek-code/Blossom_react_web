@@ -8,17 +8,20 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
 import { categoryEmoji } from "../api/categories";
+import { offerTerms } from "../api/offers";
 import styles from "./Partner.module.css";
 
+// Good defaults, so most owners never open "Change": 20 couples, codes valid
+// 2 days (the server keeps it open for a month when no end date is given).
 const EMPTY = {
   venue_name: "",
   map_url: "",
   about: "",
   offer_title: "",
   offer_details: "",
-  max_couples: "",
+  max_couples: "20",
   ends_at: "",
-  days: "7",
+  days: "2",
   hours: "0",
   contact_name: "",
   contact_email: "",
@@ -27,22 +30,35 @@ const EMPTY = {
   website: "", // hidden: people leave it empty, bots fill it
 };
 
+// One tap fills in the gift (in the owner's language).
+const TEMPLATES = [
+  { key: "coffee", emoji: "☕" },
+  { key: "dessert", emoji: "🍰" },
+  { key: "drink", emoji: "🥂" },
+  { key: "discount", emoji: "💸" },
+];
+
 const GOOGLE_MAPS_LINK = /^https?:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps)/i;
 
 // blossom-date.com/partner - a café, restaurant or bar asks to offer a
-// promotion to Blossom couples. No account: an admin reviews it and answers
-// by email (with the venue's manager link and staff code when approved).
-// A place already on Blossom is picked from a search (or comes with the
-// spot page's "Is this your place?" link, ?spot=<id>): the gift then goes on
-// that spot instead of a new one.
+// promotion to Blossom couples, in 3 short steps: the place, the gift (with
+// ready-made ideas and a live preview), how to reach them. No account: an
+// admin reviews it and answers by email (with the venue's manager link and
+// staff code when approved). A place already on Blossom is picked from a
+// search (or comes with the spot page's link, ?spot=<id>): the gift then goes
+// on that spot instead of a new one.
 export default function Partner() {
   const { t, i18n } = useTranslation();
   const [form, setForm] = useState(EMPTY);
   const [place, setPlace] = useState({ country: "", city: "" });
+  const [step, setStep] = useState(1);
+  const [template, setTemplate] = useState("");
+  const [showOptions, setShowOptions] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
   const autoName = useRef("");
+  const titleInput = useRef(null);
   const [spot, setSpot] = useState(null); // the place, when it's already on Blossom
   const [query, setQuery] = useState("");
   const [results, setResults] = useState(null); // null = nothing searched yet
@@ -117,10 +133,42 @@ export default function Partner() {
     return () => clearTimeout(timer);
   }, [form.map_url]);
 
+  function pickTemplate(key) {
+    setTemplate(key);
+    if (key === "own") {
+      setForm((f) => ({ ...f, offer_title: "", offer_details: "" }));
+      setTimeout(() => titleInput.current?.focus(), 0);
+      return;
+    }
+    setForm((f) => ({
+      ...f,
+      offer_title: t(`partners.tpl_${key}`),
+      offer_details: t(`partners.tpl_${key}_details`),
+    }));
+  }
+
+  const validHours = (parseInt(form.days, 10) || 0) * 24 + (parseInt(form.hours, 10) || 0);
+  const placeReady = spot ? !spot.partner : form.venue_name.trim().length >= 2 && place.city && place.country;
+  const giftReady = form.offer_title.trim().length >= 3;
+
+  function goTo(next) {
+    setError("");
+    setStep(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   async function submit(e) {
     e.preventDefault();
+    // Enter in a field moves on, until the last step.
+    if (step === 1) {
+      if (placeReady) goTo(2);
+      return;
+    }
+    if (step === 2) {
+      if (giftReady) goTo(3);
+      return;
+    }
     setError("");
-    const validHours = (parseInt(form.days, 10) || 0) * 24 + (parseInt(form.hours, 10) || 0);
     setSending(true);
     // A place already on Blossom: its spot gives the name, city and country.
     const placeFields = spot
@@ -155,10 +203,12 @@ export default function Partner() {
       const reason = result.data?.detail?.reason;
       if (reason === "already_partner") {
         setSpot((cur) => (cur ? { ...cur, partner: true } : cur));
+        goTo(1);
         return;
       }
       if (reason === "spot_gone") {
         setSpot(null);
+        goTo(1);
         setError(t("partners.spotGone"));
         return;
       }
@@ -169,199 +219,325 @@ export default function Partner() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function startOver() {
+    setForm(EMPTY);
+    setPlace({ country: "", city: "" });
+    setSpot(null);
+    setTemplate("");
+    setShowOptions(false);
+    setStep(1);
+    setSent(false);
+  }
+
+  const stepNames = [t("partners.stepPlace"), t("partners.stepGift"), t("partners.stepContact")];
+
   return (
     <div className={styles.page}>
       <PageNav />
       <main className={styles.wrap}>
         <h1 className={styles.title}>🏪 {t("partners.title")}</h1>
         <p className={styles.intro}>{t("partners.intro")}</p>
-        <ol className={styles.steps}>
-          <li>{t("partners.how1")}</li>
-          <li>{t("partners.how2")}</li>
-          <li>{t("partners.how3")}</li>
-        </ol>
 
         {sent ? (
           <div className={styles.sent}>
             <h2>{t("partners.sentTitle")}</h2>
-            <p>{t("partners.sentText")}</p>
-            <button
-              type="button"
-              className={styles.secondary}
-              onClick={() => {
-                setForm(EMPTY);
-                setPlace({ country: "", city: "" });
-                setSpot(null);
-                setSent(false);
-              }}
-            >
+            <h3 className={styles.nextTitle}>{t("partners.whatNext")}</h3>
+            <ol className={styles.nextList}>
+              <li>⏳ {t("partners.next1")}</li>
+              <li>📩 {t("partners.next2")}</li>
+              <li>💞 {t("partners.next3")}</li>
+            </ol>
+            <p className={styles.inbox}>{t("partners.checkInbox", { email: form.contact_email })}</p>
+            <button type="button" className={styles.secondary} onClick={startOver}>
               {t("partners.another")}
             </button>
           </div>
         ) : (
-          <form className={styles.form} onSubmit={submit}>
-            <h2 className={styles.section}>{t("partners.placeSection")}</h2>
-            {spot ? (
-              <>
-                <p className={styles.chosenLabel}>{t("partners.yourPlace")}</p>
-                <div className={styles.chosen}>
-                  <SpotThumb spot={spot} />
-                  <span className={styles.spotText}>
-                    <strong>{spot.name}</strong>
-                    <span>{[spot.neighborhood, spot.city, spot.country].filter(Boolean).join(", ")}</span>
-                  </span>
-                  <button type="button" className={styles.changeBtn} onClick={() => setSpot(null)}>
-                    {t("partners.change")}
-                  </button>
-                </div>
-                {spot.partner && (
-                  <div className={styles.partnerNotice}>
-                    <p>{t("partners.alreadyPartner")}</p>
-                    <Link to="/business#lost-link">🔑 {t("partners.getLink")}</Link>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <label className={styles.field}>
-                  <span>🔎 {t("partners.searchLabel")}</span>
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder={t("partners.searchPlaceholder")}
-                    autoComplete="off"
-                  />
-                  <small>{t("partners.searchHint")}</small>
-                </label>
-                {results &&
-                  (results.length > 0 ? (
-                    <ul className={styles.results}>
-                      {results.map((found) => (
-                        <li key={found.id}>
-                          <button type="button" className={styles.result} onClick={() => pickSpot(found)}>
-                            <SpotThumb spot={found} />
-                            <span className={styles.spotText}>
-                              <strong>{found.name}</strong>
-                              <span>{[found.neighborhood, found.city, found.country].filter(Boolean).join(", ")}</span>
-                            </span>
-                            {found.partner && <span className={styles.partnerTag}>{t("partners.partnerTag")}</span>}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
+          <>
+            {/* ① Your place → ② Your gift → ③ How to reach you */}
+            <ol className={styles.progress}>
+              {stepNames.map((name, index) => {
+                const number = index + 1;
+                const state = number === step ? styles.stepNow : number < step ? styles.stepDone : "";
+                return (
+                  <li key={name} className={`${styles.progressStep} ${state}`}>
+                    <button
+                      type="button"
+                      onClick={() => number < step && goTo(number)}
+                      disabled={number >= step}
+                      aria-current={number === step ? "step" : undefined}
+                    >
+                      <span className={styles.progressDot}>{number < step ? "✓" : number}</span>
+                      <span className={styles.progressName}>{name}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <form className={styles.form} onSubmit={submit}>
+              {step === 1 && (
+                <>
+                  <h2 className={styles.section}>① {t("partners.stepPlace")}</h2>
+                  {spot ? (
+                    <>
+                      <p className={styles.chosenLabel}>{t("partners.yourPlace")}</p>
+                      <div className={styles.chosen}>
+                        <SpotThumb spot={spot} />
+                        <span className={styles.spotText}>
+                          <strong>{spot.name}</strong>
+                          <span>{[spot.neighborhood, spot.city, spot.country].filter(Boolean).join(", ")}</span>
+                        </span>
+                        <button type="button" className={styles.changeBtn} onClick={() => setSpot(null)}>
+                          {t("partners.change")}
+                        </button>
+                      </div>
+                      {spot.partner && (
+                        <div className={styles.partnerNotice}>
+                          <p>{t("partners.alreadyPartner")}</p>
+                          <Link to="/business#lost-link">🔑 {t("partners.getLink")}</Link>
+                        </div>
+                      )}
+                    </>
                   ) : (
-                    <p className={styles.noResult}>{t("partners.searchNone")}</p>
-                  ))}
+                    <>
+                      <label className={styles.field}>
+                        <span>🔎 {t("partners.searchLabel")}</span>
+                        <input
+                          type="search"
+                          value={query}
+                          onChange={(e) => setQuery(e.target.value)}
+                          placeholder={t("partners.searchPlaceholder")}
+                          autoComplete="off"
+                        />
+                        <small>{t("partners.searchHint")}</small>
+                      </label>
+                      {results &&
+                        (results.length > 0 ? (
+                          <ul className={styles.results}>
+                            {results.map((found) => (
+                              <li key={found.id}>
+                                <button type="button" className={styles.result} onClick={() => pickSpot(found)}>
+                                  <SpotThumb spot={found} />
+                                  <span className={styles.spotText}>
+                                    <strong>{found.name}</strong>
+                                    <span>{[found.neighborhood, found.city, found.country].filter(Boolean).join(", ")}</span>
+                                  </span>
+                                  {found.partner && <span className={styles.partnerTag}>{t("partners.partnerTag")}</span>}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className={styles.noResult}>{t("partners.searchNone")}</p>
+                        ))}
 
-                <p className={styles.orNew}>{t("partners.orNew")}</p>
-                <label className={styles.field}>
-                  <span>{t("partners.mapUrl")}</span>
-                  <input value={form.map_url} onChange={set("map_url")} placeholder="https://maps.app.goo.gl/…" inputMode="url" />
-                  <small>{t("partners.mapUrlHint")}</small>
-                </label>
-                <label className={styles.field}>
-                  <span>{t("partners.venueName")} *</span>
-                  <input value={form.venue_name} onChange={set("venue_name")} maxLength={150} required />
-                </label>
-                <div className={styles.field}>
-                  <span>
-                    {t("partners.city")} / {t("partners.country")} *
-                  </span>
-                  <LocationPicker country={place.country} city={place.city} onChange={setPlace} />
+                      <p className={styles.orNew}>{t("partners.orNew")}</p>
+                      <label className={styles.field}>
+                        <span>{t("partners.mapUrl")}</span>
+                        <input value={form.map_url} onChange={set("map_url")} placeholder="https://maps.app.goo.gl/…" inputMode="url" />
+                        <small>{t("partners.mapUrlHint")}</small>
+                      </label>
+                      <label className={styles.field}>
+                        <span>{t("partners.venueName")} *</span>
+                        <input value={form.venue_name} onChange={set("venue_name")} maxLength={150} />
+                      </label>
+                      <div className={styles.field}>
+                        <span>
+                          {t("partners.city")} / {t("partners.country")} *
+                        </span>
+                        <LocationPicker country={place.country} city={place.city} onChange={setPlace} />
+                      </div>
+                      <label className={styles.field}>
+                        <span>
+                          {t("partners.about")} <em className={styles.optional}>({t("partners.optional")})</em>
+                        </span>
+                        <textarea value={form.about} onChange={set("about")} rows={2} maxLength={1000} />
+                      </label>
+                    </>
+                  )}
+                </>
+              )}
+
+              {step === 2 && (
+                <div className={styles.giftStep}>
+                  <div>
+                    <h2 className={styles.section}>② {t("partners.stepGift")}</h2>
+                    <p className={styles.tplTitle}>{t("partners.tplTitle")}</p>
+                    <div className={styles.templates}>
+                      {TEMPLATES.map((tpl) => (
+                        <button
+                          type="button"
+                          key={tpl.key}
+                          className={`${styles.template} ${template === tpl.key ? styles.templateOn : ""}`}
+                          onClick={() => pickTemplate(tpl.key)}
+                        >
+                          {tpl.emoji} {t(`partners.tpl_${tpl.key}`)}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        className={`${styles.template} ${template === "own" ? styles.templateOn : ""}`}
+                        onClick={() => pickTemplate("own")}
+                      >
+                        {t("partners.tpl_own")}
+                      </button>
+                    </div>
+
+                    <label className={styles.field}>
+                      <span>{t("partners.offerTitle")} *</span>
+                      <input
+                        ref={titleInput}
+                        value={form.offer_title}
+                        onChange={set("offer_title")}
+                        placeholder={t("partners.offerPlaceholder")}
+                        maxLength={120}
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>
+                        {t("partners.offerDetails")} <em className={styles.optional}>({t("partners.optional")})</em>
+                      </span>
+                      <input value={form.offer_details} onChange={set("offer_details")} placeholder={t("partners.detailsPlaceholder")} maxLength={500} />
+                    </label>
+
+                    {/* The limits: good defaults, changed here if they want. */}
+                    <div className={styles.defaults}>
+                      <span>
+                        ⚙️{" "}
+                        {form.max_couples
+                          ? t("partners.defaultsLine", { couples: form.max_couples, days: Math.round((validHours || 48) / 24) || 1 })
+                          : t("partners.noLimitLine", { days: Math.round((validHours || 48) / 24) || 1 })}
+                      </span>
+                      <button type="button" onClick={() => setShowOptions((o) => !o)}>
+                        {showOptions ? t("partners.lessOptions") : t("partners.moreOptions")}
+                      </button>
+                    </div>
+                    {showOptions && (
+                      <>
+                        <div className={styles.row2}>
+                          <label className={styles.field}>
+                            <span>{t("partners.maxCouples")}</span>
+                            <input
+                              inputMode="numeric"
+                              value={form.max_couples}
+                              onChange={(e) => setForm((f) => ({ ...f, max_couples: e.target.value.replace(/\D/g, "").slice(0, 5) }))}
+                              placeholder="20"
+                            />
+                            <small>{t("partners.maxCouplesHint")}</small>
+                          </label>
+                          <label className={styles.field}>
+                            <span>{t("partners.endsAt")}</span>
+                            <input type="datetime-local" value={form.ends_at} onChange={set("ends_at")} />
+                            <small>{t("partners.endsAtHint")}</small>
+                          </label>
+                        </div>
+                        <div className={styles.field}>
+                          <span>{t("partners.validFor")}</span>
+                          <div className={styles.inline}>
+                            <input
+                              inputMode="numeric"
+                              value={form.days}
+                              onChange={(e) => setForm((f) => ({ ...f, days: e.target.value.replace(/\D/g, "").slice(0, 3) }))}
+                            />
+                            <span>{t("offers.daysLabel")}</span>
+                            <input
+                              inputMode="numeric"
+                              value={form.hours}
+                              onChange={(e) => setForm((f) => ({ ...f, hours: e.target.value.replace(/\D/g, "").slice(0, 2) }))}
+                            />
+                            <span>{t("offers.hoursLabel")}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* What couples will see, as they type. */}
+                  <aside className={styles.preview}>
+                    <p className={styles.previewTitle}>👀 {t("partners.previewTitle")}</p>
+                    <GiftPreview
+                      t={t}
+                      spot={spot}
+                      name={spot?.name || form.venue_name.trim() || t("partners.previewVenue")}
+                      city={spot?.city || place.city}
+                      title={form.offer_title.trim()}
+                      details={form.offer_details.trim()}
+                      validHours={validHours || 48}
+                      maxCouples={form.max_couples ? parseInt(form.max_couples, 10) : null}
+                    />
+                  </aside>
                 </div>
-                <label className={styles.field}>
-                  <span>{t("partners.about")}</span>
-                  <textarea value={form.about} onChange={set("about")} rows={3} maxLength={1000} />
-                </label>
-              </>
-            )}
+              )}
 
-            <h2 className={styles.section}>{t("partners.offerSection")}</h2>
-            <label className={styles.field}>
-              <span>{t("partners.offerTitle")} *</span>
-              <input
-                value={form.offer_title}
-                onChange={set("offer_title")}
-                placeholder={t("partners.offerPlaceholder")}
-                maxLength={120}
-                required
-              />
-            </label>
-            <label className={styles.field}>
-              <span>{t("partners.offerDetails")}</span>
-              <input value={form.offer_details} onChange={set("offer_details")} placeholder={t("partners.detailsPlaceholder")} maxLength={500} />
-            </label>
-            <div className={styles.row2}>
-              <label className={styles.field}>
-                <span>{t("partners.maxCouples")}</span>
-                <input
-                  inputMode="numeric"
-                  value={form.max_couples}
-                  onChange={(e) => setForm((f) => ({ ...f, max_couples: e.target.value.replace(/\D/g, "").slice(0, 5) }))}
-                  placeholder="10"
-                />
-                <small>{t("partners.maxCouplesHint")}</small>
-              </label>
-              <label className={styles.field}>
-                <span>{t("partners.endsAt")}</span>
-                <input type="datetime-local" value={form.ends_at} onChange={set("ends_at")} />
-                <small>{t("partners.endsAtHint")}</small>
-              </label>
-            </div>
-            <div className={styles.field}>
-              <span>{t("partners.validFor")}</span>
-              <div className={styles.inline}>
-                <input
-                  inputMode="numeric"
-                  value={form.days}
-                  onChange={(e) => setForm((f) => ({ ...f, days: e.target.value.replace(/\D/g, "").slice(0, 3) }))}
-                />
-                <span>{t("offers.daysLabel")}</span>
-                <input
-                  inputMode="numeric"
-                  value={form.hours}
-                  onChange={(e) => setForm((f) => ({ ...f, hours: e.target.value.replace(/\D/g, "").slice(0, 2) }))}
-                />
-                <span>{t("offers.hoursLabel")}</span>
+              {step === 3 && (
+                <>
+                  <h2 className={styles.section}>③ {t("partners.stepContact")}</h2>
+                  <label className={styles.field}>
+                    <span>{t("partners.contactEmail")} *</span>
+                    <input type="email" value={form.contact_email} onChange={set("contact_email")} maxLength={200} required autoComplete="email" />
+                  </label>
+                  <div className={styles.row2}>
+                    <label className={styles.field}>
+                      <span>
+                        {t("partners.contactName")} <em className={styles.optional}>({t("partners.optional")})</em>
+                      </span>
+                      <input value={form.contact_name} onChange={set("contact_name")} maxLength={120} autoComplete="name" />
+                    </label>
+                    <label className={styles.field}>
+                      <span>
+                        {t("partners.contactPhone")} <em className={styles.optional}>({t("partners.optional")})</em>
+                      </span>
+                      <input type="tel" value={form.contact_phone} onChange={set("contact_phone")} maxLength={40} autoComplete="tel" />
+                    </label>
+                  </div>
+                  <label className={styles.field}>
+                    <span>
+                      {t("partners.message")} <em className={styles.optional}>({t("partners.optional")})</em>
+                    </span>
+                    <textarea value={form.message} onChange={set("message")} rows={2} maxLength={1000} />
+                  </label>
+                  {/* Invisible to people: a bot that fills it is ignored. */}
+                  <input
+                    className={styles.hp}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    value={form.website}
+                    onChange={set("website")}
+                    name="website"
+                  />
+                </>
+              )}
+
+              {error && <p className={styles.error}>{error}</p>}
+
+              <div className={styles.nav}>
+                {step > 1 ? (
+                  <button type="button" className={styles.secondary} onClick={() => goTo(step - 1)}>
+                    {t("partners.back")}
+                  </button>
+                ) : (
+                  <span />
+                )}
+                {step < 3 ? (
+                  <button type="submit" className={styles.primary} disabled={step === 1 ? !placeReady : !giftReady}>
+                    {t("partners.next")}
+                  </button>
+                ) : (
+                  <button type="submit" className={styles.primary} disabled={sending || !form.contact_email.trim()}>
+                    {sending ? t("partners.sending") : t("partners.send")}
+                  </button>
+                )}
               </div>
-            </div>
+            </form>
 
-            <h2 className={styles.section}>{t("partners.contactSection")}</h2>
-            <div className={styles.row2}>
-              <label className={styles.field}>
-                <span>{t("partners.contactName")}</span>
-                <input value={form.contact_name} onChange={set("contact_name")} maxLength={120} autoComplete="name" />
-              </label>
-              <label className={styles.field}>
-                <span>{t("partners.contactEmail")} *</span>
-                <input type="email" value={form.contact_email} onChange={set("contact_email")} maxLength={200} required autoComplete="email" />
-              </label>
-            </div>
-            <label className={styles.field}>
-              <span>{t("partners.contactPhone")}</span>
-              <input type="tel" value={form.contact_phone} onChange={set("contact_phone")} maxLength={40} autoComplete="tel" />
-            </label>
-            <label className={styles.field}>
-              <span>{t("partners.message")}</span>
-              <textarea value={form.message} onChange={set("message")} rows={3} maxLength={1000} />
-            </label>
-            {/* Invisible to people: a bot that fills it is ignored. */}
-            <input
-              className={styles.hp}
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              value={form.website}
-              onChange={set("website")}
-              name="website"
-            />
-
-            {error && <p className={styles.error}>{error}</p>}
-            <button type="submit" className={styles.primary} disabled={sending || Boolean(spot?.partner)}>
-              {sending ? t("partners.sending") : t("partners.send")}
-            </button>
-          </form>
+            <ol className={styles.steps}>
+              <li>{t("partners.how1")}</li>
+              <li>{t("partners.how2")}</li>
+              <li>{t("partners.how3")}</li>
+            </ol>
+          </>
         )}
         <p className={styles.more}>
           <Link to="/business#lost-link">🔑 {t("business.lostTitle")}</Link>
@@ -370,6 +546,32 @@ export default function Partner() {
         </p>
       </main>
       <Footer />
+    </div>
+  );
+}
+
+// The gift card as couples will see it on Date spots.
+function GiftPreview({ t, spot, name, city, title, details, validHours, maxCouples }) {
+  return (
+    <div className={styles.previewCard}>
+      <div className={styles.previewMedia}>
+        {spot?.image_url ? (
+          <img src={IMG.card(spot.image_url)} alt="" />
+        ) : (
+          <span className={styles.previewNoPhoto}>{spot ? categoryEmoji(spot.category) : "☕"}</span>
+        )}
+        <span className={styles.previewRibbon}>{t("dateSpots.giftRibbon")}</span>
+      </div>
+      <div className={styles.previewBody}>
+        <strong className={`${styles.previewOffer} ${title ? "" : styles.previewEmpty}`}>
+          {title || t("partners.previewPlaceholder")}
+        </strong>
+        {details && <span className={styles.previewDetails}>{details}</span>}
+        <span className={styles.previewVenue}>{name}</span>
+        {city && <span className={styles.previewPlace}>📍 {city}</span>}
+        <span className={styles.previewTerms}>{offerTerms({ valid_hours: validHours, remaining: maxCouples }, t)}</span>
+        <span className={styles.previewInvite}>💌 {t("dateSpots.invite")}</span>
+      </div>
     </div>
   );
 }

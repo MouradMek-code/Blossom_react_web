@@ -11,6 +11,7 @@ import { IMG } from "../api/images";
 import { offerTerms } from "../api/offers";
 import { KIND_EMOJI, eventDay, eventWhen } from "../api/events";
 import { isNewSpot, matchesName, orderSpots } from "../api/spotOrder";
+import { buildCollections, proofParts } from "../api/spotCollections";
 import { mapPoints } from "../api/spotMap";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
 import {
@@ -84,6 +85,94 @@ function placeLine(spot) {
   return `📍 ${shortPlace(spot)}`;
 }
 
+// "♥ 3  📅 2  💞 5": saves, upcoming events, couples who used the gift.
+function ProofLine({ spot, t, className }) {
+  const parts = proofParts(spot);
+  if (parts.length === 0) return null;
+  return (
+    <p className={`${styles.proof} ${className || ""}`}>
+      {parts.map(([icon, key, count]) => (
+        <span key={key} title={t(`dateSpots.${key}`)}>
+          {icon} {count}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+// ⭐ Spot of the week: an admin's pick (with their words), or else the most
+// saved place this week. The whole card opens the place.
+function SpotOfWeek({ data, t, saved, onOpen, onToggleSave }) {
+  const { spot, note, picked } = data;
+  const text = picked ? (note ? `“${note}”` : spot.description) : t("dateSpots.spotOfWeekAuto");
+  return (
+    <section className={styles.sotw} onClick={onOpen}>
+      <div className={styles.sotwMedia}>
+        <SpotBackdrop spot={spot} imgClass={styles.sotwImage} src={IMG.full(spot.image_url)} />
+        <SaveHeart saved={saved} onToggle={onToggleSave} t={t} />
+      </div>
+      <div className={styles.sotwBody}>
+        <span className={styles.sotwLabel}>{t("dateSpots.spotOfWeek")}</span>
+        <h2 className={styles.sotwName}>{spot.name}</h2>
+        <p className={styles.sotwPlace}>{placeLine(spot)}</p>
+        {spot.offer && <p className={styles.sotwGift}>🎁 {spot.offer.title}</p>}
+        {text && <p className={styles.sotwNote}>{text}</p>}
+        <ProofLine spot={spot} t={t} className={styles.sotwProof} />
+        <span className={styles.sotwCta}>{t("dateSpots.spotOfWeekSee")}</span>
+      </div>
+    </section>
+  );
+}
+
+// Admin: make the open spot the spot of the week (with a note), or stop it.
+function FeatureBox({ spot, isFeatured, token, t, onChanged }) {
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+
+  async function send(remove) {
+    setBusy(true);
+    setMessage("");
+    const result = await postJson(`${BASE_URL}/date_spots/${spot.id}/feature`, {
+      method: remove ? "DELETE" : "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: remove ? undefined : JSON.stringify({ note: note.trim() || null }),
+    });
+    setBusy(false);
+    if (!result.ok) {
+      setMessage(result.message);
+      return;
+    }
+    setMessage(remove ? "" : t("dateSpots.featureDone"));
+    setNote("");
+    onChanged();
+  }
+
+  return (
+    <div className={styles.featureBox}>
+      <strong>{t("dateSpots.featureTitle")}</strong>
+      {isFeatured ? (
+        <button type="button" className={styles.featureRemove} onClick={() => send(true)} disabled={busy}>
+          {t("dateSpots.featureRemove")}
+        </button>
+      ) : (
+        <div className={styles.featureRow}>
+          <input
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder={t("dateSpots.featureNotePlaceholder")}
+            maxLength={300}
+          />
+          <button type="button" onClick={() => send(false)} disabled={busy}>
+            {t("dateSpots.featurePick")}
+          </button>
+        </div>
+      )}
+      {message && <p className={styles.featureMessage}>{message}</p>}
+    </div>
+  );
+}
+
 // ♡ / ♥ in a card's corner. Its own click: it never opens the card.
 function SaveHeart({ saved, onToggle, t }) {
   return (
@@ -118,6 +207,7 @@ function GiftCard({ spot, t, onOpen, onInvite, saved, onToggleSave }) {
         <span className={styles.giftVenue}>{spot.name}</span>
         <span className={styles.giftPlace}>{placeLine(spot)}</span>
         <span className={styles.giftTerms}>{offerTerms(spot.offer, t)}</span>
+        <ProofLine spot={spot} t={t} className={styles.giftProof} />
         {onInvite ? (
           <button
             type="button"
@@ -233,6 +323,8 @@ function DateSpots() {
   const [inviteSpot, setInviteSpot] = useState(null);
   // ♡ The spots I saved (the list says so when I'm logged in).
   const [savedIds, setSavedIds] = useState(() => new Set());
+  // ⭐ Spot of the week (null when there's none).
+  const [spotOfWeek, setSpotOfWeek] = useState(null);
   // "📸 Photo mode": the spot as a clean poster, for a screenshot.
   const [photoSpot, setPhotoSpot] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -309,6 +401,19 @@ function DateSpots() {
       setLoading(false);
     }
   }, [country, city, category, bestFor, isLoggedIn, token]);
+
+  const loadSpotOfWeek = useCallback(async () => {
+    const result = await postJson(`${BASE_URL}/date_spots/featured`, {
+      headers: isLoggedIn ? { Authorization: `Bearer ${token}` } : {},
+    });
+    const data = result.ok ? result.data : null;
+    setSpotOfWeek(data && data.spot ? data : null);
+    if (data?.spot?.saved) setSavedIds((cur) => new Set(cur).add(data.spot.id));
+  }, [isLoggedIn, token]);
+
+  useEffect(() => {
+    loadSpotOfWeek();
+  }, [loadSpotOfWeek]);
 
   // ♡ / ♥ - straight away on screen, undone if the server says no.
   async function toggleSave(spot) {
@@ -437,14 +542,14 @@ function DateSpots() {
     load();
   }
 
-  // Every city with spots (or only the chosen country's), A to Z. Picking a
-  // city picks its country too.
-  const cityChoices = useMemo(() => {
-    const list = country ? locations.filter((l) => l.country === country) : locations;
-    return list
-      .flatMap((l) => l.cities.map((name) => ({ name, country: l.country })))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [locations, country]);
+  // Every city with spots, A to Z. Picking a city picks its country too.
+  const cityChoices = useMemo(
+    () =>
+      locations
+        .flatMap((l) => l.cities.map((name) => ({ name, country: l.country })))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [locations],
+  );
 
   const hasFilters = Boolean(country || city || category || bestFor);
   // The first spot gets the full-width featured treatment; the rest tile
@@ -457,6 +562,9 @@ function DateSpots() {
   );
   const [query, setQuery] = useState("");
   const [view, setView] = useState("list"); // "list" | "map"
+  // Country and "best for" live in a panel behind ⚙️, so the places come first.
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const panelCount = (country && !city ? 1 : 0) + (bestFor ? 1 : 0);
   // Picked once per visit: the random part of the order stays put while the
   // page is open (refreshes, edits) and changes on the next visit.
   const [seed] = useState(() => Math.random());
@@ -465,6 +573,18 @@ function DateSpots() {
   const ordered = orderSpots(promoOnly ? promoSpots : spots, seed);
   const shownSpots = searching ? ordered.filter((s) => matchesName(s, query)) : ordered;
   const [featured, ...rest] = shownSpots;
+  // No search or vibe chosen: the page's "home" - gifts, then themed rows.
+  const browsing = !searching && !category && !bestFor && !promoOnly;
+  const collections = browsing ? buildCollections(ordered) : [];
+
+  function clearFilters() {
+    setCountry("");
+    setCity("");
+    setCategory("");
+    setBestFor("");
+    setPromoOnly(false);
+    setQuery("");
+  }
 
   return (
     <>
@@ -515,55 +635,43 @@ function DateSpots() {
             />
           )}
 
-          {/* The gifts partner cafés and restaurants offer: first, and big. */}
-          {promoSpots.length > 0 && !promoOnly && !searching && (
-            <section className={styles.gifts}>
-              <div className={styles.giftsHead}>
-                <h2 className={styles.giftsTitle}>{t("dateSpots.giftsTitle")}</h2>
-                <p className={styles.giftsSubtitle}>{t("dateSpots.giftsSubtitle")}</p>
-              </div>
-              <div className={styles.giftsList}>
-                {promoSpots.map((spot) => (
-                  <GiftCard
-                    key={spot.id}
-                    spot={spot}
-                    t={t}
-                    onOpen={() => openSpot(spot)}
-                    onInvite={isLoggedIn ? () => setInviteSpot(spot) : null}
-                    saved={savedIds.has(spot.id)}
-                    onToggleSave={() => toggleSave(spot)}
-                  />
-                ))}
-              </div>
-            </section>
+          {/* ⭐ Spot of the week, first and big. */}
+          {spotOfWeek && browsing && (
+            <SpotOfWeek
+              data={spotOfWeek}
+              t={t}
+              saved={savedIds.has(spotOfWeek.spot.id)}
+              onOpen={() => openSpot(spotOfWeek.spot)}
+              onToggleSave={() => toggleSave(spotOfWeek.spot)}
+            />
           )}
 
-          <div className={styles.listHead}>
-            <h2 className={styles.sectionTitle}>{t("dateSpots.allSpots")}</h2>
-            {/* All spots / only those with a gift from a partner café. */}
-            <div className={styles.giftToggle} role="tablist">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={!promoOnly}
-                className={!promoOnly ? styles.giftToggleOn : styles.giftToggleOff}
-                onClick={() => setPromoOnly(false)}
+          {/* One slim bar: city, search, more filters, list / map. */}
+          <div className={styles.toolbar}>
+            <label className={styles.citySelect}>
+              <span aria-hidden="true">📍</span>
+              <select
+                value={city ? `${country}|${city}` : ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!value) {
+                    setCity("");
+                    return;
+                  }
+                  const [nextCountry, nextCity] = value.split("|");
+                  setCountry(nextCountry);
+                  setCity(nextCity);
+                }}
+                aria-label={t("dateSpots.city")}
               >
-                {t("dateSpots.filterAllSpots")} · {spots.length}
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={promoOnly}
-                className={promoOnly ? `${styles.giftToggleOn} ${styles.giftToggleGift}` : styles.giftToggleOff}
-                onClick={() => setPromoOnly(true)}
-              >
-                {t("dateSpots.filterGifts")} · {promoSpots.length}
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.searchRow}>
+                <option value="">{t("dateSpots.allCities")}</option>
+                {cityChoices.map((c) => (
+                  <option key={`${c.country}|${c.name}`} value={`${c.country}|${c.name}`}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
           <div className={styles.search}>
             <span className={styles.searchIcon} aria-hidden="true">🔎</span>
             <input
@@ -579,6 +687,15 @@ function DateSpots() {
               </button>
             )}
           </div>
+            <button
+              type="button"
+              className={`${styles.filtersBtn} ${filtersOpen || panelCount > 0 ? styles.filtersBtnOn : ""}`}
+              onClick={() => setFiltersOpen((open) => !open)}
+              aria-expanded={filtersOpen}
+            >
+              ⚙️ {t("dateSpots.moreFilters")}
+              {panelCount > 0 ? ` (${panelCount})` : ""}
+            </button>
           <div className={styles.viewSwitch} role="tablist">
             <button
               type="button"
@@ -601,8 +718,9 @@ function DateSpots() {
           </div>
           </div>
 
-          {/* Filter chips - each row is named so it's clear what it filters. */}
-          <div className={styles.filterBar}>
+          {/* Country and "best for": behind ⚙️. */}
+          {filtersOpen && (
+            <div className={styles.filterPanel}>
             <div className={styles.filterGroup}>
               <span className={styles.filterLabel}>{t("dateSpots.country")}</span>
               <div className={styles.chipRow}>
@@ -630,53 +748,6 @@ function DateSpots() {
               </div>
             </div>
 
-            {cityChoices.length > 0 && (
-              <div className={styles.filterGroup}>
-                <span className={styles.filterLabel}>{t("dateSpots.city")}</span>
-                <div className={styles.chipRow}>
-                  <button
-                    className={`${styles.chip} ${styles.chipSmall} ${!city ? styles.chipActive : ""}`}
-                    onClick={() => setCity("")}
-                  >
-                    {t("dateSpots.allCities")}
-                  </button>
-                  {cityChoices.map((c) => (
-                    <button
-                      key={`${c.country}|${c.name}`}
-                      className={`${styles.chip} ${styles.chipSmall} ${city === c.name ? styles.chipActive : ""}`}
-                      onClick={() => {
-                        setCountry(c.country);
-                        setCity(c.name);
-                      }}
-                    >
-                      📍 {c.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>{t("dateSpots.category")}</span>
-              <div className={styles.chipRow}>
-                <button
-                  className={`${styles.chip} ${styles.chipSmall} ${!category ? styles.chipActive : ""}`}
-                  onClick={() => setCategory("")}
-                >
-                  {t("dateSpots.allCategories")}
-                </button>
-                {CATEGORIES.map((c) => (
-                  <button
-                    key={c}
-                    className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
-                    onClick={() => setCategory(category === c ? "" : c)}
-                  >
-                    {categoryLabel(c, t)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* Tap a chip again to clear it. */}
             <div className={styles.filterGroup}>
               <span className={styles.filterLabel}>{t("dateSpots.bestFor")}</span>
@@ -692,7 +763,100 @@ function DateSpots() {
                 ))}
               </div>
             </div>
+
+              {(country || city || category || bestFor || promoOnly || searching) && (
+                <button type="button" className={styles.clearFilters} onClick={clearFilters}>
+                  ✕ {t("dateSpots.clearFilters")}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* The vibes: one row (it scrolls sideways on a phone). */}
+          <div className={styles.categoryRow}>
+            <button
+              type="button"
+              className={`${styles.chip} ${styles.chipSmall} ${!category && !promoOnly ? styles.chipActive : ""}`}
+              onClick={() => {
+                setCategory("");
+                setPromoOnly(false);
+              }}
+            >
+              {t("dateSpots.allCategories")}
+            </button>
+            {(promoSpots.length > 0 || promoOnly) && (
+              <button
+                type="button"
+                className={`${styles.chip} ${styles.chipSmall} ${styles.chipGift} ${promoOnly ? styles.chipGiftOn : ""}`}
+                onClick={() => setPromoOnly((on) => !on)}
+              >
+                {t("dateSpots.filterGifts")} · {promoSpots.length}
+              </button>
+            )}
+            {CATEGORIES.map((c) => (
+              <button
+                type="button"
+                key={c}
+                className={`${styles.chip} ${styles.chipSmall} ${category === c ? styles.chipActive : ""}`}
+                onClick={() => setCategory(category === c ? "" : c)}
+              >
+                {categoryEmoji(c)} {categoryLabel(c, t)}
+              </button>
+            ))}
           </div>
+
+          {/* The gifts partner cafés and restaurants offer: first, and big. */}
+          {promoSpots.length > 0 && browsing && (
+            <section className={styles.gifts}>
+              <div className={styles.giftsHead}>
+                <h2 className={styles.giftsTitle}>{t("dateSpots.giftsTitle")}</h2>
+                <p className={styles.giftsSubtitle}>{t("dateSpots.giftsSubtitle")}</p>
+              </div>
+              <div className={styles.giftsList}>
+                {promoSpots.map((spot) => (
+                  <GiftCard
+                    key={spot.id}
+                    spot={spot}
+                    t={t}
+                    onOpen={() => openSpot(spot)}
+                    onInvite={isLoggedIn ? () => setInviteSpot(spot) : null}
+                    saved={savedIds.has(spot.id)}
+                    onToggleSave={() => toggleSave(spot)}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Themed rows, Netflix-style. */}
+          {view === "list" &&
+            !loading &&
+            collections.map((c) => (
+              <section key={c.key} className={styles.collection}>
+                <h2 className={styles.collectionTitle}>
+                  {c.emoji} {t(`dateSpots.col_${c.key}`)}
+                </h2>
+                <div className={styles.collectionRow}>
+                  {c.spots.map((spot) => (
+                    <article key={spot.id} className={styles.miniCard} onClick={() => openSpot(spot)}>
+                      <SpotBackdrop spot={spot} imgClass={styles.miniImage} src={IMG.card(spot.image_url)} lazy />
+                      <div className={styles.scrim} />
+                      <SaveHeart saved={savedIds.has(spot.id)} onToggle={() => toggleSave(spot)} t={t} />
+                      <div className={styles.miniInfo}>
+                        {spot.offer && <span className={styles.miniGift}>🎁 {spot.offer.title}</span>}
+                        <strong>{spot.name}</strong>
+                        <small>{placeLine(spot)}</small>
+                        <ProofLine spot={spot} t={t} className={styles.miniProof} />
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))}
+
+          <h2 className={styles.sectionTitle}>
+            {t("dateSpots.allSpots")} · {shownSpots.length}
+          </h2>
 
           {loading ? (
             <div className={styles.grid}>
@@ -763,6 +927,7 @@ function DateSpots() {
                   <p className={styles.overlayPlace}>{placeLine(featured)}</p>
                   <p className={styles.featuredText}>{featured.description}</p>
                   <SpotStats spot={featured} t={t} className={styles.overlayStats} />
+                  <ProofLine spot={featured} t={t} />
                 </div>
               </article>
 
@@ -797,6 +962,7 @@ function DateSpots() {
                         <h3 className={styles.cardTitle}>{spot.name}</h3>
                         <p className={styles.overlayPlace}>{placeLine(spot)}</p>
                         <SpotStats spot={spot} t={t} className={styles.overlayStats} />
+                        <ProofLine spot={spot} t={t} />
                       </div>
                     </article>
                   ))}
@@ -858,6 +1024,16 @@ function DateSpots() {
               </div>
             )}
             {isAdmin && (
+              <FeatureBox
+                key={selected.id}
+                spot={selected}
+                isFeatured={Boolean(spotOfWeek?.picked && spotOfWeek.spot.id === selected.id)}
+                token={token}
+                t={t}
+                onChanged={loadSpotOfWeek}
+              />
+            )}
+            {isAdmin && (
               <AdminStatsEditor
                 spot={selected}
                 token={token}
@@ -906,6 +1082,15 @@ function DateSpots() {
                 )}
               </div>
               <SpotStats spot={selected} t={t} className={styles.detailStats} />
+              {proofParts(selected).length > 0 && (
+                <p className={styles.detailProof}>
+                  {proofParts(selected).map(([icon, key, count]) => (
+                    <span key={key}>
+                      {icon} {t(`dateSpots.${key}`)}: <strong>{count}</strong>
+                    </span>
+                  ))}
+                </p>
+              )}
               {selected.offer && (
                 <div className={styles.offerBox}>
                   <strong className={styles.offerBoxTitle}>🎁 {selected.offer.title}</strong>
