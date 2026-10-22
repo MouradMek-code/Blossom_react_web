@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { VenueNotice } from "./NoAccount";
 import styles from "./FormSignUp.module.css";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -79,6 +80,8 @@ function FormLogin() {
   return (
     <div>
       <h1 className={styles.title}>{t("login.title")}</h1>
+      {/* Log-in is for members; venues need no account. */}
+      <VenueNotice />
       <form className={styles.container} onSubmit={(e) => HandleLogin(e)}>
         {error !== "" && (
           <span className={styles.error}>{error.toString()}</span>

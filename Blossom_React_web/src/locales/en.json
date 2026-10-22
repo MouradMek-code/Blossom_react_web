@@ -843,7 +843,12 @@
     "reply": "Reply by email",
     "markHandled": "Mark as handled",
     "reopen": "Not handled",
-    "handled": "Handled ✓"
+    "handled": "Handled ✓",
+    "noAccount": "✅ No account needed. No sign-up, no password: your private link is all you need.",
+    "noAccountShort": "No account needed",
+    "noAccountTag": "no account",
+    "membersOnly": "Sign-up is for people looking for a date or a language exchange.",
+    "venueNoAccount": "Running a café or restaurant? You don't need an account"
   },
   "footer": {
     "blurb": "Where she always makes the first move.",

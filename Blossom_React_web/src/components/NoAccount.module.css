@@ -1,0 +1,29 @@
+.badge {
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #e8f6ee;
+  border: 1px solid #b9e2c9;
+  color: #1f6b45;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.notice {
+  max-width: 460px;
+  margin: 6px auto 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #fff8ec;
+  border: 1px solid #f3dcb3;
+  color: #574d46;
+  font-size: 13.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.notice a {
+  font-weight: 700;
+  color: #7e2a44;
+}

@@ -843,7 +843,12 @@
     "reply": "通过邮件回复",
     "markHandled": "标记为已处理",
     "reopen": "未处理",
-    "handled": "已处理 ✓"
+    "handled": "已处理 ✓",
+    "noAccount": "✅ 无需账号。无需注册、无需密码：只需你的私人链接。",
+    "noAccountShort": "无需账号",
+    "noAccountTag": "免注册",
+    "membersOnly": "注册仅适用于想约会或语言交换的人。",
+    "venueNoAccount": "你经营咖啡馆或餐厅？无需账号"
   },
   "footer": {
     "blurb": "永远由她迈出第一步。",

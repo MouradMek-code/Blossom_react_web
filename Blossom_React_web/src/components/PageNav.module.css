@@ -619,3 +619,16 @@
 .heartBtn + .account {
   margin-left: -14px;
 }
+
+/* "no account" next to "For venues" in the visitors' menu. */
+.navTag {
+  margin-left: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #e8f6ee;
+  color: #1f6b45;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}

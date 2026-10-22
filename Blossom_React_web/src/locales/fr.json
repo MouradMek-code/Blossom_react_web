@@ -843,7 +843,12 @@
     "reply": "Répondre par e-mail",
     "markHandled": "Marquer comme traité",
     "reopen": "Non traité",
-    "handled": "Traité ✓"
+    "handled": "Traité ✓",
+    "noAccount": "✅ Pas besoin de compte. Ni inscription, ni mot de passe : ton lien privé suffit.",
+    "noAccountShort": "Sans compte",
+    "noAccountTag": "sans compte",
+    "membersOnly": "L'inscription, c'est pour celles et ceux qui cherchent un date ou un échange linguistique.",
+    "venueNoAccount": "Tu tiens un café ou un restaurant ? Pas besoin de compte"
   },
   "footer": {
     "blurb": "Là où c'est toujours elle qui fait le premier pas.",

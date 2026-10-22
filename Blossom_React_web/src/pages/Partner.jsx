@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import LocationPicker from "../components/LocationPicker";
+import { NoAccountBadge } from "../components/NoAccount";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
@@ -237,6 +238,7 @@ export default function Partner() {
       <main className={styles.wrap}>
         <h1 className={styles.title}>🏪 {t("partners.title")}</h1>
         <p className={styles.intro}>{t("partners.intro")}</p>
+        <NoAccountBadge />
 
         {sent ? (
           <div className={styles.sent}>

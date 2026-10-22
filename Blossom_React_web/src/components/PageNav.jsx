@@ -361,6 +361,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
                     <NavLink to="/business" className={`${styles.visitorLink} ${styles.featureLink}`}>
                       <NavIcon name="venue" size={18} />
                       {t("business.navLink")}
+                      <span className={styles.navTag}>{t("business.noAccountTag")}</span>
                     </NavLink>
                   </li>
                 </ul>
@@ -415,6 +416,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
                 <NavIcon name="venue" size={20} />
               </span>
               {t("business.navLink")}
+              <span className={styles.navTag}>{t("business.noAccountTag")}</span>
             </NavLink>
             <NavLink to="/login" className={styles.mobileLink} onClick={closeMenu}>
               {t("nav.login")}

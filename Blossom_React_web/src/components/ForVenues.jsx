@@ -13,6 +13,7 @@ export default function ForVenues() {
         <div className={styles.text}>
           <h2 className={styles.title}>{t("business.homeTitle")}</h2>
           <p className={styles.body}>{t("business.homeText")}</p>
+          <p className={styles.noAccount}>✅ {t("business.noAccountShort")}</p>
           <div className={styles.actions}>
             <Link to="/partner" className={styles.primary}>
               {t("business.homeButton")}

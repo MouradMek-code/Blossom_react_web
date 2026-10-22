@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { VenueNotice } from "./NoAccount";
 import styles from "./FormSignUp.module.css";
 import styles2 from "./VerifyPhone.module.css";
 import { BASE_URL } from "../api/config";
@@ -81,6 +82,8 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
     <div>
       <FlowerProgress filled={filledCount} verified={verify === true} />
       <h1 className={styles.title}>{t("signup.title")}</h1>
+      {/* Sign-up is for dating; venues need no account. */}
+      {verify === false && <VenueNotice />}
       {verify === false && (
         <form className={styles.container} onSubmit={(e) => FormHandler(e)}>
           {error !== "" && (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { NoAccountBadge } from "../components/NoAccount";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
@@ -29,6 +30,7 @@ export default function Business() {
       <main className={styles.wrap}>
         <h1 className={styles.title}>{t("business.title")}</h1>
         <p className={styles.intro}>{t("business.intro")}</p>
+        <NoAccountBadge />
 
         <section className={`${styles.card} ${styles.highlight}`} id="partner">
           <h2>🏪 {t("business.partnerTitle")}</h2>
