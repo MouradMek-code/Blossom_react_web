@@ -5,6 +5,7 @@ import PageNav from "../components/PageNav";
 import LocationPicker from "../components/LocationPicker";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
+import { SUPPORT_EMAIL } from "../api/links";
 import { tidyCity } from "../api/geo";
 import i18n from "../i18n";
 import styles from "./Settings.module.css";
@@ -181,7 +182,7 @@ function Settings() {
             {t("settings.terms")}
             <span aria-hidden="true">›</span>
           </Link>
-          <a className={styles.linkRow} href="mailto:mourad.meknioui@gmail.com">
+          <a className={styles.linkRow} href={`mailto:${SUPPORT_EMAIL}`}>
             {t("settings.support")}
             <span aria-hidden="true">›</span>
           </a>

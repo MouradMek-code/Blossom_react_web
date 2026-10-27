@@ -3,7 +3,10 @@
 // Store home page instead of the app's own listing).
 export const ANDROID_PACKAGE = "com.mouradmek.blossom";
 export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`;
-export const SUPPORT_EMAIL = "mourad.meknioui@gmail.com";
+// Support inbox (footer, Settings, legal pages); the founder's address is
+// still given as a second contact.
+export const SUPPORT_EMAIL = "creativeproductslocal@gmail.com";
+export const CONTACT_EMAIL = "mourad.meknioui@gmail.com";
 export const INSTAGRAM_HANDLE = "blossomfordate";
 export const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`;
 

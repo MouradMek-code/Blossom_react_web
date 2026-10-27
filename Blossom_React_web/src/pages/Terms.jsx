@@ -1,5 +1,6 @@
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
+import { CONTACT_EMAIL, SUPPORT_EMAIL } from "../api/links";
 
 const sectionStyle = { marginBottom: "24px" };
 const headingStyle = { marginBottom: "8px" };
@@ -113,8 +114,9 @@ function Terms() {
         <section style={sectionStyle}>
           <h2 style={headingStyle}>9. Contact Us</h2>
           <p>
-            Questions about these Terms? Email us at{" "}
-            <a href="mailto:mourad.meknioui@gmail.com">mourad.meknioui@gmail.com</a>.
+            Questions about these Terms? Email our support at{" "}
+            <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>. You can also reach us at{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
           </p>
         </section>
       </div>

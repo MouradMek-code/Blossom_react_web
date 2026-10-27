@@ -1,4 +1,5 @@
 import PageNav from "../components/PageNav";
+import { CONTACT_EMAIL, SUPPORT_EMAIL } from "../api/links";
 
 const sectionStyle = { marginBottom: "24px" };
 const headingStyle = { marginBottom: "8px" };
@@ -32,9 +33,10 @@ function DeleteAccount() {
           <p>
             If you can't or don't want to log in, you can request deletion by email instead. Send
             a message to{" "}
-            <a href="mailto:mourad.meknioui@gmail.com?subject=Delete%20my%20Blossom%20account">
-              mourad.meknioui@gmail.com
+            <a href={`mailto:${SUPPORT_EMAIL}?subject=Delete%20my%20Blossom%20account`}>
+              {SUPPORT_EMAIL}
             </a>{" "}
+            (or {CONTACT_EMAIL}){" "}
             from the email address associated with your account, with the subject line
             "Delete my Blossom account". Include your username or phone number so we can find
             your account. We will delete your account and all associated data within 7 days and
