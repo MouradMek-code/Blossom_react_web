@@ -305,7 +305,13 @@
     "col_fun": "Jeux & fun",
     "col_firstDate": "Parfaits pour un premier date",
     "col_romantic": "Lieux romantiques",
-    "col_free": "Idées de dates gratuites"
+    "col_free": "Idées de dates gratuites",
+    "morePhotos": "Plus de photos (facultatif)",
+    "morePhotosHint": "Jusqu'à 6 de plus. Sur la carte du lieu, elles défilent toutes les 2 secondes.",
+    "removePhoto": "Retirer cette photo",
+    "removePhotoConfirm": "Retirer cette photo ?",
+    "tooManyPhotos": "Jusqu'à 6 photos de plus par lieu.",
+    "addPhotos": "Ajouter des photos"
   },
   "founder": {
     "eyebrow": "Du même fondateur",

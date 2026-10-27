@@ -2195,3 +2195,57 @@
   color: #6b3e00;
   font-weight: 700;
 }
+
+/* ---- several photos: the others fade in over the first, in turn ---- */
+.rotatorTop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.rotatorOn {
+  opacity: 1;
+}
+
+.detailPhotos {
+  position: relative;
+}
+
+/* The form's "more photos" thumbnails. */
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -4px 0 14px;
+}
+
+.thumb {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.thumb button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: #2a2420;
+  color: #fff;
+  font-size: 11px;
+  cursor: pointer;
+}

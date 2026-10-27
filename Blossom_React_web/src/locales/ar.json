@@ -305,7 +305,13 @@
     "col_fun": "مرح وألعاب",
     "col_firstDate": "مثالية لموعد أول",
     "col_romantic": "أماكن رومانسية",
-    "col_free": "أفكار مواعيد مجانية"
+    "col_free": "أفكار مواعيد مجانية",
+    "morePhotos": "صور إضافية (اختياري)",
+    "morePhotosHint": "حتى 6 صور إضافية. تتناوب على بطاقة المكان كل ثانيتين.",
+    "removePhoto": "إزالة هذه الصورة",
+    "removePhotoConfirm": "إزالة هذه الصورة؟",
+    "tooManyPhotos": "حتى 6 صور إضافية لكل مكان.",
+    "addPhotos": "إضافة صور"
   },
   "founder": {
     "eyebrow": "من المؤسس",

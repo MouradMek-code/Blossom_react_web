@@ -14,6 +14,7 @@ import { isNewSpot, matchesName, orderSpots } from "../api/spotOrder";
 import { buildCollections, proofParts } from "../api/spotCollections";
 import { mapPoints } from "../api/spotMap";
 import { friendlyError, NETWORK_ERROR, postJson } from "../api/errors";
+import { isImageFile, shrink } from "../api/photoUpload";
 import {
   BEST_FOR,
   CATEGORIES,
@@ -53,11 +54,64 @@ function SpotStats({ spot, t, className }) {
   );
 }
 
+const ROTATE_MS = 2000;
+const MAX_ROTATING = 7;
+const MAX_MORE_PHOTOS = 6;
+
+// A place with several photos: they take turns every 2 seconds, fading. The
+// first one stays in the page's flow (it gives the size); the others lie on
+// top of it, in the same positioned box, and fade in one after another.
+// Each card starts at its own moment, so they don't all change together.
+function RotatingPhotos({ urls, className, alt, lazy }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (urls.length < 2) return undefined;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return undefined;
+    let timer;
+    const start = setTimeout(() => {
+      timer = setInterval(() => setIndex((i) => (i + 1) % urls.length), ROTATE_MS);
+    }, Math.random() * ROTATE_MS);
+    return () => {
+      clearTimeout(start);
+      clearInterval(timer);
+    };
+  }, [urls.length]);
+
+  return (
+    <>
+      <img className={className} src={urls[0]} alt={alt} loading={lazy ? "lazy" : undefined} />
+      {urls.slice(1).map((url, i) => (
+        <img
+          key={url}
+          className={`${className} ${styles.rotatorTop} ${index === i + 1 ? styles.rotatorOn : ""}`}
+          src={url}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+        />
+      ))}
+    </>
+  );
+}
+
 // The spot's photo, or - for places without one, like the starter spots - a
 // backdrop tinted by vibe with the vibe's emoji, so the card still looks
 // intentional.
 function SpotBackdrop({ spot, imgClass, src, lazy }) {
   if (spot.image_url) {
+    if ((spot.photos || []).length > 1) {
+      // Same size as the main photo asked for (card or full).
+      const size = src === IMG.full(spot.image_url) ? IMG.full : IMG.card;
+      return (
+        <RotatingPhotos
+          urls={spot.photos.slice(0, MAX_ROTATING).map(size)}
+          className={imgClass}
+          alt={spot.name}
+          lazy={lazy}
+        />
+      );
+    }
     return (
       <img
         className={imgClass}
@@ -1006,11 +1060,9 @@ function DateSpots() {
               ✕
             </button>
             {selected.image_url ? (
-              <img
-                className={styles.detailImage}
-                src={IMG.full(selected.image_url)}
-                alt={selected.name}
-              />
+              <div className={styles.detailPhotos}>
+                <SpotBackdrop spot={selected} imgClass={styles.detailImage} src={IMG.full(selected.image_url)} />
+              </div>
             ) : (
               <div
                 className={styles.detailBanner}
@@ -1350,6 +1402,9 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
   );
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  // More photos: the ones already saved (editing) and the ones just picked.
+  const [gallery, setGallery] = useState(initial?.gallery || []);
+  const [moreFiles, setMoreFiles] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   // Members: "I'd love this place to offer a gift to couples".
@@ -1438,6 +1493,46 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
     setPreview(f ? URL.createObjectURL(f) : null);
   }
 
+  // More photos: up to 6 besides the main one (the ones already there count).
+  async function pickMore(e) {
+    const picked = Array.from(e.target.files || []).filter(isImageFile);
+    e.target.value = "";
+    const room = MAX_MORE_PHOTOS - gallery.length - moreFiles.length;
+    if (picked.length > room) setError(t("dateSpots.tooManyPhotos"));
+    const added = await Promise.all(picked.slice(0, Math.max(0, room)).map(shrink));
+    setMoreFiles((cur) => [...cur, ...added.map((f) => ({ file: f, url: URL.createObjectURL(f) }))]);
+  }
+
+  async function removeSaved(photo) {
+    if (!window.confirm(t("dateSpots.removePhotoConfirm"))) return;
+    const result = await postJson(`${BASE_URL}/date_spots/${initial.id}/photos/${photo.id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (result.ok) setGallery(result.data.gallery || []);
+    else setError(result.message);
+  }
+
+  // After saving: the extra photos, one by one. Returns the place as it ends up.
+  async function uploadMore(spotId, saved) {
+    let latest = saved;
+    for (const { file: extra } of moreFiles) {
+      const body = new FormData();
+      body.append("image", extra, extra.name || "photo.jpg");
+      const result = await postJson(`${BASE_URL}/date_spots/${spotId}/photos`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body,
+      });
+      if (!result.ok) {
+        setError(result.message);
+        break;
+      }
+      latest = result.data;
+    }
+    return latest;
+  }
+
   function toggleBestFor(value) {
     setBestFor((cur) =>
       cur.includes(value) ? cur.filter((v) => v !== value) : [...cur, value],
@@ -1509,10 +1604,13 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
 
     setSubmitting(true);
     const result = editing ? await saveEdit() : await create();
+    if (!result.ok) {
+      setSubmitting(false);
+      return setError(result.message);
+    }
+    const saved = moreFiles.length > 0 ? await uploadMore(result.data.id, result.data) : result.data;
     setSubmitting(false);
-
-    if (!result.ok) return setError(result.message);
-    onSaved(result.data);
+    onSaved(saved);
   }
 
   const shownPhoto = preview || (editing ? initial.image_url : null);
@@ -1591,6 +1689,45 @@ function AddSpotForm({ token, initial, isAdmin = false, onCancel, onSaved }) {
         <input className={styles.file} type="file" accept="image/*" onChange={pickFile} />
       </label>
       {shownPhoto && <img className={styles.preview} src={shownPhoto} alt="Preview" />}
+
+      {/* Up to 6 more: they take turns on the place's card. */}
+      <label className={styles.label}>
+        {t("dateSpots.morePhotos")}
+        <span className={styles.hint}>{t("dateSpots.morePhotosHint")}</span>
+        <input
+          className={styles.file}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={pickMore}
+          disabled={gallery.length + moreFiles.length >= MAX_MORE_PHOTOS}
+        />
+      </label>
+      {(gallery.length > 0 || moreFiles.length > 0) && (
+        <div className={styles.thumbs}>
+          {gallery.map((photo) => (
+            <span key={photo.id} className={styles.thumb}>
+              <img src={IMG.thumb(photo.image_url)} alt="" />
+              <button type="button" onClick={() => removeSaved(photo)} aria-label={t("dateSpots.removePhoto")} title={t("dateSpots.removePhoto")}>
+                ✕
+              </button>
+            </span>
+          ))}
+          {moreFiles.map((extra, i) => (
+            <span key={extra.url} className={styles.thumb}>
+              <img src={extra.url} alt="" />
+              <button
+                type="button"
+                onClick={() => setMoreFiles((cur) => cur.filter((_, j) => j !== i))}
+                aria-label={t("dateSpots.removePhoto")}
+                title={t("dateSpots.removePhoto")}
+              >
+                ✕
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
 
       <label className={styles.label}>
         {t("dateSpots.whyOptional")}

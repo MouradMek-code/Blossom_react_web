@@ -196,7 +196,8 @@ function SignUp() {
           (location -> questions). Once the profile exists and we're on the
           photo step, show the full logged-in nav so the user can head to
           Browse / Matches / Likes / Profile. */}
-      <PageNav minimal={isregistered === true && photos === false} />
+      {/* Minimal through the photo step too: no way to Browse without a photo. */}
+      <PageNav minimal={isregistered === true} />
       {isregistered === false && (
         <FormSignUp
           setRegistered={setRegistered}

@@ -225,7 +225,7 @@ function Profiles() {
                 </h3>
 
                 <p className={styles.location}>
-                  📍 {profile.city}, {profile.country}
+                  📍 {[profile.city, profile.country].filter(Boolean).join(", ")}
                 </p>
 
                 {/* The languages matter to anyone open to language exchange. */}

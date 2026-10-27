@@ -25,6 +25,7 @@ function PrivacyPolicy() {
           <p><b>Account information:</b> username, email address, phone number, password (stored as a one-way hash, never in plain text), and date of birth (used only to confirm you are 18 or older).</p>
           <p><b>Profile information:</b> bio, age, gender, sexual orientation, height, occupation, education, lifestyle preferences, relationship goals, languages, city/country, and any photos you upload.</p>
           <p><b>Usage information:</b> likes, matches, messages you send to other users, and any blocks or reports you submit.</p>
+          <p><b>Approximate location (app, optional):</b> if you allow it, the Blossom app reads your phone's approximate location (never your precise position) to keep the city and country on your profile up to date. Only the resulting city and country are stored; the position itself is not kept. You can turn this off at any time in Settings or in your phone's settings.</p>
           <p>We do not knowingly collect any information from anyone under 18. Signup is blocked for anyone who does not confirm a date of birth indicating they are 18 or older.</p>
         </section>
 

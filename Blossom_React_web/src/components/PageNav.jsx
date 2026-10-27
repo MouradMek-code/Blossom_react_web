@@ -218,6 +218,13 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
         const resp = await fetch(`${BASE_URL}/user/badges`, { headers });
         // An old backend reads "badges" as a user id (422) or doesn't know it.
         const data = resp.ok ? await resp.json() : await legacyCounts();
+        // A profile with no photo yet (sign-up left at the photo step): back
+        // to that step - nobody sees it in Browse until it has one.
+        if (data.has_profile && data.has_photo === false && !data.is_admin
+            && window.location.pathname !== "/sign_up") {
+          navigate("/sign_up");
+          return;
+        }
         setCounts({
           matches: data.matches || 0,
           likes: data.likes || 0,
@@ -243,7 +250,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisible);
     };
-  }, []);
+  }, [navigate]);
 
   function badgeFor(tab) {
     if (tab.badge === "likes") return counts.likes;

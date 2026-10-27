@@ -305,7 +305,13 @@
     "col_fun": "Fun & games",
     "col_firstDate": "Perfect for a first date",
     "col_romantic": "Romantic spots",
-    "col_free": "Free date ideas"
+    "col_free": "Free date ideas",
+    "morePhotos": "More photos (optional)",
+    "morePhotosHint": "Up to 6 more. On the place's card they take turns, every 2 seconds.",
+    "removePhoto": "Remove this photo",
+    "removePhotoConfirm": "Remove this photo?",
+    "tooManyPhotos": "Up to 6 more photos per place.",
+    "addPhotos": "Add photos"
   },
   "founder": {
     "eyebrow": "From the founder",
