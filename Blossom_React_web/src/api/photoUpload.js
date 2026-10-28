@@ -146,5 +146,12 @@ export async function deletePhoto(photoId) {
     headers: authHeader(),
   });
   // Already gone counts as deleted.
-  if (!resp.ok && resp.status !== 404) throw new Error(`delete failed with ${resp.status}`);
+  if (resp.ok || resp.status === 404) return;
+  // 400: the profile has only 2 photos left - it must keep them.
+  const error = new Error(`delete failed with ${resp.status}`);
+  error.keepTwo = resp.status === 400;
+  throw error;
 }
+
+// A profile keeps at least this many photos (the server refuses the rest).
+export const MIN_PROFILE_PHOTOS = 2;

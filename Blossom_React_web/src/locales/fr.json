@@ -458,7 +458,9 @@
     "deleteConfirm": "Supprimer",
     "cancel": "Annuler",
     "deleteFailed": "Impossible de supprimer la photo. Réessayez.",
-    "notImage": "Choisissez une photo (JPG, PNG, HEIC…)."
+    "notImage": "Choisissez une photo (JPG, PNG, HEIC…).",
+    "keepTwoTitle": "Gardez au moins 2 photos",
+    "keepTwo": "Gardez au moins 2 photos sur votre profil. Pour changer celle-ci, ajoutez d'abord une nouvelle photo, puis supprimez-la."
   },
   "dashboard": {
     "title": "Tableau de bord",

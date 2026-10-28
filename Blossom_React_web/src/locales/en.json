@@ -458,7 +458,9 @@
     "deleteConfirm": "Delete",
     "cancel": "Cancel",
     "deleteFailed": "Couldn't delete the photo. Please try again.",
-    "notImage": "Please choose a photo (JPG, PNG, HEIC…)."
+    "notImage": "Please choose a photo (JPG, PNG, HEIC…).",
+    "keepTwoTitle": "Keep at least 2 photos",
+    "keepTwo": "Keep at least 2 photos on your profile. To change this one, add a new photo first, then remove it."
   },
   "dashboard": {
     "title": "Dashboard",

@@ -9,7 +9,7 @@ import "./profile.css";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { postJson } from "../api/errors";
-import { deletePhoto, fetchOwnPhotos, isImageFile, uploadPhoto } from "../api/photoUpload";
+import { MIN_PROFILE_PHOTOS, deletePhoto, fetchOwnPhotos, isImageFile, uploadPhoto } from "../api/photoUpload";
 import { CONNECTION_EMOJI, CONNECTION_TYPES, connectionLabel, connectionOf } from "../api/connection";
 
 function Profile() {
@@ -143,16 +143,21 @@ function Profile() {
   }
 
   async function handleDeletePhoto(photoId) {
-    if (!window.confirm(t("photos.deleteTitle"))) return;
     setError("");
+    // The last 2 stay: add a new one first, then remove this one.
+    if ((profile?.photos || []).length <= MIN_PROFILE_PHOTOS) {
+      setError(t("photos.keepTwo"));
+      return;
+    }
+    if (!window.confirm(t("photos.deleteTitle"))) return;
     try {
       await deletePhoto(photoId);
       setProfile((prev) => ({
         ...prev,
         photos: (prev.photos || []).filter((p) => p.id !== photoId),
       }));
-    } catch {
-      setError(t("photos.deleteFailed"));
+    } catch (err) {
+      setError(t(err?.keepTwo ? "photos.keepTwo" : "photos.deleteFailed"));
     }
   }
 

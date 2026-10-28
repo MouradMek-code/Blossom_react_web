@@ -458,7 +458,9 @@
     "deleteConfirm": "删除",
     "cancel": "取消",
     "deleteFailed": "无法删除照片，请重试。",
-    "notImage": "请选择一张照片（JPG、PNG、HEIC…）。"
+    "notImage": "请选择一张照片（JPG、PNG、HEIC…）。",
+    "keepTwoTitle": "至少保留 2 张照片",
+    "keepTwo": "你的资料至少需要保留 2 张照片。想更换这张照片，请先添加一张新照片，再删除它。"
   },
   "dashboard": {
     "title": "数据面板",
