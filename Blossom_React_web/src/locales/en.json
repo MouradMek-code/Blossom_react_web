@@ -573,7 +573,14 @@
     "forgetWorking": "Deleting…",
     "forgetConfirm": "Delete all members' visit tracking from before this week (Monday)? This can't be undone.",
     "forgetDone": "Visits deleted: {{count}}.",
-    "forgetError": "Couldn't delete it. Check your connection and try again."
+    "forgetError": "Couldn't delete it. Check your connection and try again.",
+    "clearTitle": "Visit tracking",
+    "clearText": "Deletes every visit and every page seen, for members and visitors. Profiles, likes, matches and messages aren't touched. Counting starts again from zero.",
+    "clearButton": "Delete all visit data",
+    "clearWorking": "Deleting…",
+    "clearConfirm": "Delete ALL visit data (visits and pages seen)? This can't be undone.",
+    "clearDone": "Visits deleted: {{count}}.",
+    "clearError": "Couldn't delete it. Check your connection and try again."
   },
   "offers": {
     "forCouples": "For matched couples who go together",

@@ -183,6 +183,8 @@ export default function AdminDashboard() {
 
                 <ForgetOldTracking t={t} onDone={load} />
 
+                <ClearTracking t={t} onDone={load} />
+
                 <p className={styles.footnote}>
                   {t("dashboard.footnote")}
                   {updatedAt && <> · {t("dashboard.updated", { time: updatedAt.toLocaleTimeString(i18n.language, { hour: "2-digit", minute: "2-digit" }) })}</>}
@@ -231,6 +233,44 @@ function ForgetOldTracking({ t, onDone }) {
       </div>
       <button type="button" className={styles.forgetBtn} onClick={run} disabled={state === "working"}>
         {state === "working" ? t("dashboard.forgetWorking") : t("dashboard.forgetButton")}
+      </button>
+    </section>
+  );
+}
+
+// Every visit and page seen deleted at once (members and visitors); the
+// dashboard starts again from zero. Asks first: it can't be undone.
+function ClearTracking({ t, onDone }) {
+  const [state, setState] = useState("idle"); // idle | working | done | error
+  const [deleted, setDeleted] = useState(0);
+
+  async function run() {
+    if (!window.confirm(t("dashboard.clearConfirm"))) return;
+    setState("working");
+    try {
+      const resp = await fetch(`${BASE_URL}/analytics/admin/tracking`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      });
+      if (!resp.ok) throw new Error(`clear ${resp.status}`);
+      setDeleted((await resp.json()).deleted || 0);
+      setState("done");
+      onDone();
+    } catch {
+      setState("error");
+    }
+  }
+
+  return (
+    <section className={`${styles.card} ${styles.clear}`}>
+      <div>
+        <h2 className={styles.clearTitle}>🧹 {t("dashboard.clearTitle")}</h2>
+        <p className={styles.clearText}>{t("dashboard.clearText")}</p>
+        {state === "done" && <p className={styles.clearDone}>✓ {t("dashboard.clearDone", { count: deleted })}</p>}
+        {state === "error" && <p className={styles.error}>{t("dashboard.clearError")}</p>}
+      </div>
+      <button type="button" className={styles.clearBtn} onClick={run} disabled={state === "working"}>
+        {state === "working" ? t("dashboard.clearWorking") : t("dashboard.clearButton")}
       </button>
     </section>
   );

@@ -573,7 +573,14 @@
     "forgetWorking": "Suppression…",
     "forgetConfirm": "Supprimer tout le suivi des visites des membres d'avant cette semaine (lundi) ? C'est irréversible.",
     "forgetDone": "Visites supprimées : {{count}}.",
-    "forgetError": "Impossible de supprimer. Vérifiez votre connexion et réessayez."
+    "forgetError": "Impossible de supprimer. Vérifiez votre connexion et réessayez.",
+    "clearTitle": "Suivi des visites",
+    "clearText": "Supprime toutes les visites et toutes les pages vues, des membres comme des visiteurs. Les profils, likes, matchs et messages ne sont pas touchés. Le comptage repart de zéro.",
+    "clearButton": "Supprimer toutes les données de visite",
+    "clearWorking": "Suppression…",
+    "clearConfirm": "Supprimer TOUTES les données de visite (visites et pages vues) ? C'est irréversible.",
+    "clearDone": "Visites supprimées : {{count}}.",
+    "clearError": "Impossible de supprimer. Vérifiez votre connexion et réessayez."
   },
   "offers": {
     "forCouples": "Pour les couples matchés qui y vont ensemble",
