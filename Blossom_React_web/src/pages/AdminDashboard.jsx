@@ -180,6 +180,8 @@ export default function AdminDashboard() {
                   <Breakdown title={t("dashboard.entries")} kind="entries" items={data.entries} t={t} />
                 </div>
 
+                <ForgetOldTracking t={t} onDone={load} />
+
                 <p className={styles.footnote}>
                   {t("dashboard.footnote")}
                   {updatedAt && <> · {t("dashboard.updated", { time: updatedAt.toLocaleTimeString(i18n.language, { hour: "2-digit", minute: "2-digit" }) })}</>}
@@ -192,6 +194,44 @@ export default function AdminDashboard() {
         )}
       </main>
     </div>
+  );
+}
+
+// Members' visits from before this week (last week, months, years) deleted
+// on request - this week stays. Asks first: it can't be undone.
+function ForgetOldTracking({ t, onDone }) {
+  const [state, setState] = useState("idle"); // idle | working | done | error
+  const [deleted, setDeleted] = useState(0);
+
+  async function run() {
+    if (!window.confirm(t("dashboard.forgetConfirm"))) return;
+    setState("working");
+    try {
+      const resp = await fetch(`${BASE_URL}/analytics/admin/forget_member_visits?tz_offset=${tzOffsetMinutes()}`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      });
+      if (!resp.ok) throw new Error(`forget ${resp.status}`);
+      setDeleted((await resp.json()).deleted || 0);
+      setState("done");
+      onDone();
+    } catch {
+      setState("error");
+    }
+  }
+
+  return (
+    <section className={`${styles.card} ${styles.forget}`}>
+      <div>
+        <h2 className={styles.forgetTitle}>🧹 {t("dashboard.forgetTitle")}</h2>
+        <p className={styles.forgetText}>{t("dashboard.forgetText")}</p>
+        {state === "done" && <p className={styles.forgetDone}>✓ {t("dashboard.forgetDone", { count: deleted })}</p>}
+        {state === "error" && <p className={styles.error}>{t("dashboard.forgetError")}</p>}
+      </div>
+      <button type="button" className={styles.forgetBtn} onClick={run} disabled={state === "working"}>
+        {state === "working" ? t("dashboard.forgetWorking") : t("dashboard.forgetButton")}
+      </button>
+    </section>
   );
 }
 

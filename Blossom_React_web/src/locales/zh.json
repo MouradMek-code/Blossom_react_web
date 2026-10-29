@@ -564,7 +564,14 @@
     "act_reports": "举报",
     "act_events_created": "创建的活动",
     "act_event_interests": "感兴趣的活动",
-    "act_event_comments": "活动评论"
+    "act_event_comments": "活动评论",
+    "forgetTitle": "本周之前的会员追踪记录",
+    "forgetText": "删除会员在上周、过去几个月和过去几年的访问和页面记录。本周的记录会保留，没有资料的访客、喜欢、配对和消息也都会保留。",
+    "forgetButton": "删除本周之前的追踪记录",
+    "forgetWorking": "正在删除…",
+    "forgetConfirm": "删除本周（周一）之前所有会员的访问追踪记录？此操作无法撤销。",
+    "forgetDone": "已删除的访问：{{count}}。",
+    "forgetError": "删除失败，请检查网络后重试。"
   },
   "offers": {
     "forCouples": "适用于一起前往的配对情侣",

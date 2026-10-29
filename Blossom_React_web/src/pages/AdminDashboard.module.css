@@ -824,3 +824,48 @@ a.personName:hover {
     padding-left: 54px;
   }
 }
+
+/* "Delete members' tracking before this week" */
+.forget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border: 1px solid #f3d3cd;
+}
+
+.forgetTitle {
+  font-size: 15px;
+  margin: 0 0 4px;
+}
+
+.forgetText {
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin: 0;
+  max-width: 520px;
+}
+
+.forgetDone {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f6b45;
+  margin: 6px 0 0;
+}
+
+.forgetBtn {
+  border: 1.5px solid var(--down);
+  color: var(--down);
+  background: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.forgetBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

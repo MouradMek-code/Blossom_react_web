@@ -564,7 +564,14 @@
     "act_reports": "Signalements",
     "act_events_created": "Événements créés",
     "act_event_interests": "Intérêts pour des événements",
-    "act_event_comments": "Commentaires d'événements"
+    "act_event_comments": "Commentaires d'événements",
+    "forgetTitle": "Suivi des membres avant cette semaine",
+    "forgetText": "Supprime les visites et pages des membres de la semaine dernière, des derniers mois et des dernières années. Cette semaine est conservée, tout comme les visiteurs sans profil, les likes, les matchs et les messages.",
+    "forgetButton": "Supprimer le suivi avant cette semaine",
+    "forgetWorking": "Suppression…",
+    "forgetConfirm": "Supprimer tout le suivi des visites des membres d'avant cette semaine (lundi) ? C'est irréversible.",
+    "forgetDone": "Visites supprimées : {{count}}.",
+    "forgetError": "Impossible de supprimer. Vérifiez votre connexion et réessayez."
   },
   "offers": {
     "forCouples": "Pour les couples matchés qui y vont ensemble",

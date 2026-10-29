@@ -564,7 +564,14 @@
     "act_reports": "Reports",
     "act_events_created": "Events created",
     "act_event_interests": "Event interests",
-    "act_event_comments": "Event comments"
+    "act_event_comments": "Event comments",
+    "forgetTitle": "Members' tracking before this week",
+    "forgetText": "Deletes the visits and pages of members from last week, last months and last years. This week is kept, and so are visitors without a profile, likes, matches and messages.",
+    "forgetButton": "Delete tracking before this week",
+    "forgetWorking": "Deleting…",
+    "forgetConfirm": "Delete all members' visit tracking from before this week (Monday)? This can't be undone.",
+    "forgetDone": "Visits deleted: {{count}}.",
+    "forgetError": "Couldn't delete it. Check your connection and try again."
   },
   "offers": {
     "forCouples": "For matched couples who go together",
