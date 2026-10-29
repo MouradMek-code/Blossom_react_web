@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import AdminReports from "../components/AdminReports";
+import AskToVerify from "../components/AskToVerify";
 import { BASE_URL } from "../api/config";
 
 const th = {
@@ -173,6 +174,19 @@ export default function Admin() {
                       {u.profile?.created_at ? new Date(u.profile.created_at).toLocaleDateString() : "—"}
                     </td>
                     <td style={td}>
+                      {!u.is_admin && u.profile && (
+                        <div style={{ marginBottom: "8px" }}>
+                          <AskToVerify
+                            profile={u.profile}
+                            name={u.profile.first_name || u.username}
+                            onAsked={(deadline) =>
+                              setUsers((cur) =>
+                                cur.map((x) => (x.id === u.id ? { ...x, profile: { ...x.profile, verify_by: deadline } } : x)),
+                              )
+                            }
+                          />
+                        </div>
+                      )}
                       {u.is_admin ? (
                         <span style={{ color: "var(--primary)", fontWeight: "700", fontSize: "13px" }}>Admin</span>
                       ) : (

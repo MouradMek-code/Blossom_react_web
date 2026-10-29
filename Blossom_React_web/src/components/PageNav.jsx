@@ -6,6 +6,7 @@ import Logo from "./Logo";
 import NavIcon from "./NavIcon";
 import { BASE_URL } from "../api/config";
 import i18n from "../i18n";
+import { formatDeadline } from "../api/offers";
 
 const LANGUAGES = [
   { code: "en", label: "EN", name: "English" },
@@ -129,6 +130,9 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
   const [accountOpen, setAccountOpen] = useState(false);
   const [counts, setCounts] = useState({ matches: 0, likes: 0, messages: 0 });
   const [isAdmin, setIsAdmin] = useState(false);
+  // Asked by an admin to verify (suspicious profile): the deadline.
+  const [verifyBy, setVerifyBy] = useState(null);
+  const onVerifyPage = useLocation().pathname === "/verify";
   const accountRef = useRef(null);
   const istokenundefined = token === "undefined" || token === null;
   const profileCreated = sessionStorage.getItem("profilecreated");
@@ -231,6 +235,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
           messages: data.messages || 0,
         });
         setIsAdmin(Boolean(data.is_admin));
+        setVerifyBy(data.verify_by && !data.is_admin ? data.verify_by : null);
       } catch (err) {
         // Leave counts at 0 if the backend is unreachable - not worth
         // bouncing the user to login just because a badge couldn't load.
@@ -434,6 +439,13 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
           </div>
         )}
       </nav>
+
+      {verifyBy && !onVerifyPage && (
+        <Link to="/verify" className={styles.verifyBanner}>
+          ⚠️ {t("verified.deadline", { date: formatDeadline(verifyBy, i18n.language) })}{" "}
+          <strong>{t("verified.warnNow")} ›</strong>
+        </Link>
+      )}
 
       {showTabBar && (
         <nav className={styles.tabBar} aria-label={t("menu.open")}>

@@ -6,6 +6,7 @@ import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
 import { formatDeadline } from "../api/offers";
 import styles from "./AdminReports.module.css";
+import AskToVerify from "./AskToVerify";
 
 // Admin: members' reports - who, why, how many times that person was
 // reported. "Done" files a report away; "Delete the account" removes the
@@ -103,6 +104,19 @@ export default function AdminReports({ token, onDeleted }) {
                   <Link to={`/profile/${person.id}`} className={styles.secondary}>
                     👤 {t("profileReports.seeProfile")}
                   </Link>
+                )}
+                {!person.deleted && person.id && (
+                  <AskToVerify
+                    profile={person}
+                    name={person.name}
+                    onAsked={(deadline) =>
+                      setReports((cur) =>
+                        cur.map((r) =>
+                          r.reported.id === person.id ? { ...r, reported: { ...r.reported, verify_by: deadline } } : r,
+                        ),
+                      )
+                    }
+                  />
                 )}
                 {!person.deleted && person.user_id && (
                   <button type="button" className={styles.danger} onClick={() => deleteAccount(report)} disabled={busy === report.id}>
