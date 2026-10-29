@@ -371,7 +371,9 @@
     "save": "保存",
     "saving": "保存中…",
     "cancel": "取消",
-    "notSet": "未设置位置"
+    "notSet": "未设置位置",
+    "removedTitle": "Blossom 暂未在此地区开放",
+    "removedText": "Blossom 暂未在你所在的国家开放，因此你的资料已被删除。希望很快能欢迎你。🌸"
   },
   "tabs": {
     "browse": "浏览",

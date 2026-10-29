@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import FormSignUp from "../components/FormSignUp";
 import PageNav from "../components/PageNav";
 import styles from "./Homepage.module.css";
@@ -8,7 +9,17 @@ import Localisation from "../components/Localisation";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
 import { getSignupDraft, clearSignupDraft } from "../api/signupDraft";
+// The browser's time zone, e.g. "Europe/Paris" (sent with a new profile).
+function browserTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || null;
+  } catch {
+    return null;
+  }
+}
+
 function SignUp() {
+  const { t } = useTranslation();
   const [isregistered, setRegistered] = useState(false);
   const [error, setError] = useState("");
   const [questionEnded, setQuestionEnded] = useState(false);
@@ -147,16 +158,26 @@ function SignUp() {
         country: answer?.country,
         // Dating, language exchange or both (the default).
         connection_type: answer?.connection_type || "both",
+        // India's time zone means the account is removed (server).
+        timezone: browserTimezone(),
       }),
     });
+    // From a country Blossom isn't open to: the server removed the account.
+    if (resp.status === 403) return false;
     const data = await resp.json();
     sessionStorage.setItem("profile_id", data.id);
+    return true;
   }, [answer, token]);
 
   useEffect(() => {
     async function submit() {
       if (questionEnded && !istokenundefined) {
-        await CreateProfile();
+        if (!(await CreateProfile())) {
+          sessionStorage.clear();
+          window.alert(`${t("location.removedTitle")}\n\n${t("location.removedText")}`);
+          window.location.assign("/");
+          return;
+        }
         // The profile now exists, so the nav should switch to the logged-in
         // links. Set it here rather than only when a photo is picked, so a
         // user who skips photos doesn't end up seeing "Login" afterwards.
@@ -176,6 +197,7 @@ function SignUp() {
     CreateLearningLanguage,
     CreateLanguage,
     istokenundefined,
+    t,
   ]);
 
   if (checkingResume) {

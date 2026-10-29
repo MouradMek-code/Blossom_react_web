@@ -371,7 +371,9 @@
     "save": "Enregistrer",
     "saving": "Enregistrement…",
     "cancel": "Annuler",
-    "notSet": "Localisation non renseignée"
+    "notSet": "Localisation non renseignée",
+    "removedTitle": "Blossom n'est pas encore disponible ici",
+    "removedText": "Blossom n'est pas encore disponible dans votre pays, votre profil a donc été supprimé. Nous espérons vous accueillir bientôt. 🌸"
   },
   "tabs": {
     "browse": "Explorer",

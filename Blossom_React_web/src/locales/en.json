@@ -371,7 +371,9 @@
     "save": "Save",
     "saving": "Saving…",
     "cancel": "Cancel",
-    "notSet": "Location not set"
+    "notSet": "Location not set",
+    "removedTitle": "Blossom isn't available here yet",
+    "removedText": "Blossom isn't available in your country yet, so your profile has been removed. We hope to welcome you soon. 🌸"
   },
   "tabs": {
     "browse": "Browse",
