@@ -21,7 +21,8 @@ import {
 } from "../api/dashboardLabels";
 import styles from "./AdminDashboard.module.css";
 
-const PERIODS = [7, 30, 90];
+// One week only: tracking is deleted every Monday (db_analytics.delete_old_tracking).
+const PERIODS = [7];
 
 // Admins only: who visits Blossom (admins never counted; a member once per
 // period, anyone without a profile at every visit) and how many finish a
@@ -29,7 +30,7 @@ const PERIODS = [7, 30, 90];
 export default function AdminDashboard() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const [days, setDays] = useState(30);
+  const [days, setDays] = useState(7);
   // "period": the overview over 7/30/90 days; "day": one day in detail.
   const [mode, setMode] = useState("period");
   const [data, setData] = useState(null);
