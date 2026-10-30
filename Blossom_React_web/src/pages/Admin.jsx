@@ -118,7 +118,7 @@ export default function Admin() {
         {loading ? (
           <p style={{ color: "#888", textAlign: "center", marginTop: "60px" }}>Loading...</p>
         ) : (
-          <div style={{ backgroundColor: "#fff", borderRadius: "16px", boxShadow: "0 2px 20px rgba(0,0,0,0.06)", overflow: "hidden" }}>
+          <div style={{ backgroundColor: "#fff", borderRadius: "16px", boxShadow: "0 2px 20px rgba(0,0,0,0.06)", overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
@@ -173,7 +173,7 @@ export default function Admin() {
                     <td style={{ ...td, color: "#888", fontSize: "13px" }}>
                       {u.profile?.created_at ? new Date(u.profile.created_at).toLocaleDateString() : "—"}
                     </td>
-                    <td style={td}>
+                    <td style={{ ...td, maxWidth: "170px" }}>
                       {!u.is_admin && u.profile && (
                         <div style={{ marginBottom: "8px" }}>
                           <AskToVerify

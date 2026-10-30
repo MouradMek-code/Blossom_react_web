@@ -43,15 +43,16 @@ export default function AskToVerify({ profile, name, onAsked }) {
       onClick={ask}
       disabled={sending}
       style={{
-        padding: "6px 14px",
-        borderRadius: 999,
+        maxWidth: "100%",
+        padding: "6px 12px",
+        borderRadius: 14,
         border: `1.5px solid ${BLUE}`,
         background: "transparent",
         color: BLUE,
         fontSize: 13,
+        lineHeight: 1.25,
         fontWeight: 700,
         cursor: "pointer",
-        whiteSpace: "nowrap",
       }}
     >
       🛡️ {sending ? "…" : t("verified.askButton")}
