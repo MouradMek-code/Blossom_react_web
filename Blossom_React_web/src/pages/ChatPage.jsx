@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./ChatPage.module.css";
@@ -9,6 +9,7 @@ import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
 import { categoryEmoji, categoryGradient, shortPlace } from "../api/categories";
 import { formatDeadline } from "../api/offers";
+import { firstRiskyMessageId } from "../api/chatSafety";
 
 // A date spot sent with "Invite a match": the message text plus a tappable
 // card for the place. The invited person answers "I'm in"; when the spot has
@@ -226,6 +227,8 @@ function ChatPage() {
 
   const profileId = details?.me_profile_id ?? sessionStorage.getItem("profile_id");
   const partner = details?.profile;
+  // WhatsApp, crypto, money...: a warning under the first such message.
+  const riskyId = useMemo(() => firstRiskyMessageId(messages, profileId), [messages, profileId]);
 
   // "I'm in" on a date spot invite. With a venue promotion on the spot, the
   // couple gets a code - or a word on why not.
@@ -422,8 +425,8 @@ function ChatPage() {
               Number(message.sender_profile_id) === Number(profileId);
 
             return (
+              <Fragment key={message.id}>
               <div
-                key={message.id}
                 className={`${styles.row} ${isMine ? styles.right : styles.left}`}
               >
                 <div
@@ -444,6 +447,13 @@ function ChatPage() {
                   )}
                 </div>
               </div>
+              {message.id === riskyId && (
+                <div className={styles.safety}>
+                  <span>⚠️ {t("chatSafety.text")}</span>
+                  {partner && <Link to={`/profile/${partner.id}`} className={styles.safetyLink}>🚩 {t("chatSafety.report")}</Link>}
+                </div>
+              )}
+              </Fragment>
             );
           })}
 

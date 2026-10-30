@@ -1181,5 +1181,9 @@
     "warnLater": "Later",
     "deadline": "Please verify before {{date}}, or your profile will be deleted for suspicious activity.",
     "askExpired": "Deadline passed · not verified – you can delete the profile"
+  },
+  "chatSafety": {
+    "text": "Be careful: never send money, bank details or codes to someone you haven't met, and take your time before moving to another app.",
+    "report": "Report this person"
   }
 }

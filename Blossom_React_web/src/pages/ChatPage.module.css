@@ -563,3 +563,24 @@
   text-transform: uppercase;
   color: var(--primary);
 }
+
+/* Seen only here, by the person reading: the check runs in the browser. */
+.safety {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #f0ce8a;
+  background: #fff6e3;
+  color: #6b4a10;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.safetyLink {
+  color: var(--danger, #d64545);
+  font-weight: 800;
+  text-decoration: none;
+}

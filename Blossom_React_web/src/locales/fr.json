@@ -1181,5 +1181,9 @@
     "warnLater": "Plus tard",
     "deadline": "Merci de vous vérifier avant le {{date}}, sinon votre profil sera supprimé pour activité suspecte.",
     "askExpired": "Délai dépassé · non vérifié – vous pouvez supprimer le profil"
+  },
+  "chatSafety": {
+    "text": "Prudence : n'envoyez jamais d'argent, de coordonnées bancaires ou de codes à une personne que vous n'avez pas rencontrée, et prenez votre temps avant de passer sur une autre application.",
+    "report": "Signaler cette personne"
   }
 }
