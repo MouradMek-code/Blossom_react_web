@@ -18,6 +18,7 @@ import Terms from "./pages/Terms";
 import DateSpots from "./pages/DateSpots";
 import DeleteAccount from "./pages/DeleteAccount";
 import Verify from "./pages/Verify";
+import EnableLocation from "./pages/EnableLocation";
 import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPromos from "./pages/AdminPromos";
@@ -80,6 +81,8 @@ function App() {
         <Route path="/delete-account" element={<DeleteAccount />} />
         {/* The ✓ badge; an admin's "Ask to verify" email links here. */}
         <Route path="/verify" element={<Verify />} />
+        {/* After the photos at sign-up. */}
+        <Route path="/enable_location" element={<EnableLocation />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/promos" element={<AdminPromos />} />

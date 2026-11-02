@@ -373,7 +373,12 @@
     "cancel": "取消",
     "notSet": "未设置位置",
     "removedTitle": "Blossom 暂未在此地区开放",
-    "removedText": "Blossom 暂未在你所在的国家开放，因此你的资料已被删除。希望很快能欢迎你。🌸"
+    "removedText": "Blossom 暂未在你所在的国家开放，因此你的资料已被删除。希望很快能欢迎你。🌸",
+    "pageTitle": "开启你的位置",
+    "pageText": "Blossom 使用你的大致位置，在资料中显示你的城市和国家，并确认 Blossom 在你所在地区可用。绝不使用你的精确位置。",
+    "pageButton": "开启位置",
+    "pageBusy": "正在查找你的城市…",
+    "pageNote": "浏览器会请求你的授权。"
   },
   "tabs": {
     "browse": "浏览",

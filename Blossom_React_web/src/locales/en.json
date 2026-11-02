@@ -373,7 +373,12 @@
     "cancel": "Cancel",
     "notSet": "Location not set",
     "removedTitle": "Blossom isn't available here yet",
-    "removedText": "Blossom isn't available in your country yet, so your profile has been removed. We hope to welcome you soon. 🌸"
+    "removedText": "Blossom isn't available in your country yet, so your profile has been removed. We hope to welcome you soon. 🌸",
+    "pageTitle": "Enable your location",
+    "pageText": "Blossom uses your approximate location to show your city and country on your profile, and to check that Blossom is available where you are. Never your exact position.",
+    "pageButton": "Enable location",
+    "pageBusy": "Finding your city…",
+    "pageNote": "Your browser will ask for your permission."
   },
   "tabs": {
     "browse": "Browse",

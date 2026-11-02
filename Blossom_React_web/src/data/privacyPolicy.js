@@ -8,7 +8,7 @@
 export const PRIVACY_POLICY = {
   en: {
     title: "Privacy Policy",
-    updated: "Last updated: October 27, 2026",
+    updated: "Last updated: November 2, 2026",
     sections: [
       {
         blocks: [
@@ -21,7 +21,7 @@ export const PRIVACY_POLICY = {
           "**Account information:** username, email address, phone number, password (stored as a one-way hash, never in plain text), and date of birth (used only to confirm you are 18 or older).",
           "**Profile information:** bio, age, gender, sexual orientation, height, occupation, education, lifestyle preferences, relationship goals, languages, city/country, and any photos you upload.",
           "**Usage information:** likes, matches, messages you send to other users, and any blocks or reports you submit.",
-          "**Approximate location (app, optional):** if you allow it, the Blossom app reads your phone's approximate location (never your precise position) to keep the city and country on your profile up to date. Only the resulting city and country are stored; the position itself is not kept. You can turn this off at any time in Settings or in your phone's settings.",
+          "**Approximate location (optional):** if you allow it, the Blossom app or website reads your approximate location (never your precise position) to keep the city and country on your profile up to date, and to check that Blossom is available where you are; in a country where it isn't, the account is removed. Only the resulting city and country are stored; the position itself is not kept. You can refuse in the permission window, or turn this off at any time in the app's Settings or your phone's settings.",
           "**Notifications (app, optional):** if you allow notifications, we store a notification token for your phone and your app language, so we can tell you about new likes, matches and messages.",
           "We do not knowingly collect any information from anyone under 18. Signup is blocked for anyone who does not confirm a date of birth indicating they are 18 or older.",
         ],
@@ -47,6 +47,7 @@ export const PRIVACY_POLICY = {
             "**Cloudinary** - stores and serves the photos you upload",
             "**Brevo** - sends verification and password-reset emails",
             "**Expo and Google Firebase Cloud Messaging** - deliver the app's notifications",
+            "**OpenStreetMap (Nominatim)** - on the website, finds the city from a position rounded to about a kilometre",
             "**Render** - hosts our backend server and database",
           ],
           "We do not sell your personal information to anyone.",
@@ -102,7 +103,7 @@ export const PRIVACY_POLICY = {
 
   fr: {
     title: "Politique de confidentialité",
-    updated: "Dernière mise à jour : 27 octobre 2026",
+    updated: "Dernière mise à jour : 2 novembre 2026",
     sections: [
       {
         blocks: [
@@ -115,7 +116,7 @@ export const PRIVACY_POLICY = {
           "**Informations du compte :** nom d'utilisateur, adresse e-mail, numéro de téléphone, mot de passe (enregistré sous forme de hachage irréversible, jamais en clair) et date de naissance (utilisée uniquement pour confirmer que vous avez 18 ans ou plus).",
           "**Informations du profil :** bio, âge, genre, orientation sexuelle, taille, profession, études, habitudes de vie, objectifs amoureux, langues, ville/pays et les photos que vous ajoutez.",
           "**Informations d'utilisation :** likes, matchs, messages envoyés aux autres membres, ainsi que les blocages et signalements que vous effectuez.",
-          "**Position approximative (application, facultatif) :** si vous l'autorisez, l'application Blossom lit la position approximative de votre téléphone (jamais votre position précise) pour garder à jour la ville et le pays de votre profil. Seuls la ville et le pays obtenus sont enregistrés ; la position elle-même n'est pas conservée. Vous pouvez désactiver cette option à tout moment dans les Réglages ou dans les réglages de votre téléphone.",
+          "**Position approximative (facultatif) :** si vous l'autorisez, l'application ou le site Blossom lit votre position approximative (jamais votre position précise) pour garder à jour la ville et le pays de votre profil, et vérifier que Blossom est disponible là où vous êtes ; dans un pays où il ne l'est pas, le compte est supprimé. Seuls la ville et le pays obtenus sont enregistrés ; la position elle-même n'est pas conservée. Vous pouvez refuser dans la fenêtre d'autorisation, ou désactiver cette option à tout moment dans les Réglages de l'application ou de votre téléphone.",
           "**Notifications (application, facultatif) :** si vous autorisez les notifications, nous enregistrons un identifiant de notification pour votre téléphone ainsi que la langue de l'application, afin de vous prévenir des nouveaux likes, matchs et messages.",
           "Nous ne collectons sciemment aucune information auprès de personnes de moins de 18 ans. L'inscription est bloquée pour toute personne qui ne confirme pas une date de naissance indiquant qu'elle a 18 ans ou plus.",
         ],
@@ -141,6 +142,7 @@ export const PRIVACY_POLICY = {
             "**Cloudinary** : stocke et affiche les photos que vous ajoutez",
             "**Brevo** : envoie les e-mails de vérification et de réinitialisation du mot de passe",
             "**Expo et Google Firebase Cloud Messaging** : envoient les notifications de l'application",
+            "**OpenStreetMap (Nominatim)** : sur le site, trouve la ville à partir d'une position arrondie à environ un kilomètre",
             "**Render** : héberge notre serveur et notre base de données",
           ],
           "Nous ne vendons vos informations personnelles à personne.",
@@ -196,7 +198,7 @@ export const PRIVACY_POLICY = {
 
   zh: {
     title: "隐私政策",
-    updated: "最后更新：2026年10月27日",
+    updated: "最后更新：2026年11月2日",
     sections: [
       {
         blocks: [
@@ -209,7 +211,7 @@ export const PRIVACY_POLICY = {
           "**账户信息：**用户名、电子邮箱、电话号码、密码（以单向哈希形式保存，绝不以明文存储）以及出生日期（仅用于确认你已年满 18 岁）。",
           "**资料信息：**个人简介、年龄、性别、性取向、身高、职业、教育程度、生活习惯、恋爱目标、语言、城市/国家，以及你上传的照片。",
           "**使用信息：**喜欢、配对、你发送给其他用户的消息，以及你提交的屏蔽和举报。",
-          "**大致位置（应用，可选）：**如果你允许，Blossom 应用会读取手机的大致位置（绝不读取精确位置），以保持你资料中的城市和国家为最新。我们只保存得出的城市和国家，不保存位置本身。你可以随时在设置或手机设置中关闭此功能。",
+          "**大致位置（可选）：**如果你允许，Blossom 应用或网站会读取你的大致位置（绝不读取精确位置），以保持你资料中的城市和国家为最新，并确认 Blossom 在你所在地区可用；如果当地未开放，账户将被删除。我们只保存得出的城市和国家，不保存位置本身。你可以在授权窗口中拒绝，也可以随时在应用设置或手机设置中关闭此功能。",
           "**通知（应用，可选）：**如果你允许通知，我们会保存你手机的通知令牌和应用语言，以便告诉你新的喜欢、配对和消息。",
           "我们不会故意收集未满 18 岁人士的任何信息。未确认出生日期显示已年满 18 岁的人无法注册。",
         ],
@@ -235,6 +237,7 @@ export const PRIVACY_POLICY = {
             "**Cloudinary**：存储并展示你上传的照片",
             "**Brevo**：发送验证和重置密码邮件",
             "**Expo 和 Google Firebase Cloud Messaging**：发送应用通知",
+            "**OpenStreetMap（Nominatim）**：在网站上，根据精确到约一公里的位置查找城市",
             "**Render**：托管我们的后端服务器和数据库",
           ],
           "我们绝不出售你的个人信息。",
@@ -290,7 +293,7 @@ export const PRIVACY_POLICY = {
 
   ar: {
     title: "سياسة الخصوصية",
-    updated: "آخر تحديث: 27 أكتوبر 2026",
+    updated: "آخر تحديث: 2 نوفمبر 2026",
     sections: [
       {
         blocks: [
@@ -303,7 +306,7 @@ export const PRIVACY_POLICY = {
           "**معلومات الحساب:** اسم المستخدم وعنوان البريد الإلكتروني ورقم الهاتف وكلمة المرور (تُحفظ كتجزئة أحادية الاتجاه ولا تُخزَّن أبدًا كنص واضح) وتاريخ الميلاد (يُستخدم فقط للتأكد من أن عمرك 18 عامًا أو أكثر).",
           "**معلومات الملف الشخصي:** النبذة والعمر والجنس والتوجه الجنسي والطول والمهنة والتعليم ونمط الحياة وأهداف العلاقة واللغات والمدينة/الدولة وأي صور تقوم برفعها.",
           "**معلومات الاستخدام:** الإعجابات والتطابقات والرسائل التي ترسلها إلى المستخدمين الآخرين وأي حظر أو بلاغ تقدّمه.",
-          "**الموقع التقريبي (التطبيق، اختياري):** إذا سمحت بذلك، يقرأ تطبيق Blossom الموقع التقريبي لهاتفك (وليس موقعك الدقيق أبدًا) لإبقاء المدينة والدولة في ملفك الشخصي محدّثتين. لا نحفظ إلا المدينة والدولة الناتجتين، ولا نحتفظ بالموقع نفسه. يمكنك إيقاف ذلك في أي وقت من الإعدادات أو من إعدادات هاتفك.",
+          "**الموقع التقريبي (اختياري):** إذا سمحت بذلك، يقرأ تطبيق Blossom أو موقعه الإلكتروني موقعك التقريبي (وليس موقعك الدقيق أبدًا) لإبقاء المدينة والدولة في ملفك الشخصي محدّثتين، وللتأكد من توفر Blossom في مكانك؛ وفي البلد غير المتاح فيه يُحذف الحساب. لا نحفظ إلا المدينة والدولة الناتجتين، ولا نحتفظ بالموقع نفسه. يمكنك الرفض في نافذة الإذن، أو إيقاف ذلك في أي وقت من إعدادات التطبيق أو إعدادات هاتفك.",
           "**الإشعارات (التطبيق، اختياري):** إذا سمحت بالإشعارات، نحفظ رمز إشعارات لهاتفك ولغة التطبيق، حتى نخبرك بالإعجابات والتطابقات والرسائل الجديدة.",
           "لا نجمع عن علم أي معلومات من أي شخص دون 18 عامًا. يُمنع التسجيل لكل من لا يؤكد تاريخ ميلاد يدل على أن عمره 18 عامًا أو أكثر.",
         ],
@@ -329,6 +332,7 @@ export const PRIVACY_POLICY = {
             "**Cloudinary**: تخزين الصور التي ترفعها وعرضها",
             "**Brevo**: إرسال رسائل التحقق وإعادة تعيين كلمة المرور",
             "**Expo وGoogle Firebase Cloud Messaging**: إيصال إشعارات التطبيق",
+            "**OpenStreetMap (Nominatim)**: على الموقع الإلكتروني، تحديد المدينة من موقع مقرّب إلى نحو كيلومتر",
             "**Render**: استضافة الخادم وقاعدة البيانات",
           ],
           "لا نبيع معلوماتك الشخصية لأي أحد.",
