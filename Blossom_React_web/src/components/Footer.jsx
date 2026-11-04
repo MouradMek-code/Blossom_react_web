@@ -55,6 +55,9 @@ function Footer() {
           <Link to="/privacy-policy">{t("footer.privacy")}</Link>
           <Link to="/terms">{t("footer.terms")}</Link>
           <Link to="/delete-account">{t("footer.deleteAccount")}</Link>
+          <Link to="/report">{t("feedback.settingsRow")}</Link>
+          {/* A plain page (public/child-safety.html), readable without JavaScript. */}
+          <a href="/child-safety.html">{t("feedback.childSafetyLink")}</a>
           <a href={`mailto:${SUPPORT_EMAIL}`}>{t("footer.contact")}</a>
         </nav>
       </div>

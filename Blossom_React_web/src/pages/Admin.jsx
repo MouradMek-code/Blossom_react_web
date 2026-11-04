@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PageNav from "../components/PageNav";
 import AdminReports from "../components/AdminReports";
+import AdminFeedback from "../components/AdminFeedback";
 import AskToVerify from "../components/AskToVerify";
 import { BASE_URL } from "../api/config";
 
@@ -112,6 +113,8 @@ export default function Admin() {
 
         {/* 🚩 Members' reports: who, why - and delete from here. */}
         <AdminReports token={token} onDeleted={(userId) => setUsers((prev) => prev.filter((u) => u.id !== userId))} />
+        {/* 🛟 "Report a problem" from members and visitors. */}
+        <AdminFeedback token={token} />
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 

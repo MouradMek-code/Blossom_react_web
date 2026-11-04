@@ -182,6 +182,10 @@ function Settings() {
             {t("settings.terms")}
             <span aria-hidden="true">›</span>
           </Link>
+          <Link className={styles.linkRow} to="/report">
+            🛟 {t("feedback.settingsRow")}
+            <span aria-hidden="true">›</span>
+          </Link>
           <a className={styles.linkRow} href={`mailto:${SUPPORT_EMAIL}`}>
             {t("settings.support")}
             <span aria-hidden="true">›</span>
