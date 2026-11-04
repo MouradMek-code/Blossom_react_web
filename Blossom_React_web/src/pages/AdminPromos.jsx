@@ -65,6 +65,19 @@ export default function AdminPromos() {
     setOffers((cur) => cur.map((o) => (o.id === offer.id ? result.data : o)));
   }
 
+  // Gone for good, with the couples' codes; Pause / End now keep the history.
+  async function remove(offer) {
+    if (!window.confirm(t("offers.deleteConfirm", { title: offer.title }))) return;
+    setBusy(offer.id);
+    const result = await send(`/offers/admin/${offer.id}`, "DELETE");
+    setBusy(null);
+    if (!result.ok) {
+      setError(result.message || t("offers.saveFailed"));
+      return;
+    }
+    setOffers((cur) => cur.filter((o) => o.id !== offer.id));
+  }
+
   const deadline = (value) => formatDeadline(value, i18n.language);
   const [copied, setCopied] = useState(null);
 
@@ -203,6 +216,9 @@ export default function AdminPromos() {
                 <a className={styles.linkBtn} href={`/poster/${o.id}`} target="_blank" rel="noreferrer">
                   {t("offers.poster")}
                 </a>
+                <button type="button" className={styles.danger} onClick={() => remove(o)} disabled={busy === o.id}>
+                  {t("offers.delete")}
+                </button>
               </div>
             </article>
           ))

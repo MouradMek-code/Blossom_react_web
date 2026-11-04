@@ -577,3 +577,9 @@
   font-size: 14px;
   color: #8a7e76;
 }
+
+/* The Google Maps link field: pasted text that isn't one. */
+.linkError {
+  color: var(--danger, #d64545) !important;
+  font-weight: 700;
+}

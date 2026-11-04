@@ -149,7 +149,11 @@ export default function Partner() {
   }
 
   const validHours = (parseInt(form.days, 10) || 0) * 24 + (parseInt(form.hours, 10) || 0);
-  const placeReady = spot ? !spot.partner : form.venue_name.trim().length >= 2 && place.city && place.country;
+  // A new place needs its Google Maps link: text-only promotions were spam.
+  const mapLinkOk = GOOGLE_MAPS_LINK.test(form.map_url.trim());
+  const placeReady = spot
+    ? !spot.partner
+    : mapLinkOk && form.venue_name.trim().length >= 2 && place.city && place.country;
   const giftReady = form.offer_title.trim().length >= 3;
 
   function goTo(next) {
@@ -336,9 +340,12 @@ export default function Partner() {
 
                       <p className={styles.orNew}>{t("partners.orNew")}</p>
                       <label className={styles.field}>
-                        <span>{t("partners.mapUrl")}</span>
-                        <input value={form.map_url} onChange={set("map_url")} placeholder="https://maps.app.goo.gl/…" inputMode="url" />
+                        <span>{t("partners.mapUrl")} *</span>
+                        <input value={form.map_url} onChange={set("map_url")} placeholder="https://maps.app.goo.gl/…" inputMode="url" required />
                         <small>{t("partners.mapUrlHint")}</small>
+                        {form.map_url.trim() && !mapLinkOk && (
+                          <small className={styles.linkError}>{t("partners.mapUrlInvalid")}</small>
+                        )}
                       </label>
                       <label className={styles.field}>
                         <span>{t("partners.venueName")} *</span>

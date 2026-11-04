@@ -279,6 +279,23 @@ function RequestCard({ request: r, token, language, onDone }) {
     onDone();
   }
 
+  // Spam: deleted without a word to the sender ("Refuse" emails them).
+  async function remove() {
+    if (!window.confirm(t("partners.deleteRequestConfirm"))) return;
+    setBusy(true);
+    setError("");
+    const result = await postJson(`${BASE_URL}/partners/requests/${r.id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.message || t("partners.failed"));
+      return;
+    }
+    onDone();
+  }
+
   function approve() {
     const body = {};
     if (editing) {
@@ -379,6 +396,9 @@ function RequestCard({ request: r, token, language, onDone }) {
             </button>
             <button type="button" className={styles.danger} onClick={() => setRefusing(true)} disabled={busy}>
               {t("partners.refuse")}
+            </button>
+            <button type="button" className={styles.danger} onClick={remove} disabled={busy}>
+              {t("partners.deleteRequest")}
             </button>
           </>
         )}
@@ -481,6 +501,7 @@ export function BusinessMessages({ token }) {
   return (
     <section className={styles.partnerBlock}>
       <h2 className={styles.blockTitle}>{t("business.messages")}</h2>
+      <p className={styles.muted}>{t("business.handledHint")}</p>
       {messages.length === 0 && <p className={styles.muted}>{t("business.noMessages")}</p>}
       {messages.map((m) => (
         <article key={m.id} className={`${styles.card} ${m.handled ? styles.handled : ""}`}>
