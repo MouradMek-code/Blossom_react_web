@@ -14,14 +14,18 @@ function Email({ address, subject }) {
   return <a href={href} dir="ltr">{address}</a>;
 }
 
-// **bold**, {support}, {contact}, {safety} and {deletePage} (see data/privacyPolicy.js).
+// **bold**, {support}, {contact}, {safety}, {deletePage}, {reportPage} and
+// {childSafety} (see data/privacyPolicy.js).
 function rich(text) {
-  return text.split(/(\*\*[^*]+\*\*|\{support\}|\{contact\}|\{safety\}|\{deletePage\})/).map((part, i) => {
+  return text.split(/(\*\*[^*]+\*\*|\{support\}|\{contact\}|\{safety\}|\{deletePage\}|\{reportPage\}|\{childSafety\})/).map((part, i) => {
     if (part.startsWith("**")) return <b key={i}>{part.slice(2, -2)}</b>;
     if (part === "{support}") return <Email key={i} address={SUPPORT_EMAIL} />;
     if (part === "{contact}") return <Email key={i} address={CONTACT_EMAIL} />;
     if (part === "{safety}") return <Email key={i} address={SUPPORT_EMAIL} subject="Child Safety Report" />;
     if (part === "{deletePage}") return <Link key={i} to="/delete-account" dir="ltr">blossom-date.com/delete-account</Link>;
+    if (part === "{reportPage}") return <Link key={i} to="/report" dir="ltr">blossom-date.com/report</Link>;
+    // A plain page, not part of the React site: a normal link.
+    if (part === "{childSafety}") return <a key={i} href="/child-safety.html" dir="ltr">blossom-date.com/child-safety.html</a>;
     return <Fragment key={i}>{part}</Fragment>;
   });
 }

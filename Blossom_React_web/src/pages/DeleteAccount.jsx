@@ -15,13 +15,15 @@ function DeleteAccount() {
         </p>
 
         <section style={sectionStyle}>
-          <h2 style={headingStyle}>Option 1: Delete it yourself in the app (fastest)</h2>
+          <h2 style={headingStyle}>Option 1: Delete it yourself (fastest)</h2>
+          <p><b>In the Android app:</b></p>
           <ol>
-            <li>Log in to Blossom (web or the Android app)</li>
-            <li>Go to your <b>Profile</b> page</li>
-            <li>Scroll to the <b>Danger Zone</b> section</li>
-            <li>Tap/click <b>Delete Account</b> and confirm</li>
+            <li>Log in to Blossom and open your <b>Profile</b></li>
+            <li>Tap <b>Settings</b></li>
+            <li>At the very bottom, tap <b>Delete account</b></li>
+            <li>Type the confirmation word and tap <b>Yes, delete my account forever</b></li>
           </ol>
+          <p><b>On the website:</b> log in, open <b>Settings</b>, go to the <b>Delete account</b> section, then confirm.</p>
           <p>
             This is instant and permanent - your profile, photos, bio, matches, likes, and every
             message you've sent are all removed immediately. This cannot be undone.
@@ -51,6 +53,7 @@ function DeleteAccount() {
             <li>Your account (username, email, phone number, password)</li>
             <li>All your matches and likes</li>
             <li>All messages you've sent</li>
+            <li>Your saved places, your verification selfie if one is waiting, and your phone's notification settings</li>
           </ul>
           <p>This action is permanent and cannot be reversed.</p>
         </section>
