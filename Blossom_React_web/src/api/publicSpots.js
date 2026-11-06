@@ -16,3 +16,20 @@ export function loadPublicSpots() {
   }
   return pending;
 }
+
+// "Spot of the week" (picked by an admin, or the most saved this week), or
+// null. Fetched once, like the list.
+let pendingFeatured = null;
+
+export function loadFeaturedSpot() {
+  if (!pendingFeatured) {
+    pendingFeatured = fetch(`${BASE_URL}/date_spots/featured`)
+      .then((resp) => (resp.ok ? resp.json() : null))
+      .then((data) => data?.spot || null)
+      .catch(() => {
+        pendingFeatured = null;
+        return null;
+      });
+  }
+  return pendingFeatured;
+}

@@ -76,6 +76,11 @@
   animation: captionIn 0.6s ease;
 }
 
+/* The spot of the week: in Blossom's rose. */
+.captionWeekly {
+  background: rgba(193, 70, 107, 0.9);
+}
+
 @keyframes captionIn {
   from {
     opacity: 0;

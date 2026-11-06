@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { IMG } from "../api/images";
-import { loadPublicSpots } from "../api/publicSpots";
+import { loadFeaturedSpot, loadPublicSpots } from "../api/publicSpots";
 import { shuffle } from "../api/shuffle";
 import { Icon } from "../ui";
 import styles from "./SpotsWallpaper.module.css";
@@ -10,6 +10,16 @@ import styles from "./SpotsWallpaper.module.css";
 // How long each photo stays (the change itself is a 1 s cross-fade).
 const SLIDE_MS = 3000;
 const MAX_SLIDES = 12;
+
+
+// The spot of the week first (else the list's first: gift spots lead), then
+// the others in a new random order each time.
+function wallOrder(all, weekly) {
+  const withPhoto = all.filter((s) => s.image_url);
+  const first = weekly?.image_url ? weekly : withPhoto[0];
+  if (!first) return [];
+  return [first, ...shuffle(withPhoto.filter((s) => s.id !== first.id))].slice(0, MAX_SLIDES);
+}
 
 const reducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -21,6 +31,7 @@ const reducedMotion = () =>
 export default function SpotsWallpaper() {
   const { t } = useTranslation();
   const [spots, setSpots] = useState([]);
+  const [weeklyId, setWeeklyId] = useState(null);
   const [index, setIndex] = useState(0);
   const [needed, setNeeded] = useState(() => new Set([0, 1]));
   const [paused, setPaused] = useState(false);
@@ -29,8 +40,10 @@ export default function SpotsWallpaper() {
 
   useEffect(() => {
     let alive = true;
-    loadPublicSpots().then((all) => {
-      if (alive) setSpots(shuffle(all.filter((s) => s.image_url)).slice(0, MAX_SLIDES));
+    Promise.all([loadPublicSpots(), loadFeaturedSpot()]).then(([all, weekly]) => {
+      if (!alive) return;
+      setWeeklyId(weekly?.image_url ? weekly.id : null);
+      setSpots(wallOrder(all, weekly));
     });
     return () => {
       alive = false;
@@ -95,10 +108,16 @@ export default function SpotsWallpaper() {
       <span className={styles.shade} aria-hidden="true" />
 
       {/* Which place this is. */}
-      <span className={styles.caption} key={current.id} aria-hidden="true">
-        <Icon name="map-pin" size={15} />
-        {[current.name, current.city].filter(Boolean).join(" · ")}
-      </span>
+      {current.id === weeklyId ? (
+        <span className={`${styles.caption} ${styles.captionWeekly}`} key={current.id} aria-hidden="true">
+          {t("dateSpots.spotOfWeek")} · {current.name}
+        </span>
+      ) : (
+        <span className={styles.caption} key={current.id} aria-hidden="true">
+          <Icon name="map-pin" size={15} />
+          {[current.name, current.city].filter(Boolean).join(" · ")}
+        </span>
+      )}
 
       <span className={styles.content}>
         <span className={styles.title}>{t("spotsWall.title")}</span>
