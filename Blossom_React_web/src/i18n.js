@@ -20,4 +20,14 @@ i18n
     interpolation: { escapeValue: false },
   });
 
+// Arabic reads right to left: <html dir> and <html lang> follow the language,
+// so the whole page mirrors (and screen readers pronounce it right).
+function applyDirection(lng) {
+  const code = (lng || "en").slice(0, 2);
+  document.documentElement.lang = code;
+  document.documentElement.dir = code === "ar" ? "rtl" : "ltr";
+}
+applyDirection(i18n.language);
+i18n.on("languageChanged", applyDirection);
+
 export default i18n;

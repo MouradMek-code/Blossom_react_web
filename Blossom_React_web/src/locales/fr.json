@@ -347,7 +347,9 @@
     "likesCircle": "Likes reçus",
     "circlesLikeBack": "Like en retour pour matcher 💞",
     "circlesEmpty": "Quand quelqu'un te like ou que vous matchez, ça apparaît ici.",
-    "heartLabel": "Les personnes qui t'ont liké"
+    "heartLabel": "Les personnes qui t'ont liké",
+    "pickTitle": "Vos conversations",
+    "pickText": "Choisissez une conversation à gauche pour la lire et répondre."
   },
   "location": {
     "title": "Où habitez-vous ?",
@@ -430,7 +432,18 @@
     "cancel": "Annuler"
   },
   "browse": {
-    "new": "Nouveau profil"
+    "new": "Nouveau profil",
+    "previousPhoto": "Photo précédente",
+    "nextPhoto": "Photo suivante",
+    "title": "Découvrir",
+    "filters": "Filtres",
+    "viewProfile": "Voir le profil",
+    "like": "Like",
+    "refresh": "Actualiser",
+    "emptyTitle": "Vous avez vu tout le monde !",
+    "emptyText": "De nouvelles personnes arrivent chaque jour. Actualisez pour voir les nouveaux.",
+    "noMatchTitle": "Personne ne correspond à vos filtres",
+    "noMatchText": "Élargissez votre recherche : avec moins de filtres, plus de personnes apparaissent."
   },
   "connection": {
     "question": "Qu'est-ce qui vous amène sur Blossom ?",
@@ -1230,5 +1243,32 @@
     "adminDelete": "🗑 Supprimer",
     "adminDeleteConfirm": "Supprimer ce signalement ?",
     "adminReply": "Répondre par e-mail"
+  },
+  "signupSteps": {
+    "step": "Étape {{n}} sur {{total}}",
+    "intent": "Ce qui vous amène",
+    "you": "À propos de vous",
+    "looking": "Ce que vous recherchez",
+    "story": "Votre histoire",
+    "languages": "Vos langues",
+    "basics": "Quelques détails de plus",
+    "lifestyle": "Votre mode de vie",
+    "personal": "Famille et relations passées",
+    "optional": "Facultatif",
+    "optionalStep": "Tout est facultatif – passez ce que vous préférez.",
+    "startTitle": "Créez votre profil",
+    "startText": "{{count}} étapes courtes – environ 2 minutes.",
+    "startButton": "C'est parti",
+    "next": "Suivant",
+    "finish": "Terminer"
+  },
+  "likesYou": {
+    "matchMessage": "Envoyer un message",
+    "matchKeepGoing": "Continuer à explorer",
+    "matchTitle": "C'est un match !",
+    "matchText": "Vous vous êtes likés tous les deux",
+    "title": "Ces personnes vous aiment",
+    "empty": "Pas encore de like - revenez bientôt !",
+    "likeBack": "Liker aussi"
   }
 }

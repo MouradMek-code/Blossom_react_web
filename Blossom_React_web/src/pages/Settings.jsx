@@ -7,6 +7,7 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { SUPPORT_EMAIL } from "../api/links";
 import { tidyCity } from "../api/geo";
+import { Icon } from "../ui";
 import i18n from "../i18n";
 import styles from "./Settings.module.css";
 
@@ -164,7 +165,7 @@ function Settings() {
             </div>
           ) : (
             <div className={styles.row}>
-              <span>📍 {place || t("location.notSet")}</span>
+              <span className={styles.rowLabel}><Icon name="map-pin" size={19} />{place || t("location.notSet")}</span>
               <button type="button" className={styles.rowAction} onClick={startEditingLocation}>
                 {t("location.change")}
               </button>
@@ -175,28 +176,28 @@ function Settings() {
         <section className={styles.card}>
           <h2 className={styles.cardTitle}>{t("settings.about")}</h2>
           <Link className={styles.linkRow} to="/privacy-policy">
-            {t("settings.privacy")}
-            <span aria-hidden="true">›</span>
+            <span className={styles.rowLabel}><Icon name="lock" size={19} />{t("settings.privacy")}</span>
+            <Icon name="chevron-right" size={18} className={styles.chev} />
           </Link>
           <Link className={styles.linkRow} to="/terms">
-            {t("settings.terms")}
-            <span aria-hidden="true">›</span>
+            <span className={styles.rowLabel}><Icon name="book-open" size={19} />{t("settings.terms")}</span>
+            <Icon name="chevron-right" size={18} className={styles.chev} />
           </Link>
           <Link className={styles.linkRow} to="/report">
-            🛟 {t("feedback.settingsRow")}
-            <span aria-hidden="true">›</span>
+            <span className={styles.rowLabel}><Icon name="life-buoy" size={19} />{t("feedback.settingsRow")}</span>
+            <Icon name="chevron-right" size={18} className={styles.chev} />
           </Link>
           <a className={styles.linkRow} href={`mailto:${SUPPORT_EMAIL}`}>
-            {t("settings.support")}
-            <span aria-hidden="true">›</span>
+            <span className={styles.rowLabel}><Icon name="mail" size={19} />{t("settings.support")}</span>
+            <Icon name="chevron-right" size={18} className={styles.chev} />
           </a>
         </section>
 
         <section className={styles.card}>
           <h2 className={styles.cardTitle}>{t("settings.account")}</h2>
           <button type="button" className={styles.linkRow} onClick={handleLogout}>
-            {t("settings.logout")}
-            <span aria-hidden="true">›</span>
+            <span className={styles.rowLabel}><Icon name="log-out" size={19} />{t("settings.logout")}</span>
+            <Icon name="chevron-right" size={18} className={styles.chev} />
           </button>
         </section>
 

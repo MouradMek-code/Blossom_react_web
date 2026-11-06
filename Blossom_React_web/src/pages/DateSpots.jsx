@@ -25,6 +25,7 @@ import {
   fullPlace,
   shortPlace,
 } from "../api/categories";
+import { Icon } from "../ui";
 import styles from "./DateSpots.module.css";
 
 // Fire-and-forget engagement tracking. Never block or surface errors: a missed
@@ -134,9 +135,14 @@ function SpotBackdrop({ spot, imgClass, src, lazy }) {
   );
 }
 
-// "📍 Châtelet, Paris"
+// "(pin) Châtelet, Paris"
 function placeLine(spot) {
-  return `📍 ${shortPlace(spot)}`;
+  return (
+    <>
+      <Icon name="map-pin" size={14} style={{ verticalAlign: "-2px", marginInlineEnd: 4 }} />
+      {shortPlace(spot)}
+    </>
+  );
 }
 
 // "♥ 3  📅 2  💞 5": saves, upcoming events, couples who used the gift.
@@ -703,7 +709,7 @@ function DateSpots() {
           {/* One slim bar: city, search, more filters, list / map. */}
           <div className={styles.toolbar}>
             <label className={styles.citySelect}>
-              <span aria-hidden="true">📍</span>
+              <Icon name="map-pin" size={18} color="var(--primary)" />
               <select
                 value={city ? `${country}|${city}` : ""}
                 onChange={(e) => {
@@ -924,7 +930,9 @@ function DateSpots() {
             </div>
           ) : shownSpots.length === 0 ? (
             <div className={styles.empty}>
-              <div className={styles.emptyIcon}>📍</div>
+              <div className={styles.emptyIcon}>
+                <Icon name="map-pin" size={48} strokeWidth={1.7} color="var(--primary)" />
+              </div>
               <p className={styles.emptyTitle}>{t("dateSpots.emptyTitle")}</p>
               <p className={styles.emptyText}>
                 {searching
@@ -1109,7 +1117,7 @@ function DateSpots() {
                 </div>
               )}
               <h2 className={styles.detailTitle}>{selected.name}</h2>
-              <p className={styles.detailPlace}>📍 {fullPlace(selected)}</p>
+              <p className={styles.detailPlace}><Icon name="map-pin" size={14} style={{ verticalAlign: "-2px", marginInlineEnd: 4 }} />{fullPlace(selected)}</p>
               {/* Right away, no scrolling: organise something here, or (for
                   the café's staff) offer couples a gift here. */}
               <div className={styles.quickRow}>
@@ -1193,7 +1201,8 @@ function DateSpots() {
                     onClick={() => deleteSpot(selected)}
                     disabled={deleting}
                   >
-                    🗑️ {deleting ? t("dateSpots.deleting") : t("dateSpots.delete")}
+                    <Icon name="trash-2" size={16} style={{ verticalAlign: "-3px", marginInlineEnd: 6 }} />
+                    {deleting ? t("dateSpots.deleting") : t("dateSpots.delete")}
                   </button>
                 )}
               </div>

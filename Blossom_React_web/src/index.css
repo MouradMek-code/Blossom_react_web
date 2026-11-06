@@ -152,3 +152,8 @@ select {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+/* Directional icons (arrows, chevrons) point the reading way in Arabic. */
+[dir="rtl"] .ui-mirror-rtl {
+  transform: scaleX(-1);
+}

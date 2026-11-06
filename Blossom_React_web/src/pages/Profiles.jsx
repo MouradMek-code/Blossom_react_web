@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
+import MatchCelebration from "../components/MatchCelebration";
 import ProfileFilterModal from "../components/ProfileFilterModal";
 import { matchesFilters, getDefaultFilters } from "../api/profileFilters";
 import { seededShuffle } from "../api/shuffle";
@@ -10,6 +11,118 @@ import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { isNewMember } from "../api/newMember";
 import { CONNECTION_DOTS, connectionOf, languagesLine } from "../api/connection";
+import { Button, EmptyState, Icon, SkeletonTiles } from "../ui";
+
+// One person in the Browse grid. Several photos: bars on top, and the left or
+// right half of the photo shows the previous or next one.
+function BrowseCard({ profile, latinScript, onLike, onOpen }) {
+  const { t } = useTranslation();
+  const photos = profile.photos || [];
+  const [index, setIndex] = useState(0);
+  const photo = photos[Math.min(index, Math.max(photos.length - 1, 0))];
+
+  function step(e, by) {
+    e.stopPropagation();
+    setIndex((cur) => Math.min(Math.max(cur + by, 0), photos.length - 1));
+  }
+
+  return (
+    <div className={styles.card}>
+      <img src={IMG.card(photo?.image_url)} alt={profile.first_name} className={styles.image} />
+
+      {photos.length > 1 && (
+        <>
+          <div className={styles.bars} aria-hidden="true">
+            {photos.map((p, i) => (
+              <span key={p.id ?? i} className={`${styles.bar} ${i === index ? styles.barOn : ""}`} />
+            ))}
+          </div>
+          <button
+            type="button"
+            className={`${styles.tapZone} ${styles.tapLeft}`}
+            onClick={(e) => step(e, -1)}
+            disabled={index === 0}
+            aria-label={t("browse.previousPhoto")}
+          />
+          <button
+            type="button"
+            className={`${styles.tapZone} ${styles.tapRight}`}
+            onClick={(e) => step(e, 1)}
+            disabled={index >= photos.length - 1}
+            aria-label={t("browse.nextPhoto")}
+          />
+        </>
+      )}
+
+      <button
+        type="button"
+        className={styles.loveButton}
+        onClick={(e) => onLike(e, profile)}
+        aria-label={`${t("browse.like")} ${profile.first_name}`}
+      >
+        <Icon name="heart" size={24} color="var(--primary)" strokeWidth={2.4} />
+      </button>
+
+      {/* Joined less than a week ago. */}
+      {isNewMember(profile) && (
+        <span className={`${styles.newBadge} ${latinScript ? styles.smallCaps : ""}`}>
+          <span className={styles.newDot} aria-hidden="true" />
+          {t("browse.new")}
+        </span>
+      )}
+
+      <div className={styles.overlay}>
+        <div className={styles.profileInfo}>
+          {/* What they're here for: dating, language exchange or both. */}
+          <span className={styles.connection}>
+            <span className={styles.dots} aria-hidden="true">
+              {CONNECTION_DOTS[connectionOf(profile)].map((color) => (
+                <span key={color} className={styles.dot} style={{ background: color }} />
+              ))}
+            </span>
+            {t(`connection.${connectionOf(profile)}`)}
+          </span>
+          <h3>
+            <span className={styles.nameLine}>
+              {profile.first_name}
+              {profile.verified && (
+                <span className={styles.verified} title={t("verified.verifiedLabel")}>
+                  <Icon name="check" size={14} strokeWidth={3.2} color="#fff" />
+                </span>
+              )}
+            </span>
+            <span>{profile.age}</span>
+          </h3>
+
+          <div className={styles.pills}>
+            {(profile.city || profile.country) && (
+              <span className={styles.pill}>
+                <Icon name="map-pin" size={15} />
+                {[profile.city, profile.country].filter(Boolean).join(", ")}
+              </span>
+            )}
+            {profile.occupation && (
+              <span className={styles.pill}>
+                <Icon name="briefcase" size={15} />
+                {profile.occupation}
+              </span>
+            )}
+          </div>
+
+          {/* The languages matter to anyone open to language exchange. */}
+          {connectionOf(profile) !== "dating" && languagesLine(profile) && (
+            <p className={styles.languages}>{languagesLine(profile)}</p>
+          )}
+
+          <button type="button" className={styles.viewProfileButton} onClick={() => onOpen(profile)}>
+            {t("browse.viewProfile")}
+            <Icon name="arrow-right" size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Profiles() {
   const { t, i18n } = useTranslation();
@@ -19,6 +132,7 @@ function Profiles() {
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const [profiles, setProfiles] = useState([]);
+  const [ownPhoto, setOwnPhoto] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [draftFilters, setDraftFilters] = useState(() => {
@@ -28,6 +142,8 @@ function Profiles() {
     try { return JSON.parse(sessionStorage.getItem("blossom_filters") || "{}"); } catch { return {}; }
   });
   const [loading, setLoading] = useState(true);
+  // Bumped by "Refresh" at the end of the deck.
+  const [reloadKey, setReloadKey] = useState(0);
   // One seed per mount: the deck order is random each visit but stays put
   // while browsing, even though a match triggers a re-fetch.
   const [deckSeed] = useState(() => Math.random());
@@ -49,10 +165,8 @@ function Profiles() {
           `error happened on like service : ${data.detail?.[0]?.msg}`,
         );
 
-      if (data.matched) {
-        setMatchedProfile(profile);
-        setTimeout(() => setMatchedProfile(null), 2000);
-      }
+      // The match moment stays until they choose: write, or keep browsing.
+      if (data.matched) setMatchedProfile(profile);
     } catch (err) {}
   }
 
@@ -80,6 +194,7 @@ function Profiles() {
 
         if (ownResp.ok) {
           const ownData = await ownResp.json();
+          setOwnPhoto(ownData.photos?.[0]?.image_url || null);
           const saved = (() => { try { return JSON.parse(sessionStorage.getItem("blossom_filters") || "null"); } catch { return null; } })();
           const defaults = getDefaultFilters(ownData);
           const initial = saved !== null ? saved : defaults;
@@ -95,7 +210,7 @@ function Profiles() {
     }
 
     fetchAll();
-  }, [token, navigate, matchedProfile, deckSeed]);
+  }, [token, navigate, matchedProfile, deckSeed, reloadKey]);
 
   const filteredProfiles = useMemo(
     () => profiles.filter((p) => matchesFilters(p, appliedFilters)),
@@ -115,44 +230,43 @@ function Profiles() {
     setFilterOpen(false);
   }
 
+  const closeMatch = useCallback(() => setMatchedProfile(null), []);
+
+  function refresh() {
+    setLoading(true);
+    setReloadKey((k) => k + 1);
+  }
+
+  const toolbar = (
+    <div className={styles.toolbar}>
+      <h1 className={styles.pageTitle}>{t("browse.title")}</h1>
+      <button type="button" className={styles.filterButton} onClick={openFilters} disabled={loading}>
+        <Icon name="sliders" size={18} />
+        {t("browse.filters")}
+        {activeFilterCount > 0 && <span className={styles.filterCount}>{activeFilterCount}</span>}
+      </button>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="profile-page">
         <PageNav />
-        <p className={styles.empty} style={{ marginTop: "4rem" }}>Loading profiles...</p>
+        {toolbar}
+        <div className={styles.skeletonWrap}>
+          <SkeletonTiles count={6} imageHeight={420} />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="profile-page">
-      {matchedProfile && (
-        <div className={styles.matchOverlay}>
-          <div className={styles.matchCard}>
-            <div className={styles.matchHeart}>❤️</div>
-            <h1>It's a Match!</h1>
-            <img
-              src={IMG.card(matchedProfile.photos?.[0]?.image_url)}
-              alt={matchedProfile.first_name}
-              className={styles.matchImage}
-            />
-            <h2>{matchedProfile.first_name}</h2>
-            <p>You both liked each other</p>
-          </div>
-        </div>
-      )}
+      <MatchCelebration myPhoto={ownPhoto} them={matchedProfile} onClose={closeMatch} />
 
       <PageNav />
 
-      <div className={styles.toolbar}>
-        <button
-          type="button"
-          className={styles.filterButton}
-          onClick={openFilters}
-        >
-          ⚙️ Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-        </button>
-      </div>
+      {toolbar}
 
       <ProfileFilterModal
         open={filterOpen}
@@ -165,90 +279,33 @@ function Profiles() {
 
       <div className={styles.container}>
         {filteredProfiles.length === 0 && (
-          <div className={styles.empty}>
+          <div className={styles.emptyWrap}>
             {activeFilterCount > 0 ? (
-              <>
-                <div className={styles.emptyIcon}>🔍</div>
-                <p className={styles.emptyTitle}>No matches for your filters</p>
-                <p className={styles.emptyText}>Try widening your search — more people may appear with fewer filters applied.</p>
-                <p className={styles.emptyHint}>Click ⚙️ Filters to adjust</p>
-              </>
+              <EmptyState
+                icon="search"
+                title={t("browse.noMatchTitle")}
+                text={t("browse.noMatchText")}
+                action={<Button icon="sliders" onClick={openFilters}>{t("browse.filters")}</Button>}
+              />
             ) : (
-              <>
-                <div className={styles.emptyIcon}>🌸</div>
-                <p className={styles.emptyTitle}>You've seen everyone!</p>
-                <p className={styles.emptyText}>No more profiles right now — check back later as new members join every day.</p>
-                <p className={styles.emptyHint}>New people bloom every day 💌</p>
-              </>
+              <EmptyState
+                icon="users"
+                title={t("browse.emptyTitle")}
+                text={t("browse.emptyText")}
+                action={<Button icon="refresh-cw" variant="secondary" onClick={refresh}>{t("browse.refresh")}</Button>}
+              />
             )}
           </div>
         )}
 
         {filteredProfiles.map((profile) => (
-          <div key={profile.id} className={styles.card}>
-            <button
-              type="button"
-              className={styles.loveButton}
-              onClick={(e) => handleLike(e, profile)}
-            >
-              ❤️
-            </button>
-
-            <img
-              src={IMG.card(profile.photos?.[0]?.image_url)}
-              alt={profile.first_name}
-              className={styles.image}
-            />
-
-            {/* Joined less than a week ago. */}
-            {isNewMember(profile) && (
-              <span className={`${styles.newBadge} ${latinScript ? styles.smallCaps : ""}`}>
-                <span className={styles.newDot} aria-hidden="true" />
-                {t("browse.new")}
-              </span>
-            )}
-
-            <div className={styles.overlay}>
-              <div className={styles.profileInfo}>
-                {/* What they're here for: dating, language exchange or both. */}
-                <span className={styles.connection}>
-                  <span className={styles.dots} aria-hidden="true">
-                    {CONNECTION_DOTS[connectionOf(profile)].map((color) => (
-                      <span key={color} className={styles.dot} style={{ background: color }} />
-                    ))}
-                  </span>
-                  {t(`connection.${connectionOf(profile)}`)}
-                </span>
-                <h3>
-                  {profile.first_name}
-                  <span>{profile.age}</span>
-                </h3>
-
-                {(profile.city || profile.country) && (
-                  <p className={styles.location}>
-                    📍 {[profile.city, profile.country].filter(Boolean).join(", ")}
-                  </p>
-                )}
-
-                {/* The languages matter to anyone open to language exchange. */}
-                {connectionOf(profile) !== "dating" && languagesLine(profile) && (
-                  <p className={styles.languages}>{languagesLine(profile)}</p>
-                )}
-
-                {profile.occupation && (
-                  <div className={styles.tag}>💼 {profile.occupation}</div>
-                )}
-
-                <button
-                  type="button"
-                  className={styles.viewProfileButton}
-                  onClick={() => navigate(`/profile/${profile.id}`)}
-                >
-                  View Profile
-                </button>
-              </div>
-            </div>
-          </div>
+          <BrowseCard
+            key={profile.id}
+            profile={profile}
+            latinScript={latinScript}
+            onLike={handleLike}
+            onOpen={(p) => navigate(`/profile/${p.id}`)}
+          />
         ))}
       </div>
     </div>

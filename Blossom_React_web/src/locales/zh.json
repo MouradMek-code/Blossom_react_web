@@ -347,7 +347,9 @@
     "likesCircle": "喜欢你",
     "circlesLikeBack": "回赞即可配对 💞",
     "circlesEmpty": "有人喜欢你或配对成功时，会显示在这里。",
-    "heartLabel": "喜欢你的人"
+    "heartLabel": "喜欢你的人",
+    "pickTitle": "你的聊天",
+    "pickText": "在左侧选择一个聊天来查看和回复。"
   },
   "location": {
     "title": "你住在哪里？",
@@ -430,7 +432,18 @@
     "cancel": "取消"
   },
   "browse": {
-    "new": "新人"
+    "new": "新人",
+    "previousPhoto": "上一张照片",
+    "nextPhoto": "下一张照片",
+    "title": "发现",
+    "filters": "筛选",
+    "viewProfile": "查看资料",
+    "like": "喜欢",
+    "refresh": "刷新",
+    "emptyTitle": "你已经看完所有人了！",
+    "emptyText": "每天都有新人加入。刷新看看谁是新来的。",
+    "noMatchTitle": "没有符合筛选条件的人",
+    "noMatchText": "试着放宽条件——筛选越少，能看到的人越多。"
   },
   "connection": {
     "question": "你来 Blossom 是为了什么？",
@@ -1230,5 +1243,32 @@
     "adminDelete": "🗑 删除",
     "adminDeleteConfirm": "删除这条反馈？",
     "adminReply": "通过邮件回复"
+  },
+  "signupSteps": {
+    "step": "第 {{n}} 步，共 {{total}} 步",
+    "intent": "你来这里的目的",
+    "you": "关于你",
+    "looking": "你在寻找什么",
+    "story": "你的故事",
+    "languages": "你的语言",
+    "basics": "更多细节",
+    "lifestyle": "你的生活方式",
+    "personal": "家庭与过往感情",
+    "optional": "可选",
+    "optionalStep": "全部可选——不想回答的可以跳过。",
+    "startTitle": "创建你的资料",
+    "startText": "{{count}} 个简短步骤，大约 2 分钟。",
+    "startButton": "开始吧",
+    "next": "下一步",
+    "finish": "完成"
+  },
+  "likesYou": {
+    "matchMessage": "发消息",
+    "matchKeepGoing": "继续浏览",
+    "matchTitle": "配对成功！",
+    "matchText": "你们互相喜欢",
+    "title": "喜欢你的人",
+    "empty": "还没有人喜欢你 - 稍后再来看看！",
+    "likeBack": "回喜欢"
   }
 }

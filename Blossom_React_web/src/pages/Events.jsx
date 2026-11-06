@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
+import { Icon } from "../ui";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { EVENT_KINDS, KIND_EMOJI, KIND_GRADIENT, eventDay, eventWhen } from "../api/events";
@@ -112,7 +113,8 @@ export default function Events() {
                 {cities.map((c) => (
                   <button key={c} type="button" className={city === c ? styles.chipOn : styles.chip}
                     onClick={() => setCity(city === c ? "" : c)}>
-                    📍 {c}
+                    <Icon name="map-pin" size={14} />
+                    {c}
                   </button>
                 ))}
               </div>
@@ -167,8 +169,8 @@ export function EventCard({ event, t, language }) {
       </div>
       <div className={styles.cardBody}>
         <h2 className={styles.cardTitle}>{event.title}</h2>
-        <p className={styles.when}>🕒 {eventWhen(event.starts_at, language)}</p>
-        <p className={styles.place}>📍 {event.place_name} · {event.city}</p>
+        <p className={styles.when}><Icon name="clock" size={15} />{eventWhen(event.starts_at, language)}</p>
+        <p className={styles.place}><Icon name="map-pin" size={15} />{event.place_name} · {event.city}</p>
         <div className={styles.tags}>
           {event.spot?.offer && <span className={styles.giftTag}>🎁 {event.spot.offer.title}</span>}
           {event.women_only && <span className={styles.tag}>👩 {t("events.womenOnly")}</span>}

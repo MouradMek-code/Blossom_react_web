@@ -2249,3 +2249,10 @@
   font-size: 11px;
   cursor: pointer;
 }
+
+/* On a computer: use the width - more spots per row. */
+@media (min-width: 1280px) {
+  .body {
+    max-width: 1280px;
+  }
+}

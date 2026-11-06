@@ -347,7 +347,9 @@
     "likesCircle": "معجبون بك",
     "circlesLikeBack": "أعجب بهم بدورك لتتوافقا 💞",
     "circlesEmpty": "عندما يعجب بك أحد أو تتوافقان، سيظهر هنا.",
-    "heartLabel": "الأشخاص المعجبون بك"
+    "heartLabel": "الأشخاص المعجبون بك",
+    "pickTitle": "محادثاتك",
+    "pickText": "اختر محادثة من اليسار لقراءتها والرد عليها."
   },
   "location": {
     "title": "أين تسكن؟",
@@ -430,7 +432,18 @@
     "cancel": "إلغاء"
   },
   "browse": {
-    "new": "ملف جديد"
+    "new": "ملف جديد",
+    "previousPhoto": "الصورة السابقة",
+    "nextPhoto": "الصورة التالية",
+    "title": "اكتشف",
+    "filters": "الفلاتر",
+    "viewProfile": "عرض الملف",
+    "like": "إعجاب",
+    "refresh": "تحديث",
+    "emptyTitle": "لقد رأيت الجميع!",
+    "emptyText": "ينضم أشخاص جدد كل يوم. حدّث الصفحة لترى الجدد.",
+    "noMatchTitle": "لا أحد يطابق الفلاتر",
+    "noMatchText": "وسّع بحثك: مع فلاتر أقل سيظهر أشخاص أكثر."
   },
   "connection": {
     "question": "ما الذي أتى بك إلى Blossom؟",
@@ -1230,5 +1243,32 @@
     "adminDelete": "🗑 حذف",
     "adminDeleteConfirm": "حذف هذا البلاغ؟",
     "adminReply": "الرد بالبريد"
+  },
+  "signupSteps": {
+    "step": "الخطوة {{n}} من {{total}}",
+    "intent": "ما الذي يأتي بك إلى هنا",
+    "you": "عنك",
+    "looking": "ما الذي تبحث عنه",
+    "story": "قصتك",
+    "languages": "لغاتك",
+    "basics": "بعض التفاصيل الإضافية",
+    "lifestyle": "نمط حياتك",
+    "personal": "العائلة والعلاقات السابقة",
+    "optional": "اختياري",
+    "optionalStep": "كل شيء اختياري – تخطَّ ما تفضّل.",
+    "startTitle": "أنشئ ملفك الشخصي",
+    "startText": "{{count}} خطوات قصيرة – حوالي دقيقتين.",
+    "startButton": "لنبدأ",
+    "next": "التالي",
+    "finish": "إنهاء"
+  },
+  "likesYou": {
+    "matchMessage": "أرسل رسالة",
+    "matchKeepGoing": "متابعة التصفح",
+    "matchTitle": "لقد تطابقتما!",
+    "matchText": "كلاكما أعجب بالآخر",
+    "title": "من أعجبهم ملفك",
+    "empty": "لا توجد إعجابات بعد - تحقق مرة أخرى قريبًا!",
+    "likeBack": "بادله الإعجاب"
   }
 }

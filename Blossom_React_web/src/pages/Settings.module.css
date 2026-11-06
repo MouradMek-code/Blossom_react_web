@@ -242,3 +242,23 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+/* A row: icon + text on one side, a chevron on the other. */
+.rowLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.rowLabel svg {
+  color: var(--primary);
+}
+
+.chev {
+  color: var(--text-muted);
+}
+
+.linkRow {
+  min-height: 48px;
+}

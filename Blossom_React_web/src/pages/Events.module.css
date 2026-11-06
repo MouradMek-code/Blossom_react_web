@@ -349,3 +349,23 @@
   margin: 0;
   font-size: 2.6rem;
 }
+
+/* Icon + text lines on the event cards and the city chips. */
+.when,
+.place {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.when svg,
+.place svg {
+  color: var(--primary);
+}
+
+.chip,
+.chipOn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}

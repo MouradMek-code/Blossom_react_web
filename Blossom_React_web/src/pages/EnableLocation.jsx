@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
+import { Icon } from "../ui";
 import styles from "./EnableLocation.module.css";
 
 // Some browsers never answer when the permission window is just closed.
@@ -83,7 +84,9 @@ export default function EnableLocation() {
     <div className={styles.page}>
       <PageNav minimal />
       <main className={styles.wrap}>
-        <span className={styles.circle} aria-hidden="true">📍</span>
+        <span className={styles.circle} aria-hidden="true">
+          <Icon name="map-pin" size={56} strokeWidth={1.8} color="var(--primary)" />
+        </span>
         <h1 className={styles.title}>{t("location.pageTitle")}</h1>
         <p className={styles.text}>{t("location.pageText")}</p>
         <button type="button" className={styles.button} onClick={enable} disabled={busy}>

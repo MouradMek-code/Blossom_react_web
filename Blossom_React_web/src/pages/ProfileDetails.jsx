@@ -5,6 +5,7 @@ import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { connectionLabel, connectionOf } from "../api/connection";
+import { Icon } from "../ui";
 import styles from "./ProfileDetails.module.css";
 
 // Someone's full profile. Liking and passing happen on the Browse cards, not
@@ -129,7 +130,7 @@ function ProfileDetails() {
             <div className={styles.heroNoPhoto} />
           )}
           <div className={styles.heroGradient} />
-          {profile.photos?.length > 1 && <span className={styles.heroCount}>📷 {profile.photos.length}</span>}
+          {profile.photos?.length > 1 && <span className={styles.heroCount}><Icon name="camera" size={14} />{profile.photos.length}</span>}
 
         <div className={styles.heroInfo}>
           <h1 className={styles.heroName}>
@@ -140,9 +141,9 @@ function ProfileDetails() {
             <span className={`${styles.heroBadge} ${styles.heroConnection}`}>
               {connectionLabel(connectionOf(profile), t)}
             </span>
-            {profile.city && <span className={styles.heroBadge}>📍 {profile.city}</span>}
-            {profile.relationship_goal && <span className={styles.heroBadge}>💘 {profile.relationship_goal}</span>}
-            {profile.occupation && <span className={styles.heroBadge}>💼 {profile.occupation}</span>}
+            {profile.city && <span className={styles.heroBadge}><Icon name="map-pin" size={14} />{profile.city}</span>}
+            {profile.relationship_goal && <span className={styles.heroBadge}><Icon name="heart" size={14} />{profile.relationship_goal}</span>}
+            {profile.occupation && <span className={styles.heroBadge}><Icon name="briefcase" size={14} />{profile.occupation}</span>}
           </div>
         </div>
         </div>
@@ -156,14 +157,17 @@ function ProfileDetails() {
           <div className={styles.safetyRow}>
             {isMatch && (
               <button className={styles.unmatchBtn} onClick={handleUnmatch} disabled={unmatching}>
-                💔 {t("messages.unmatch")}
+                <Icon name="x" size={17} />
+                {t("messages.unmatch")}
               </button>
             )}
             <button className={styles.reportBtn} onClick={() => setReportModalOpen(true)}>
-              ⚠️ {t("safety.report")}
+              <Icon name="flag" size={17} />
+              {t("safety.report")}
             </button>
             <button className={styles.blockBtn} onClick={() => setBlockModalOpen(true)}>
-              🚫 {t("safety.block")}
+              <Icon name="slash" size={17} />
+              {t("safety.block")}
             </button>
           </div>
         </div>

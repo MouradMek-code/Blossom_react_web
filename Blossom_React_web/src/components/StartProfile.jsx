@@ -21,119 +21,125 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
+// The questions in a few short steps (2-4 each) instead of one per screen -
+// the same steps as the app. Only what Browse needs is required.
+export const SIGNUP_STEPS = [
+  { key: "intent", fields: ["connection_type"], required: ["connection_type"] },
+  { key: "you", fields: ["gender", "sexual_orientation", "age"], required: ["gender", "sexual_orientation", "age"] },
+  { key: "looking", fields: ["relationship_goal", "first_date_preference"], required: ["relationship_goal"] },
+  { key: "story", fields: ["bio", "occupation"], required: [] },
+  { key: "languages", fields: ["language_name", "learning_language_name"], required: ["language_name"] },
+  { key: "basics", fields: ["height_cm", "education", "personality_type"], required: [] },
+  { key: "lifestyle", fields: ["smoking", "drinking", "exercise_frequency", "has_pets"], required: [] },
+  { key: "personal", fields: ["has_children", "wants_children", "past_relationships_count", "last_breakup_reason"], required: [] },
+];
+
+function filled(value) {
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === "string") return value.trim().length > 0;
+  return value != null;
+}
+
+// Each question reports "answered" through setClicked; a step works it out
+// from the answers instead.
+const noop = () => {};
+
 function StartProfile({ setQuestionEnded, answer, setAnswer, initialIndex = 0, autoStart = false }) {
+  const { t } = useTranslation();
+  const isMobile = useIsMobile();
   const [started, setStart] = useState(autoStart);
-  const [indiceQuestion, setIndiceQuestion] = useState(initialIndex);
-  const [clicked, setClicked] = useState(false);
+  const [step, setStep] = useState(initialIndex);
   // Someone here only for language exchange skips the dating questions.
   const questions = useMemo(
     () => questionsFor(allQuestions, answer.connection_type),
     [answer.connection_type],
   );
+  const steps = useMemo(
+    () =>
+      SIGNUP_STEPS.map((s) => ({
+        ...s,
+        questions: s.fields.map((f) => questions.find((q) => q.field === f)).filter(Boolean),
+      })).filter((s) => s.questions.length > 0),
+    [questions],
+  );
+  const index = Math.min(step, steps.length - 1);
+  const current = steps[index];
+  const ready = current.required.every((f) => !current.questions.some((q) => q.field === f) || filled(answer[f]));
+  const last = index >= steps.length - 1;
 
   function Handleclicked(question, values) {
-    setClicked(true);
-    if ((question.field === "language_name" || question.field === "learning_language_name") && question.field in answer) {
-      const prev = answer[question.field];
-      setAnswer((c) => ({ ...c, [question.field]: [...prev, ...values] }));
-      return;
-    }
     setAnswer((c) => ({ ...c, [question.field]: values }));
   }
-  function HandleLetStartButton() {
-    setStart((s) => !s);
-    setIndiceQuestion(0);
-    setClicked(false);
+
+  function begin() {
+    setStart(true);
+    setStep(0);
     saveSignupDraft({ started: true, questionIndex: 0, answer });
   }
-  function Handleindicequestion(i) {
-    setClicked(false);
-    if (indiceQuestion >= questions.length - 1) {
+
+  function next() {
+    if (last) {
       setQuestionEnded((c) => !c);
+      return;
     }
-    const nextIndex = indiceQuestion + 1;
-    setIndiceQuestion(nextIndex);
-    saveSignupDraft({ started: true, questionIndex: nextIndex, answer });
+    const nextStep = index + 1;
+    setStep(nextStep);
+    saveSignupDraft({ started: true, questionIndex: nextStep, answer });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  const nextButton = (
+    <button className={styles.end_button} onClick={next}>
+      {last ? t("signupSteps.finish") : t("signupSteps.next")}
+    </button>
+  );
+
+  if (!started) return <ButtonLetsStart count={steps.length} onclick={begin} />;
+
   return (
     <div className={styles.container}>
-      <header>
-        <span className={styles.title}>Create Your Profile Here</span>
-      </header>
-      {started ? (
-        <ProfileFlowerProgress current={indiceQuestion + 1} total={questions.length} />
-      ) : (
-        <ButtonLetsStart
-          length={questions.length}
-          onclick={HandleLetStartButton}
-        />
-      )}
-      {started && indiceQuestion < questions.length && (
-        <QuestionOption
-          question={questions[indiceQuestion]}
-          onclick={Handleindicequestion}
-          Handleclicked={Handleclicked}
-          clicked={clicked}
-          setAnswer={setAnswer}
-          answer={answer}
-          setClicked={setClicked}
-        />
-      )}
+      <ProfileFlowerProgress current={index + 1} total={steps.length} />
+      <p className={styles.stepLabel}>{t("signupSteps.step", { n: index + 1, total: steps.length })}</p>
+      <h1 className={styles.stepTitle}>{t(`signupSteps.${current.key}`)}</h1>
+      {current.required.length === 0 && <p className={styles.optionalNote}>{t("signupSteps.optionalStep")}</p>}
+      {current.questions.map((question) => (
+        <div key={question.field} className={styles.questions}>
+          <h2>
+            {question.field === "connection_type" ? t("connection.question") : question.question}
+            {!current.required.includes(question.field) && (
+              <span className={styles.optionalTag}>{t("signupSteps.optional")}</span>
+            )}
+          </h2>
+          <div className={styles.button_question}>
+            <Question
+              question={question}
+              Handleclicked={Handleclicked}
+              setAnswer={setAnswer}
+              answer={answer}
+              setClicked={noop}
+            />
+          </div>
+        </div>
+      ))}
+      {ready && !isMobile && nextButton}
+      {ready && isMobile && createPortal(nextButton, document.body)}
     </div>
   );
 }
-function ButtonLetsStart({ length, onclick }) {
-  return (
-    <>
-      <div className={styles.let_start_btn}>
-        <p>Create Your Profile</p>
-        <h3>{length} questions to create your profile</h3>
 
-        <button onClick={onclick}>let'start</button>
-      </div>
-    </>
-  );
-}
-
-
-function QuestionOption({
-  question,
-  onclick,
-  Handleclicked,
-  clicked,
-  setAnswer,
-  answer,
-  setClicked,
-}) {
+function ButtonLetsStart({ count, onclick }) {
   const { t } = useTranslation();
-  const isMobile = useIsMobile();
-  const nextButton = (
-    <button className={styles.end_button} onClick={onclick}>
-      NEXT
-    </button>
-  );
-  const title = question.field === "connection_type" ? t("connection.question") : question.question;
-
   return (
-    <>
-      <div className={styles.questions}>
-        <h2>{title}</h2>
-        <div className={styles.button_question}>
-          <Question
-            question={question}
-            Handleclicked={Handleclicked}
-            clicked={clicked}
-            setAnswer={setAnswer}
-            answer={answer}
-            setClicked={setClicked}
-          />
-        </div>
-        {clicked && !isMobile && nextButton}
+    <div className={styles.container}>
+      <div className={styles.let_start_btn}>
+        <p>{t("signupSteps.startTitle")}</p>
+        <h3>{t("signupSteps.startText", { count })}</h3>
+        <button onClick={onclick}>{t("signupSteps.startButton")}</button>
       </div>
-      {clicked && isMobile && createPortal(nextButton, document.body)}
-    </>
+    </div>
   );
 }
+
 // "What brings you to Blossom?": dating, language exchange or both. "Both" is
 // chosen already, so Next works straight away.
 function ConnectionQuestion({ answer, setAnswer, setClicked }) {

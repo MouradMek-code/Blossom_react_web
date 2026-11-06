@@ -620,3 +620,15 @@
     align-items: stretch;
   }
 }
+
+/* The fact icons (time, place) in Blossom's rose. */
+.facts li > span:first-child {
+  color: var(--primary);
+  padding-top: 1px;
+}
+
+.chipBtn,
+.chipDanger {
+  gap: 6px;
+  min-height: 36px;
+}

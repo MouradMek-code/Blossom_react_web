@@ -538,3 +538,40 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* The steps: "Step 2 of 8", the step's name, and "Optional" tags. */
+.stepLabel {
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stepTitle {
+  margin: 6px 0 4px;
+  text-align: center;
+  font-size: 26px;
+  color: var(--text);
+}
+
+.optionalNote {
+  margin: 0 0 8px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14.5px;
+}
+
+.optionalTag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #f7f1ec;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 800;
+  vertical-align: middle;
+}

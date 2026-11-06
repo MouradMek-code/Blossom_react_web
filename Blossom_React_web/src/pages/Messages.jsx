@@ -1,223 +1,38 @@
-import { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
-import { BASE_URL } from "../api/config";
-import { IMG } from "../api/images";
-import { NETWORK_ERROR, postJson } from "../api/errors";
-import { shortTime } from "../api/chatTime";
+import ConversationList from "../components/ConversationList";
+import { useWide } from "../api/useWide";
+import { EmptyState } from "../ui";
 import styles from "./Messages.module.css";
 
-// Refresh while the page is open, so new messages and badges show up without
-// a reload (there's no push channel).
-const REFRESH_MS = 10000;
-
+// Chats. On a phone: the list. On a computer: the list on the left and a
+// "pick a conversation" panel on the right - opening one keeps the list there
+// (ChatPage), like WhatsApp Web.
 function Messages() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
-  const [items, setItems] = useState(null); // null while loading
-  const [error, setError] = useState("");
-  const [openingId, setOpeningId] = useState(null);
-  // The "Likes you" circle: how many, how many new, a few photos to blur.
-  const [likes, setLikes] = useState({ total: 0, new: 0, photos: [] });
+  const wide = useWide();
 
-  const load = useCallback(async () => {
-    const headers = { Authorization: `Bearer ${token}` };
-    try {
-      const [resp, likesResp] = await Promise.all([
-        fetch(`${BASE_URL}/messages/inbox`, { headers }),
-        fetch(`${BASE_URL}/likes/profile_likes/summary`, { headers }).catch(() => null),
-      ]);
-      if (resp.status === 401) {
-        navigate("/login");
-        return;
-      }
-      setItems(resp.ok ? await resp.json() : []);
-      if (likesResp?.ok) setLikes(await likesResp.json());
-      setError("");
-    } catch {
-      setError(NETWORK_ERROR);
-      setItems((cur) => cur || []);
-    }
-  }, [token, navigate]);
-
-  useEffect(() => {
-    if (!token || token === "null" || token === "undefined") {
-      navigate("/login");
-      return;
-    }
-    load();
-    // New matches are on display here, so they count as seen.
-    fetch(`${BASE_URL}/matches/mark_seen`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    }).catch(() => {});
-    const interval = setInterval(load, REFRESH_MS);
-    return () => clearInterval(interval);
-  }, [token, navigate, load]);
-
-  // New matches have no conversation until someone opens it.
-  async function open(item) {
-    if (item.conversation_id) {
-      navigate(`/chat/${item.conversation_id}`);
-      return;
-    }
-    setOpeningId(item.profile.id);
-    const result = await postJson(`${BASE_URL}/profile/profile/${item.profile.id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setOpeningId(null);
-    if (!result.ok) {
-      setError(result.message);
-      return;
-    }
-    navigate(`/chat/${result.data.conversation_id}`);
+  if (wide) {
+    return (
+      <div className={styles.splitPage}>
+        <PageNav hideTabBar />
+        <div className={styles.split}>
+          <aside className={styles.side}>
+            <ConversationList compact />
+          </aside>
+          <main className={styles.pick}>
+            <EmptyState icon="message-circle" title={t("messages.pickTitle")} text={t("messages.pickText")} />
+          </main>
+        </div>
+      </div>
+    );
   }
-
-  // Only conversations reach the list; matches nobody has written to yet are
-  // the row of faces above it.
-  function preview(item) {
-    const text = item.last_message.is_invite
-      ? `💌 ${item.last_message.content}`
-      : item.last_message.content;
-    return item.last_message.mine ? `${t("messages.you")}: ${text}` : text;
-  }
-
-  const newMatches = (items || []).filter((item) => !item.last_message);
-  const conversations = (items || []).filter((item) => item.last_message);
 
   return (
     <div className={styles.page}>
       <PageNav />
       <div className={styles.container}>
-        <h1 className={styles.title}>{t("messages.title")}</h1>
-        <p className={styles.subtitle}>{t("messages.subtitle")}</p>
-
-        {error !== "" && <p className={styles.error}>{error}</p>}
-
-        {/* Likes and new matches, always on top: the "Likes you" circle
-            first (their photos blurred - tap to see who), then the faces of
-            new matches nobody has written to yet. */}
-        <section className={styles.matchesBlock}>
-          <h2 className={styles.sectionTitle}>{t("messages.circlesTitle")}</h2>
-          <ul className={styles.matchesRow}>
-            <li>
-              <Link to="/liked_you" className={styles.matchItem}>
-                <span className={styles.likesWrap} aria-hidden="true">
-                  <span className={`${styles.likesCircle} ${likes.total > 0 ? styles.likesCircleOn : ""}`}>
-                    {likes.photos[0] && <img className={styles.likesBlur} src={IMG.thumb(likes.photos[0])} alt="" />}
-                    <span className={styles.likesHeart}>❤️</span>
-                  </span>
-                  {likes.total > 0 && (
-                    <span className={styles.likesCount}>{likes.total > 99 ? "99+" : likes.total}</span>
-                  )}
-                </span>
-                <span className={styles.matchName}>{t("messages.likesCircle")}</span>
-                {likes.new > 0 && (
-                  <span className={styles.likesNewLabel}>{t("events.likesBannerNew", { count: likes.new })}</span>
-                )}
-              </Link>
-            </li>
-            {newMatches.length === 0 && items !== null && (
-              <li className={styles.rowHint}>
-                {likes.total > 0 ? t("messages.circlesLikeBack") : t("messages.circlesEmpty")}
-              </li>
-            )}
-              {newMatches.map((item) => (
-                <li key={item.profile.id}>
-                  <button
-                    type="button"
-                    className={styles.matchItem}
-                    onClick={() => open(item)}
-                    disabled={openingId !== null}
-                  >
-                    {item.profile.photo ? (
-                      <img
-                        className={styles.matchAvatar}
-                        src={IMG.thumb(item.profile.photo)}
-                        alt={item.profile.first_name}
-                      />
-                    ) : (
-                      <span className={`${styles.matchAvatar} ${styles.avatarEmpty}`}>🌸</span>
-                    )}
-                    <span className={styles.matchName}>{item.profile.first_name}</span>
-                    {/* Blossom's rule: she writes first. */}
-                    {item.waiting_for_them && (
-                      <span className={styles.matchWaiting}>{t("messages.waitingShort")}</span>
-                    )}
-                  </button>
-                </li>
-              ))}
-          </ul>
-        </section>
-
-        {items === null ? (
-          <p className={styles.muted}>{t("messages.loading")}</p>
-        ) : conversations.length === 0 ? (
-          newMatches.length > 0 ? (
-            <p className={styles.hint}>{t("messages.startChatting")}</p>
-          ) : (
-            <div className={styles.empty}>
-              <div className={styles.emptyIcon}>💬</div>
-              <p className={styles.emptyText}>{t("messages.empty")}</p>
-              <button className={styles.emptyBtn} onClick={() => navigate("/profiles")}>
-                {t("messages.browse")}
-              </button>
-            </div>
-          )
-        ) : (
-          <ul className={styles.list}>
-            {conversations.map((item) => {
-              const unread = item.unread_count > 0;
-              return (
-                <li key={item.profile.id}>
-                  <button
-                    className={`${styles.row} ${unread ? styles.rowUnread : ""}`}
-                    onClick={() => open(item)}
-                    disabled={openingId !== null}
-                  >
-                    <span className={styles.avatarWrap}>
-                      {item.profile.photo ? (
-                        <img
-                          className={styles.avatar}
-                          src={IMG.thumb(item.profile.photo)}
-                          alt={item.profile.first_name}
-                        />
-                      ) : (
-                        <span className={`${styles.avatar} ${styles.avatarEmpty}`}>🌸</span>
-                      )}
-                    </span>
-
-                    <span className={styles.body}>
-                      <span className={styles.topLine}>
-                        <span className={styles.name}>
-                          {item.profile.first_name}
-                          {item.profile.age ? `, ${item.profile.age}` : ""}
-                        </span>
-                        <span className={`${styles.time} ${unread ? styles.timeUnread : ""}`}>
-                          {shortTime(item.last_message.created_at)}
-                        </span>
-                      </span>
-                      <span className={styles.bottomLine}>
-                        <span
-                          className={`${styles.preview} ${unread ? styles.previewUnread : ""}`}
-                        >
-                          {openingId === item.profile.id ? t("messages.loading") : preview(item)}
-                        </span>
-                        {unread && (
-                          <span className={styles.unreadBadge}>
-                            {item.unread_count > 9 ? "9+" : item.unread_count}
-                          </span>
-                        )}
-                      </span>
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        <ConversationList />
       </div>
     </div>
   );

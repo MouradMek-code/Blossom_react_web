@@ -362,3 +362,47 @@
   font-size: 0.88rem;
   line-height: 1.4;
 }
+
+/* On a computer: the list on the left, "pick a conversation" on the right. */
+.splitPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.split {
+  flex: 1;
+  display: flex;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 0;
+}
+
+.side {
+  width: 380px;
+  flex-shrink: 0;
+  padding: 18px 16px 24px;
+  border-right: 1px solid #eee3dc;
+  background: #fff;
+  overflow-y: auto;
+  max-height: calc(100vh - 64px);
+}
+
+.pick {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The list in the side column: a little tighter. */
+.compact .title {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.rowActive {
+  background: var(--primary-soft) !important;
+}

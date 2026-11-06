@@ -4,15 +4,16 @@ import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
+import { Icon } from "../ui";
 import styles from "./ReportProblem.module.css";
 
 // What the report is about; child safety first.
 const KINDS = [
-  ["child_safety", "🛡️"],
-  ["scam", "🎭"],
-  ["harassment", "🚫"],
-  ["bug", "🐞"],
-  ["other", "💬"],
+  ["child_safety", "shield"],
+  ["scam", "alert-triangle"],
+  ["harassment", "slash"],
+  ["bug", "tool"],
+  ["other", "message-circle"],
 ];
 
 // "Report a problem" on the website (blossom-date.com/report) - members and
@@ -59,10 +60,15 @@ export default function ReportProblem() {
     <div className={styles.page}>
       <PageNav />
       <main className={styles.wrap}>
-        <h1 className={styles.title}>🛟 {t("feedback.title")}</h1>
+        <h1 className={styles.title}>
+          <Icon name="life-buoy" size={26} color="var(--primary)" />
+          {t("feedback.title")}
+        </h1>
         {sent ? (
           <section className={`${styles.card} ${styles.center}`}>
-            <span className={styles.bigEmoji} aria-hidden="true">💌</span>
+            <span className={styles.bigEmoji} aria-hidden="true">
+              <Icon name="check-circle" size={52} strokeWidth={1.8} color="var(--primary)" />
+            </span>
             <h2>{t("feedback.doneTitle")}</h2>
             <p className={styles.text}>{t("feedback.doneText")}</p>
           </section>
@@ -73,7 +79,7 @@ export default function ReportProblem() {
             <section className={styles.card}>
               <h2 className={styles.label}>{t("feedback.reasonLabel")}</h2>
               <div className={styles.kinds} role="radiogroup">
-                {KINDS.map(([key, emoji]) => (
+                {KINDS.map(([key, icon]) => (
                   <button
                     key={key}
                     type="button"
@@ -84,7 +90,8 @@ export default function ReportProblem() {
                     }`}
                     onClick={() => setKind(key)}
                   >
-                    {emoji} {t(`feedback.kind_${key}`)}
+                    <Icon name={icon} size={16} />
+                    {t(`feedback.kind_${key}`)}
                   </button>
                 ))}
               </div>

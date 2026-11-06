@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import Footer from "../components/Footer";
+import { Icon } from "../ui";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { postJson } from "../api/errors";
@@ -202,14 +203,14 @@ export default function EventDetail() {
 
             <ul className={styles.facts}>
               <li>
-                <span>🕒</span>
+                <span><Icon name="clock" size={18} /></span>
                 <strong>
                   {eventWhen(event.starts_at, language)}
                   {event.ends_at && ` – ${timeOnly(event.ends_at, language)}`}
                 </strong>
               </li>
               <li>
-                <span>📍</span>
+                <span><Icon name="map-pin" size={18} /></span>
                 <span>
                   <strong>{event.place_name}</strong> · {event.city}
                   {event.map_url && (
@@ -324,10 +325,11 @@ export default function EventDetail() {
                 </div>
               ) : null}
               <div className={styles.smallActions}>
-                <button type="button" className={styles.chipBtn} onClick={share}>🔗 {t("events.share")}</button>
+                <button type="button" className={styles.chipBtn} onClick={share}><Icon name="share-2" size={15} />{t("events.share")}</button>
                 {loggedIn && !isOwner && (
                   <button type="button" className={styles.chipBtn} onClick={report} disabled={busy}>
-                    🚩 {t("events.report")}
+                    <Icon name="flag" size={15} />
+                    {t("events.report")}
                   </button>
                 )}
                 {isAdmin && !isOwner && (

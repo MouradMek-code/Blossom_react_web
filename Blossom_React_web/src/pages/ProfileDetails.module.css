@@ -493,3 +493,21 @@
   .grid { grid-template-columns: 1fr; }
   .fact:nth-child(even) { border-left: none; padding-left: 0; }
 }
+
+/* Icons inside the badges and buttons sit on the text's line. */
+.heroBadge,
+.heroCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reportBtn,
+.blockBtn,
+.unmatchBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+}

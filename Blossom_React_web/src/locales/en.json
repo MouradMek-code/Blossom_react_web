@@ -347,7 +347,9 @@
     "likesCircle": "Likes you",
     "circlesLikeBack": "Like them back to match 💞",
     "circlesEmpty": "When someone likes you or you match, they'll appear here.",
-    "heartLabel": "People who like you"
+    "heartLabel": "People who like you",
+    "pickTitle": "Your conversations",
+    "pickText": "Pick a conversation on the left to read it and answer."
   },
   "location": {
     "title": "Where do you live?",
@@ -430,7 +432,18 @@
     "cancel": "Cancel"
   },
   "browse": {
-    "new": "New"
+    "new": "New",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "title": "Discover",
+    "filters": "Filters",
+    "viewProfile": "View profile",
+    "like": "Like",
+    "refresh": "Refresh",
+    "emptyTitle": "You've seen everyone!",
+    "emptyText": "New people join every day. Refresh to see who's new.",
+    "noMatchTitle": "No matches for your filters",
+    "noMatchText": "Try widening your search - more people may appear with fewer filters."
   },
   "connection": {
     "question": "What brings you to Blossom?",
@@ -1230,5 +1243,32 @@
     "adminDelete": "🗑 Delete",
     "adminDeleteConfirm": "Delete this report?",
     "adminReply": "Reply by email"
+  },
+  "signupSteps": {
+    "step": "Step {{n}} of {{total}}",
+    "intent": "What brings you here",
+    "you": "About you",
+    "looking": "What you're looking for",
+    "story": "Your story",
+    "languages": "Your languages",
+    "basics": "A few more details",
+    "lifestyle": "Your lifestyle",
+    "personal": "Family and past relationships",
+    "optional": "Optional",
+    "optionalStep": "All optional – skip what you prefer.",
+    "startTitle": "Create your profile",
+    "startText": "{{count}} short steps – about 2 minutes.",
+    "startButton": "Let's start",
+    "next": "Next",
+    "finish": "Finish"
+  },
+  "likesYou": {
+    "matchMessage": "Send a message",
+    "matchKeepGoing": "Keep browsing",
+    "matchTitle": "It's a match!",
+    "matchText": "You both liked each other",
+    "title": "People who like you",
+    "empty": "No likes yet - check back soon!",
+    "likeBack": "Like back"
   }
 }

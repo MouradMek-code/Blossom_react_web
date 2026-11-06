@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { POSE_EMOJI, fetchVerification, sendSelfie } from "../api/verification";
 import { formatDeadline } from "../api/offers";
+import { Icon } from "../ui";
 import styles from "./Verify.module.css";
 
 // The ✓ verified badge on the website: copy the pose, take a selfie (a
@@ -83,7 +84,7 @@ export default function Verify() {
               </section>
             ) : status === "pending" ? (
               <section className={`${styles.card} ${styles.center}`}>
-                <span className={styles.bigEmoji}>⏳</span>
+                <span className={styles.bigEmoji}><Icon name="hourglass" size={48} strokeWidth={1.8} /></span>
                 <h1 className={styles.title}>{t("verified.pendingTitle")}</h1>
                 <p className={styles.text}>{t("verified.pendingText")}</p>
               </section>
@@ -123,13 +124,14 @@ export default function Verify() {
                     </>
                   ) : (
                     <button type="button" className={styles.primary} onClick={() => input.current?.click()}>
-                      📸 {t("verified.take")}
+                      <Icon name="camera" size={19} />
+                      {t("verified.take")}
                     </button>
                   )}
                   {error && <p className={styles.error}>{error}</p>}
                 </section>
 
-                <p className={styles.privacy}>🔒 {t("verified.privacy")}</p>
+                <p className={styles.privacy}><Icon name="lock" size={14} />{t("verified.privacy")}</p>
               </>
             )}
           </>

@@ -136,3 +136,21 @@
   opacity: 0.45;
   cursor: default;
 }
+
+/* Title and reason chips with their icons. */
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+}
+
+.bigEmoji {
+  display: inline-flex;
+}

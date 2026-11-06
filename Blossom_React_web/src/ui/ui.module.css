@@ -1,0 +1,252 @@
+/* Blossom's shared building blocks (the app has the same set in src/ui). */
+
+/* ---- Button ---- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font: inherit;
+  font-size: 15.5px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.15s ease;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(0.97);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.button:focus-visible,
+.chip:focus-visible {
+  outline: 3px solid rgba(193, 70, 107, 0.35);
+  outline-offset: 2px;
+}
+
+.small {
+  min-height: 36px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.full {
+  width: 100%;
+}
+
+.primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.secondary {
+  background: #fff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.quiet {
+  background: #fff;
+  border-color: #dccec3;
+  color: var(--text-soft);
+}
+
+.danger {
+  background: #fff;
+  border-color: var(--danger, #c0392b);
+  color: var(--danger, #c0392b);
+}
+
+.dangerSolid {
+  background: var(--danger, #c0392b);
+  border-color: var(--danger, #c0392b);
+  color: #fff;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-soft);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Card ---- */
+.card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardDanger {
+  border: 1.5px solid #f3b7b0;
+}
+
+.cardInfo {
+  border: 1.5px solid #bfd6fa;
+  background: #f5f9ff;
+}
+
+/* ---- Chip ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #ece2da;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chipOn {
+  border-color: var(--primary);
+  background: var(--primary-tint, #fbf1f4);
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.chipOnDanger {
+  border-color: var(--danger, #c0392b);
+  background: #fdecea;
+  color: var(--danger, #c0392b);
+  font-weight: 800;
+}
+
+span.chip {
+  cursor: default;
+}
+
+/* ---- Empty state ---- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 40px 20px;
+}
+
+.emptyCircle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-soft);
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.emptyText {
+  margin: 0;
+  max-width: 340px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.emptyAction {
+  margin-top: 14px;
+}
+
+/* ---- Skeleton ---- */
+.skeleton {
+  background: linear-gradient(90deg, #f3ece6 25%, #faf6f2 50%, #f3ece6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .spinner {
+    animation: none;
+  }
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.skeletonTile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonRows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.skeletonRowText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

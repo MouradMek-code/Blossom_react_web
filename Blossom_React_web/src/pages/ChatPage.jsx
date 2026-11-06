@@ -3,6 +3,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./ChatPage.module.css";
 import PageNav from "../components/PageNav";
+import ConversationList from "../components/ConversationList";
+import { useWide } from "../api/useWide";
+import { Icon } from "../ui";
 
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
@@ -41,7 +44,7 @@ function InviteCard({ message, mine, partnerName, onAccept, accepting }) {
         <div className={styles.inviteInfo}>
           <span className={styles.inviteEyebrow}>💌 {t("dateSpots.dateIdea")}</span>
           <strong className={styles.inviteName}>{spot.name}</strong>
-          <span className={styles.invitePlace}>📍 {shortPlace(spot)}</span>
+          <span className={styles.invitePlace}><Icon name="map-pin" size={14} style={{ verticalAlign: "-2px", marginInlineEnd: 4 }} />{shortPlace(spot)}</span>
           <span className={styles.inviteCta}>{t("dateSpots.viewSpot")} →</span>
         </div>
       </Link>
@@ -117,7 +120,7 @@ function SpotSuggester({ partner, token, onClose, onSent }) {
         )}
         <span className={styles.suggestText}>
           <strong>{spot.name}</strong>
-          <span>📍 {shortPlace(spot)}</span>
+          <span><Icon name="map-pin" size={14} style={{ verticalAlign: "-2px", marginInlineEnd: 4 }} />{shortPlace(spot)}</span>
           {spot.offer && <span className={styles.suggestOffer}>🎁 {spot.offer.title}</span>}
         </span>
         <span aria-hidden="true">{sending === spot.id ? "…" : "💌"}</span>
@@ -147,7 +150,9 @@ function SpotSuggester({ partner, token, onClose, onSent }) {
       <div className={styles.suggestSheet} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={t("offers.suggestTitle")}>
         <div className={styles.suggestHead}>
           <strong>{t("offers.suggestTitle")}</strong>
-          <button type="button" onClick={onClose} aria-label="Close">✕</button>
+          <button type="button" onClick={onClose} aria-label="Close">
+            <Icon name="x" size={20} />
+          </button>
         </div>
         <p className={styles.suggestHint}>{t("offers.suggestHint")}</p>
         <input
@@ -180,6 +185,7 @@ function SpotSuggester({ partner, token, onClose, onSent }) {
 function ChatPage() {
   const { t, i18n } = useTranslation();
   const { conversationId } = useParams();
+  const wide = useWide();
   const navigate = useNavigate();
 
   const token = sessionStorage.getItem("token");
@@ -356,15 +362,17 @@ function ChatPage() {
       ),
   );
 
-  return (
+  const page = (
     <>
-      <div className={styles.chatContainer}>
+      <div className={`${styles.chatContainer} ${wide ? styles.chatInSplit : ""}`}>
         {/* No bottom tab bar here: the message box needs the bottom. */}
-        <PageNav hideTabBar />
+        {!wide && <PageNav hideTabBar />}
         <div className={styles.header}>
-          <Link to="/messages" className={styles.back} aria-label={t("messages.back")}>
-            ←
-          </Link>
+          {!wide && (
+            <Link to="/messages" className={styles.back} aria-label={t("messages.back")}>
+              <Icon name="arrow-left" size={22} />
+            </Link>
+          )}
           {partner ? (
             <div className={styles.partner}>
               {/* state: tells their profile page this is a match (Unmatch). */}
@@ -449,8 +457,16 @@ function ChatPage() {
               </div>
               {message.id === riskyId && (
                 <div className={styles.safety}>
-                  <span>⚠️ {t("chatSafety.text")}</span>
-                  {partner && <Link to={`/profile/${partner.id}`} className={styles.safetyLink}>🚩 {t("chatSafety.report")}</Link>}
+                  <span className={styles.safetyRow}>
+                    <Icon name="alert-triangle" size={17} />
+                    {t("chatSafety.text")}
+                  </span>
+                  {partner && (
+                    <Link to={`/profile/${partner.id}`} className={`${styles.safetyRow} ${styles.safetyLink}`}>
+                      <Icon name="flag" size={16} />
+                      {t("chatSafety.report")}
+                    </Link>
+                  )}
                 </div>
               )}
               </Fragment>
@@ -500,7 +516,7 @@ function ChatPage() {
               title={t("offers.suggestSpot")}
               aria-label={t("offers.suggestSpot")}
             >
-              📍
+              <Icon name="map-pin" size={20} />
             </button>
           )}
           <input
@@ -529,6 +545,20 @@ function ChatPage() {
         )}
       </div>
     </>
+  );
+
+  // On a computer: the chat list on the left, like WhatsApp Web.
+  if (!wide) return page;
+  return (
+    <div className={styles.desktopPage}>
+      <PageNav hideTabBar />
+      <div className={styles.desktopBody}>
+        <aside className={styles.side}>
+          <ConversationList compact activeConversationId={conversationId} />
+        </aside>
+        <div className={styles.desktopMain}>{page}</div>
+      </div>
+    </div>
   );
 }
 

@@ -8,8 +8,8 @@
   padding: 28px 40px 0;
 }
 
-.toolbar::before {
-  content: "Discover";
+.pageTitle {
+  margin: 0;
   font-family: var(--font-display);
   font-size: 1.9rem;
   font-weight: 700;
@@ -18,6 +18,10 @@
 }
 
 .filterButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
   border: 1.5px solid var(--border-strong);
   border-radius: var(--r-pill);
   padding: 9px 18px;
@@ -44,6 +48,11 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 24px 40px 40px;
+}
+
+.emptyWrap {
+  grid-column: 1 / -1;
+  padding: 40px 0;
 }
 
 .empty {
@@ -119,6 +128,9 @@
 .overlay {
   position: absolute;
   inset: 0;
+  /* Clicks on the photo reach the photo switch zones; the buttons inside
+     the overlay still work. */
+  pointer-events: none;
 
   background: linear-gradient(
     to top,
@@ -156,26 +168,6 @@
   opacity: 0.85;
 }
 
-/* A chip: readable on any photo, and hard to miss. */
-.location {
-  display: inline-block;
-  max-width: 100%;
-  margin: 2px 0 12px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(20, 14, 12, 0.58);
-  font-weight: 700;
-}
-
-.tag {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 50px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  margin-bottom: 12px;
-}
-
 .loveButton {
   position: absolute;
   top: 16px;
@@ -191,7 +183,6 @@
   backdrop-filter: blur(8px);
   cursor: pointer;
 
-  font-size: 1.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -289,7 +280,12 @@
 }
 
 .viewProfileButton {
-  display: block;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
   width: 100%;
   border: none;
   border-radius: var(--r-pill);
@@ -308,109 +304,6 @@
   transform: translateY(-1px);
 }
 
-.matchOverlay {
-  position: fixed;
-  inset: 0;
-
-  background: rgba(0, 0, 0, 0.92);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 99999;
-
-  animation: fadeIn 0.4s ease;
-}
-
-.matchCard {
-  text-align: center;
-  color: white;
-
-  animation: popUp 0.4s ease;
-}
-
-.matchHeart {
-  font-size: 5rem;
-  margin-bottom: 20px;
-
-  animation: heartbeat 1s infinite;
-}
-
-.matchCard h1 {
-  font-size: 3.5rem;
-  margin-bottom: 25px;
-}
-
-.matchImage {
-  width: 320px;
-  height: 320px;
-
-  border-radius: 50%;
-  object-fit: cover;
-
-  border: 8px solid white;
-
-  box-shadow:
-    0 0 30px rgba(255, 255, 255, 0.3),
-    0 0 60px rgba(255, 105, 180, 0.4);
-}
-
-.matchCard h2 {
-  margin-top: 25px;
-  font-size: 2rem;
-}
-
-.matchCard p {
-  opacity: 0.85;
-  margin-top: 10px;
-  font-size: 1.1rem;
-}
-
-@keyframes heartbeat {
-  0% {
-    transform: scale(1);
-  }
-
-  25% {
-    transform: scale(1.15);
-  }
-
-  50% {
-    transform: scale(1);
-  }
-
-  75% {
-    transform: scale(1.15);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes popUp {
-  from {
-    transform: scale(0.75);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
 @media (max-width: 768px) {
   .toolbar {
     padding: 12px 16px 0;
@@ -426,17 +319,153 @@
     height: 420px;
   }
 
-  .matchHeart {
-    font-size: 3rem;
+  .pageTitle {
+    font-size: 1.5rem;
   }
 
-  .matchCard h1 {
-    font-size: 2.2rem;
-    margin-bottom: 16px;
+  .skeletonWrap {
+    padding: 16px;
   }
 
-  .matchImage {
-    width: 200px;
-    height: 200px;
-  }
 }
+
+/* ---- The Browse card, new parts ---- */
+.filterCount {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filterButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.skeletonWrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 40px 40px;
+}
+
+/* Several photos: a bar per photo on top, the current one white. */
+.bars {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  z-index: 4;
+  display: flex;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.barOn {
+  background: #fff;
+}
+
+/* The upper part of the photo: left half = previous, right half = next. */
+.tapZone {
+  position: absolute;
+  top: 0;
+  bottom: 45%;
+  width: 50%;
+  z-index: 3;
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tapZone:disabled {
+  cursor: default;
+}
+
+.tapZone:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -6px;
+  border-radius: 14px;
+}
+
+.tapLeft {
+  left: 0;
+}
+
+.tapRight {
+  right: 0;
+}
+
+[dir="rtl"] .tapLeft {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .tapRight {
+  right: auto;
+  left: 0;
+}
+
+.nameLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  opacity: 1 !important;
+}
+
+/* Verified: a small blue check beside the name. */
+.verified {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2f80ed;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+/* City and job: dark-glass pills, readable on any photo. */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 2px 0 12px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(20, 14, 12, 0.58);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.languages {
+  margin-bottom: 12px !important;
+}
+
