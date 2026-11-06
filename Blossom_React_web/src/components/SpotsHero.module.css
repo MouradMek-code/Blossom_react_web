@@ -1,0 +1,277 @@
+/* ---- Background: spot photos behind the homepage title ---- */
+
+/* Doubled class: beats the hero's ".head > :not(nav)" rule (which lifts the
+   content above the background) so this layer stays underneath. */
+.backdrop.backdropLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 1.2s ease, transform 9s ease-out;
+}
+
+/* On screen: fully visible, drifting slowly closer. */
+.slideOn {
+  opacity: 1;
+  transform: scale(1.14);
+}
+
+/* Readable white text on any photo: darker top (menu), centre and bottom
+   (the card). */
+.shade {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  background:
+    radial-gradient(ellipse at center, rgba(16, 9, 12, 0.42) 0%, rgba(16, 9, 12, 0.18) 70%),
+    linear-gradient(to bottom, rgba(16, 9, 12, 0.5) 0%, rgba(16, 9, 12, 0.08) 28%, rgba(16, 9, 12, 0.12) 60%, rgba(16, 9, 12, 0.7) 100%);
+}
+
+.shadeOn {
+  opacity: 1;
+}
+
+/* ---- The card: bottom of the hero ---- */
+
+.card {
+  position: relative;
+  align-self: flex-start;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  width: min(400px, calc(100% - 32px));
+  margin: 0 0 32px;
+  margin-inline-start: clamp(16px, 4vw, 56px);
+  padding: 12px 16px 18px 12px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  color: #fff;
+  text-decoration: none;
+  overflow: hidden;
+  animation: cardIn 0.9s 0.5s both cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+}
+
+.card:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* "translate", not "transform": the hover lift (transform) still works
+   once the entrance is over. */
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.thumbWrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55);
+}
+
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: soft 0.6s ease;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  animation: soft 0.6s ease;
+}
+
+@keyframes soft {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Spacing breaks Arabic's joined letters; Chinese has no capitals. */
+:global(html[lang="ar"]) .eyebrow,
+:global(html[lang="zh"]) .eyebrow {
+  letter-spacing: 0;
+  font-size: 0.8rem;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.weekly {
+  display: inline-block;
+  margin-inline-end: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--primary);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  vertical-align: 2px;
+}
+
+.place {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arrow {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: var(--primary-deep);
+  transition: transform 0.25s ease;
+}
+
+.card:hover .arrow {
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .card:hover .arrow {
+  transform: translateX(-3px);
+}
+
+/* Story-style progress: one thin line per photo along the card's foot. */
+.progress {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 8px;
+  display: flex;
+  gap: 4px;
+}
+
+.segment {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: #fff;
+  transform-origin: left center;
+}
+
+[dir="rtl"] .fill {
+  transform-origin: right center;
+}
+
+.fillDone {
+  transform: scaleX(1);
+}
+
+.fillRun {
+  transform: scaleX(0);
+  animation-name: grow;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .card {
+    align-self: center;
+    margin: 0 auto 22px;
+    margin-inline-start: auto;
+    width: calc(100% - 32px);
+    max-width: 440px;
+  }
+
+  .thumbWrap {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Reduce motion: one photo, no drifting, no automatic changes. */
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: none;
+    transform: none;
+  }
+
+  .card {
+    animation: none;
+  }
+
+  .fillRun {
+    animation: none;
+  }
+}

@@ -9,7 +9,7 @@ import LanguageDating from "../components/LanguageDating";
 import FounderProjects from "../components/FounderProjects";
 import ForVenues from "../components/ForVenues";
 import DateGifts from "../components/DateGifts";
-import SpotsWallpaper from "../components/SpotsWallpaper";
+import SpotsHero from "../components/SpotsHero";
 import InstagramBand from "../components/InstagramBand";
 import Footer from "../components/Footer";
 import styles from "./Homepage.module.css";
@@ -28,8 +28,9 @@ function Homepage() {
       <div className={`${styles.head} ${styles.animatedBg}`}>
         <PageNav overlay />
         <StartHome />
+        {/* Date spots as the background, and a card that opens them. */}
+        <SpotsHero />
       </div>
-      <SpotsWallpaper />
       <TrustBadges />
       <DateGifts />
       <LanguageDating />
