@@ -1270,5 +1270,10 @@
     "title": "Ces personnes vous aiment",
     "empty": "Pas encore de like - revenez bientôt !",
     "likeBack": "Liker aussi"
+  },
+  "spotsWall": {
+    "title": "Des lieux pour vos rendez-vous",
+    "text": "Cafés, balades et points de vue choisis pour un premier rendez-vous.",
+    "button": "Découvrir les lieux"
   }
 }

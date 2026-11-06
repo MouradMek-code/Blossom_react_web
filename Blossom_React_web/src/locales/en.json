@@ -1270,5 +1270,10 @@
     "title": "People who like you",
     "empty": "No likes yet - check back soon!",
     "likeBack": "Like back"
+  },
+  "spotsWall": {
+    "title": "Spots for dating",
+    "text": "Cafés, walks and views picked for a first date.",
+    "button": "Discover the spots"
   }
 }

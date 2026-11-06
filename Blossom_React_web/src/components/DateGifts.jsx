@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BASE_URL } from "../api/config";
+import { loadPublicSpots } from "../api/publicSpots";
 import { IMG } from "../api/images";
 import { categoryEmoji, categoryGradient } from "../api/categories";
 import styles from "./DateGifts.module.css";
@@ -24,12 +24,9 @@ export default function DateGifts() {
 
   useEffect(() => {
     let alive = true;
-    fetch(`${BASE_URL}/date_spots`)
-      .then((resp) => (resp.ok ? resp.json() : []))
-      .then((spots) => {
-        if (alive && Array.isArray(spots)) setGifts(spots.filter((s) => s.offer).slice(0, 3));
-      })
-      .catch(() => {});
+    loadPublicSpots().then((spots) => {
+      if (alive) setGifts(spots.filter((s) => s.offer).slice(0, 3));
+    });
     return () => {
       alive = false;
     };

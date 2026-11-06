@@ -9,6 +9,7 @@ import LanguageDating from "../components/LanguageDating";
 import FounderProjects from "../components/FounderProjects";
 import ForVenues from "../components/ForVenues";
 import DateGifts from "../components/DateGifts";
+import SpotsWallpaper from "../components/SpotsWallpaper";
 import InstagramBand from "../components/InstagramBand";
 import Footer from "../components/Footer";
 import styles from "./Homepage.module.css";
@@ -28,6 +29,7 @@ function Homepage() {
         <PageNav overlay />
         <StartHome />
       </div>
+      <SpotsWallpaper />
       <TrustBadges />
       <DateGifts />
       <LanguageDating />
