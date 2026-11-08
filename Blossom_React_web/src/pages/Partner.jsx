@@ -8,8 +8,9 @@ import { NoAccountBadge } from "../components/NoAccount";
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
-import { categoryEmoji } from "../api/categories";
+import { categoryEmoji, categoryLabel } from "../api/categories";
 import { offerTerms } from "../api/offers";
+import { Chip, Icon } from "../ui";
 import styles from "./Partner.module.css";
 
 // Good defaults, so most owners never open "Change": 20 couples, codes valid
@@ -18,6 +19,7 @@ const EMPTY = {
   venue_name: "",
   map_url: "",
   about: "",
+  category: "",
   offer_title: "",
   offer_details: "",
   max_couples: "20",
@@ -39,30 +41,51 @@ const TEMPLATES = [
   { key: "discount", emoji: "💸" },
 ];
 
-const GOOGLE_MAPS_LINK = /^https?:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps)/i;
+// The kinds of places that welcome couples (the spot types that are venues).
+const VENUE_TYPES = [
+  "Coffee",
+  "Restaurant",
+  "Drinks / Bar",
+  "Bowling",
+  "Mini Golf",
+  "Arcade / Gaming",
+  "Movie",
+  "Museum / Art Gallery",
+  "Concert / Live Music",
+];
 
-// blossom-date.com/partner - a café, restaurant or bar asks to offer a
-// promotion to Blossom couples, in 3 short steps: the place, the gift (with
-// ready-made ideas and a live preview), how to reach them. No account: an
-// admin reviews it and answers by email (with the venue's manager link and
-// staff code when approved). A place already on Blossom is picked from a
-// search (or comes with the spot page's link, ?spot=<id>): the gift then goes
-// on that spot instead of a new one.
+const GOOGLE_MAPS_LINK = /^https?:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps)/i;
+const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+// blossom-date.com/partner - a café, restaurant or bar puts its place on
+// Blossom, two ways, picked first:
+//   * "List my place": free, no offer - the place, its type, a few words.
+//     Approved, it shows on Date spots.
+//   * "With a gift for couples": the same, plus a small gift couples get
+//     there (ready-made ideas and a live preview). A place already on
+//     Blossom is picked from a search (or comes with ?spot=<id>).
+// One short page, then how to reach them. No account: an admin reviews it
+// and answers by email.
 export default function Partner() {
   const { t, i18n } = useTranslation();
+  const [mode, setMode] = useState(null); // "place" | "gift", picked first
   const [form, setForm] = useState(EMPTY);
   const [place, setPlace] = useState({ country: "", city: "" });
-  const [step, setStep] = useState(1);
   const [template, setTemplate] = useState("");
   const [showOptions, setShowOptions] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState(null); // the mode it was sent with
+  const [listed, setListed] = useState(null); // "already on Blossom": that spot
   const autoName = useRef("");
   const titleInput = useRef(null);
+  const formTop = useRef(null);
   const [spot, setSpot] = useState(null); // the place, when it's already on Blossom
   const [query, setQuery] = useState("");
   const [results, setResults] = useState(null); // null = nothing searched yet
+
+  const gift = mode === "gift";
 
   function pickSpot(found) {
     setSpot(found);
@@ -71,7 +94,15 @@ export default function Partner() {
     setError("");
   }
 
-  // Opened from a spot's page: /partner?spot=<id>.
+  function choose(next) {
+    setMode(next);
+    setError("");
+    setListed(null);
+    setTimeout(() => formTop.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  }
+
+  // Opened from a spot's page or the "your place is on Blossom" email:
+  // /partner?spot=<id> - a gift for that place.
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("spot");
     if (!id) return undefined;
@@ -79,7 +110,9 @@ export default function Partner() {
     fetch(`${BASE_URL}/partners/spots/${encodeURIComponent(id)}`)
       .then((resp) => (resp.ok ? resp.json() : null))
       .then((found) => {
-        if (alive && found) pickSpot(found);
+        if (!alive || !found) return;
+        pickSpot(found);
+        setMode("gift");
       })
       .catch(() => {});
     return () => {
@@ -87,7 +120,7 @@ export default function Partner() {
     };
   }, []);
 
-  // "Is your place already on Blossom?" - search as they type.
+  // "Is your place already on Blossom?" - search as they type (gift only).
   useEffect(() => {
     const q = query.trim();
     if (q.length < 2) {
@@ -149,52 +182,57 @@ export default function Partner() {
   }
 
   const validHours = (parseInt(form.days, 10) || 0) * 24 + (parseInt(form.hours, 10) || 0);
-  // A new place needs its Google Maps link: text-only promotions were spam.
+  // A new place needs its Google Maps link: text-only requests were spam.
   const mapLinkOk = GOOGLE_MAPS_LINK.test(form.map_url.trim());
-  const placeReady = spot
-    ? !spot.partner
-    : mapLinkOk && form.venue_name.trim().length >= 2 && place.city && place.country;
+  const newPlaceReady = mapLinkOk && form.venue_name.trim().length >= 2 && place.city && place.country;
+  const placeReady = gift && spot ? !spot.partner : newPlaceReady;
   const giftReady = form.offer_title.trim().length >= 3;
 
-  function goTo(next) {
-    setError("");
-    setStep(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  // What's still missing, in order - said on "Send".
+  function missing() {
+    if (!placeReady) return t("partners.needPlace");
+    if (gift && !giftReady) return t("partners.needGift");
+    if (!EMAIL.test(form.contact_email.trim())) return t("partners.needEmail");
+    return "";
   }
 
   async function submit(e) {
     e.preventDefault();
-    // Enter in a field moves on, until the last step.
-    if (step === 1) {
-      if (placeReady) goTo(2);
-      return;
-    }
-    if (step === 2) {
-      if (giftReady) goTo(3);
+    const problem = missing();
+    if (problem) {
+      setError(problem);
       return;
     }
     setError("");
+    setListed(null);
     setSending(true);
     // A place already on Blossom: its spot gives the name, city and country.
-    const placeFields = spot
-      ? { spot_id: spot.id }
-      : {
-          venue_name: form.venue_name,
-          map_url: form.map_url || null,
-          city: place.city,
-          country: place.country,
-          about: form.about || null,
-        };
+    const placeFields =
+      gift && spot
+        ? { spot_id: spot.id }
+        : {
+            venue_name: form.venue_name,
+            map_url: form.map_url || null,
+            city: place.city,
+            country: place.country,
+            category: form.category || null,
+            about: form.about || null,
+          };
+    const giftFields = gift
+      ? {
+          offer_title: form.offer_title,
+          offer_details: form.offer_details || null,
+          max_couples: form.max_couples ? parseInt(form.max_couples, 10) : null,
+          ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
+          valid_hours: validHours || null,
+        }
+      : { place_only: true };
     const result = await postJson(`${BASE_URL}/partners/requests`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...placeFields,
-        offer_title: form.offer_title,
-        offer_details: form.offer_details || null,
-        max_couples: form.max_couples ? parseInt(form.max_couples, 10) : null,
-        ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
-        valid_hours: validHours || null,
+        ...giftFields,
         contact_name: form.contact_name || null,
         contact_email: form.contact_email,
         contact_phone: form.contact_phone || null,
@@ -205,23 +243,32 @@ export default function Partner() {
     });
     setSending(false);
     if (!result.ok) {
-      const reason = result.data?.detail?.reason;
-      if (reason === "already_partner") {
-        setSpot((cur) => (cur ? { ...cur, partner: true } : cur));
-        goTo(1);
+      const detail = result.data?.detail;
+      if (detail?.reason === "already_listed") {
+        setListed(detail.spot);
         return;
       }
-      if (reason === "spot_gone") {
+      if (detail?.reason === "already_partner") {
+        setSpot((cur) => (cur ? { ...cur, partner: true } : cur));
+        return;
+      }
+      if (detail?.reason === "spot_gone") {
         setSpot(null);
-        goTo(1);
         setError(t("partners.spotGone"));
         return;
       }
       setError(result.message || t("partners.failed"));
       return;
     }
-    setSent(true);
+    setSent(mode);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // "Already on Blossom" -> a gift for that place.
+  function giftForListed() {
+    pickSpot(listed);
+    setListed(null);
+    setMode("gift");
   }
 
   function startOver() {
@@ -230,28 +277,43 @@ export default function Partner() {
     setSpot(null);
     setTemplate("");
     setShowOptions(false);
-    setStep(1);
-    setSent(false);
+    setShowContact(false);
+    setListed(null);
+    setMode(null);
+    setSent(null);
   }
 
-  const stepNames = [t("partners.stepPlace"), t("partners.stepGift"), t("partners.stepContact")];
+  const optional = <em className={styles.optional}>({t("partners.optional")})</em>;
 
   return (
     <div className={styles.page}>
       <PageNav />
       <main className={styles.wrap}>
-        <h1 className={styles.title}>🏪 {t("partners.title")}</h1>
-        <p className={styles.intro}>{t("partners.intro")}</p>
+        <h1 className={styles.title}>{t("partners.pageTitle")}</h1>
+        <p className={styles.intro}>{t("partners.pageIntro")}</p>
         <NoAccountBadge />
 
         {sent ? (
           <div className={styles.sent}>
+            <span className={styles.sentIcon} aria-hidden="true">
+              <Icon name="check" size={30} strokeWidth={2.6} />
+            </span>
             <h2>{t("partners.sentTitle")}</h2>
             <h3 className={styles.nextTitle}>{t("partners.whatNext")}</h3>
             <ol className={styles.nextList}>
-              <li>⏳ {t("partners.next1")}</li>
-              <li>📩 {t("partners.next2")}</li>
-              <li>💞 {t("partners.next3")}</li>
+              {sent === "gift" ? (
+                <>
+                  <li>⏳ {t("partners.next1")}</li>
+                  <li>📩 {t("partners.next2")}</li>
+                  <li>💞 {t("partners.next3")}</li>
+                </>
+              ) : (
+                <>
+                  <li>⏳ {t("partners.placeNext1")}</li>
+                  <li>📍 {t("partners.placeNext2")}</li>
+                  <li>🎁 {t("partners.placeNext3")}</li>
+                </>
+              )}
             </ol>
             <p className={styles.inbox}>{t("partners.checkInbox", { email: form.contact_email })}</p>
             <button type="button" className={styles.secondary} onClick={startOver}>
@@ -260,118 +322,169 @@ export default function Partner() {
           </div>
         ) : (
           <>
-            {/* ① Your place → ② Your gift → ③ How to reach you */}
-            <ol className={styles.progress}>
-              {stepNames.map((name, index) => {
-                const number = index + 1;
-                const state = number === step ? styles.stepNow : number < step ? styles.stepDone : "";
-                return (
-                  <li key={name} className={`${styles.progressStep} ${state}`}>
-                    <button
-                      type="button"
-                      onClick={() => number < step && goTo(number)}
-                      disabled={number >= step}
-                      aria-current={number === step ? "step" : undefined}
-                    >
-                      <span className={styles.progressDot}>{number < step ? "✓" : number}</span>
-                      <span className={styles.progressName}>{name}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
+            {/* Two ways in: just the place, or the place with a gift. */}
+            <h2 className={styles.chooseTitle}>{t("partners.choiceTitle")}</h2>
+            <div className={styles.choices} role="radiogroup" aria-label={t("partners.choiceTitle")}>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={mode === "place"}
+                className={`${styles.choice} ${mode === "place" ? styles.choiceOn : ""}`}
+                onClick={() => choose("place")}
+              >
+                <span className={styles.choiceIcon}>
+                  <Icon name="map-pin" size={22} />
+                </span>
+                <span className={styles.choiceTitle}>{t("partners.choicePlace")}</span>
+                <span className={styles.choiceText}>{t("partners.choicePlaceText")}</span>
+                <span className={styles.choiceFree}>{t("partners.choiceFree")}</span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={mode === "gift"}
+                className={`${styles.choice} ${mode === "gift" ? styles.choiceOn : ""}`}
+                onClick={() => choose("gift")}
+              >
+                <span className={`${styles.choiceIcon} ${styles.choiceIconGift}`}>
+                  <Icon name="gift" size={22} />
+                </span>
+                <span className={styles.choiceTitle}>{t("partners.choiceGift")}</span>
+                <span className={styles.choiceText}>{t("partners.choiceGiftText")}</span>
+                <span className={styles.choiceBadge}>{t("partners.choiceGiftBadge")}</span>
+              </button>
+            </div>
 
-            <form className={styles.form} onSubmit={submit}>
-              {step === 1 && (
-                <>
-                  <h2 className={styles.section}>① {t("partners.stepPlace")}</h2>
-                  {spot ? (
-                    <>
-                      <p className={styles.chosenLabel}>{t("partners.yourPlace")}</p>
-                      <div className={styles.chosen}>
-                        <SpotThumb spot={spot} />
-                        <span className={styles.spotText}>
-                          <strong>{spot.name}</strong>
-                          <span>{[spot.neighborhood, spot.city, spot.country].filter(Boolean).join(", ")}</span>
-                        </span>
-                        <button type="button" className={styles.changeBtn} onClick={() => setSpot(null)}>
-                          {t("partners.change")}
-                        </button>
+            {mode && (
+              <form className={styles.form} onSubmit={submit} ref={formTop} noValidate>
+                {/* ---- The place ---- */}
+                <h2 className={styles.section}>{t("partners.stepPlace")}</h2>
+
+                {gift && spot ? (
+                  <>
+                    <p className={styles.chosenLabel}>{t("partners.yourPlace")}</p>
+                    <div className={styles.chosen}>
+                      <SpotThumb spot={spot} />
+                      <span className={styles.spotText}>
+                        <strong>{spot.name}</strong>
+                        <span>{[spot.neighborhood, spot.city, spot.country].filter(Boolean).join(", ")}</span>
+                      </span>
+                      <button type="button" className={styles.changeBtn} onClick={() => setSpot(null)}>
+                        {t("partners.change")}
+                      </button>
+                    </div>
+                    {spot.partner && (
+                      <div className={styles.partnerNotice}>
+                        <p>{t("partners.alreadyPartner")}</p>
+                        <Link to="/business#lost-link">🔑 {t("partners.getLink")}</Link>
                       </div>
-                      {spot.partner && (
-                        <div className={styles.partnerNotice}>
-                          <p>{t("partners.alreadyPartner")}</p>
-                          <Link to="/business#lost-link">🔑 {t("partners.getLink")}</Link>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <label className={styles.field}>
-                        <span>🔎 {t("partners.searchLabel")}</span>
-                        <input
-                          type="search"
-                          value={query}
-                          onChange={(e) => setQuery(e.target.value)}
-                          placeholder={t("partners.searchPlaceholder")}
-                          autoComplete="off"
-                        />
-                        <small>{t("partners.searchHint")}</small>
-                      </label>
-                      {results &&
-                        (results.length > 0 ? (
-                          <ul className={styles.results}>
-                            {results.map((found) => (
-                              <li key={found.id}>
-                                <button type="button" className={styles.result} onClick={() => pickSpot(found)}>
-                                  <SpotThumb spot={found} />
-                                  <span className={styles.spotText}>
-                                    <strong>{found.name}</strong>
-                                    <span>{[found.neighborhood, found.city, found.country].filter(Boolean).join(", ")}</span>
-                                  </span>
-                                  {found.partner && <span className={styles.partnerTag}>{t("partners.partnerTag")}</span>}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className={styles.noResult}>{t("partners.searchNone")}</p>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {gift && (
+                      <>
+                        <label className={styles.field}>
+                          <span>{t("partners.searchLabel")}</span>
+                          <input
+                            type="search"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            placeholder={t("partners.searchPlaceholder")}
+                            autoComplete="off"
+                          />
+                          <small>{t("partners.searchHint")}</small>
+                        </label>
+                        {results &&
+                          (results.length > 0 ? (
+                            <ul className={styles.results}>
+                              {results.map((found) => (
+                                <li key={found.id}>
+                                  <button type="button" className={styles.result} onClick={() => pickSpot(found)}>
+                                    <SpotThumb spot={found} />
+                                    <span className={styles.spotText}>
+                                      <strong>{found.name}</strong>
+                                      <span>{[found.neighborhood, found.city, found.country].filter(Boolean).join(", ")}</span>
+                                    </span>
+                                    {found.partner && <span className={styles.partnerTag}>{t("partners.partnerTag")}</span>}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className={styles.noResult}>{t("partners.searchNone")}</p>
+                          ))}
+                        <p className={styles.orNew}>{t("partners.orNew")}</p>
+                      </>
+                    )}
+
+                    <label className={styles.field}>
+                      <span>{t("partners.mapUrl")} *</span>
+                      <input value={form.map_url} onChange={set("map_url")} placeholder="https://maps.app.goo.gl/…" inputMode="url" />
+                      <small>{t("partners.mapUrlHint")}</small>
+                      {form.map_url.trim() && !mapLinkOk && <small className={styles.linkError}>{t("partners.mapUrlInvalid")}</small>}
+                    </label>
+                    <label className={styles.field}>
+                      <span>{t("partners.venueName")} *</span>
+                      <input value={form.venue_name} onChange={set("venue_name")} maxLength={150} />
+                    </label>
+                    <div className={styles.field}>
+                      <span>
+                        {t("partners.city")} / {t("partners.country")} *
+                      </span>
+                      <LocationPicker country={place.country} city={place.city} onChange={setPlace} />
+                    </div>
+                    <div className={styles.field}>
+                      <span>
+                        {t("partners.placeType")} {optional}
+                      </span>
+                      <div className={styles.types} role="radiogroup" aria-label={t("partners.placeType")}>
+                        {VENUE_TYPES.map((type) => (
+                          <Chip
+                            key={type}
+                            label={categoryLabel(type, t)}
+                            selected={form.category === type}
+                            onClick={() => setForm((f) => ({ ...f, category: f.category === type ? "" : type }))}
+                          />
                         ))}
-
-                      <p className={styles.orNew}>{t("partners.orNew")}</p>
-                      <label className={styles.field}>
-                        <span>{t("partners.mapUrl")} *</span>
-                        <input value={form.map_url} onChange={set("map_url")} placeholder="https://maps.app.goo.gl/…" inputMode="url" required />
-                        <small>{t("partners.mapUrlHint")}</small>
-                        {form.map_url.trim() && !mapLinkOk && (
-                          <small className={styles.linkError}>{t("partners.mapUrlInvalid")}</small>
-                        )}
-                      </label>
-                      <label className={styles.field}>
-                        <span>{t("partners.venueName")} *</span>
-                        <input value={form.venue_name} onChange={set("venue_name")} maxLength={150} />
-                      </label>
-                      <div className={styles.field}>
-                        <span>
-                          {t("partners.city")} / {t("partners.country")} *
-                        </span>
-                        <LocationPicker country={place.country} city={place.city} onChange={setPlace} />
                       </div>
-                      <label className={styles.field}>
-                        <span>
-                          {t("partners.about")} <em className={styles.optional}>({t("partners.optional")})</em>
-                        </span>
-                        <textarea value={form.about} onChange={set("about")} rows={2} maxLength={1000} />
-                      </label>
-                    </>
-                  )}
-                </>
-              )}
+                    </div>
+                    <label className={styles.field}>
+                      <span>
+                        {t("partners.aboutDate")} {optional}
+                      </span>
+                      <textarea
+                        value={form.about}
+                        onChange={set("about")}
+                        rows={3}
+                        maxLength={1000}
+                        placeholder={t("partners.aboutPlaceholder")}
+                      />
+                    </label>
+                  </>
+                )}
 
-              {step === 2 && (
-                <div className={styles.giftStep}>
-                  <div>
-                    <h2 className={styles.section}>② {t("partners.stepGift")}</h2>
+                {/* Picked "just my place" for a place that's on Blossom already. */}
+                {listed && (
+                  <div className={styles.listedNotice} role="status">
+                    <strong>{t("partners.listedTitle", { name: listed.name })}</strong>
+                    <p>{t("partners.listedText")}</p>
+                    <div className={styles.listedActions}>
+                      {!listed.partner && (
+                        <button type="button" className={styles.listedGift} onClick={giftForListed}>
+                          <Icon name="gift" size={17} />
+                          {t("partners.listedGift")}
+                        </button>
+                      )}
+                      <Link to={`/date-spots/${listed.id}`}>{t("partners.listedSee")}</Link>
+                    </div>
+                  </div>
+                )}
+
+                {/* ---- The gift (only with a gift) ---- */}
+                {gift && (
+                  <>
+                    <h2 className={styles.section}>{t("partners.stepGift")}</h2>
                     <p className={styles.tplTitle}>{t("partners.tplTitle")}</p>
                     <div className={styles.templates}>
                       {TEMPLATES.map((tpl) => (
@@ -405,7 +518,7 @@ export default function Partner() {
                     </label>
                     <label className={styles.field}>
                       <span>
-                        {t("partners.offerDetails")} <em className={styles.optional}>({t("partners.optional")})</em>
+                        {t("partners.offerDetails")} {optional}
                       </span>
                       <input value={form.offer_details} onChange={set("offer_details")} placeholder={t("partners.detailsPlaceholder")} maxLength={500} />
                     </label>
@@ -413,7 +526,6 @@ export default function Partner() {
                     {/* The limits: good defaults, changed here if they want. */}
                     <div className={styles.defaults}>
                       <span>
-                        ⚙️{" "}
                         {form.max_couples
                           ? t("partners.defaultsLine", { couples: form.max_couples, days: Math.round((validHours || 48) / 24) || 1 })
                           : t("partners.noLimitLine", { days: Math.round((validHours || 48) / 24) || 1 })}
@@ -460,92 +572,90 @@ export default function Partner() {
                         </div>
                       </>
                     )}
-                  </div>
 
-                  {/* What couples will see, as they type. */}
-                  <aside className={styles.preview}>
-                    <p className={styles.previewTitle}>👀 {t("partners.previewTitle")}</p>
-                    <GiftPreview
-                      t={t}
-                      spot={spot}
-                      name={spot?.name || form.venue_name.trim() || t("partners.previewVenue")}
-                      city={spot?.city || place.city}
-                      title={form.offer_title.trim()}
-                      details={form.offer_details.trim()}
-                      validHours={validHours || 48}
-                      maxCouples={form.max_couples ? parseInt(form.max_couples, 10) : null}
-                    />
-                  </aside>
-                </div>
-              )}
+                    {/* What couples will see, as they type. */}
+                    {giftReady && (
+                      <aside className={styles.preview}>
+                        <p className={styles.previewTitle}>{t("partners.previewTitle")}</p>
+                        <GiftPreview
+                          t={t}
+                          spot={spot}
+                          name={spot?.name || form.venue_name.trim() || t("partners.previewVenue")}
+                          city={spot?.city || place.city}
+                          title={form.offer_title.trim()}
+                          details={form.offer_details.trim()}
+                          validHours={validHours || 48}
+                          maxCouples={form.max_couples ? parseInt(form.max_couples, 10) : null}
+                        />
+                      </aside>
+                    )}
 
-              {step === 3 && (
-                <>
-                  <h2 className={styles.section}>③ {t("partners.stepContact")}</h2>
-                  <label className={styles.field}>
-                    <span>{t("partners.contactEmail")} *</span>
-                    <input type="email" value={form.contact_email} onChange={set("contact_email")} maxLength={200} required autoComplete="email" />
-                  </label>
-                  <div className={styles.row2}>
+                    {/* The way out, plainly: no gift is fine. */}
+                    <button type="button" className={styles.skipGift} onClick={() => choose("place")}>
+                      {t("partners.skipGift")}
+                    </button>
+                  </>
+                )}
+
+                {/* ---- How to reach them ---- */}
+                <h2 className={styles.section}>{t("partners.stepContact")}</h2>
+                <label className={styles.field}>
+                  <span>{t("partners.contactEmail")} *</span>
+                  <input type="email" value={form.contact_email} onChange={set("contact_email")} maxLength={200} autoComplete="email" />
+                  <small>{t("partners.emailHint")}</small>
+                </label>
+                {showContact ? (
+                  <>
+                    <div className={styles.row2}>
+                      <label className={styles.field}>
+                        <span>
+                          {t("partners.contactName")} {optional}
+                        </span>
+                        <input value={form.contact_name} onChange={set("contact_name")} maxLength={120} autoComplete="name" />
+                      </label>
+                      <label className={styles.field}>
+                        <span>
+                          {t("partners.contactPhone")} {optional}
+                        </span>
+                        <input type="tel" value={form.contact_phone} onChange={set("contact_phone")} maxLength={40} autoComplete="tel" />
+                      </label>
+                    </div>
                     <label className={styles.field}>
                       <span>
-                        {t("partners.contactName")} <em className={styles.optional}>({t("partners.optional")})</em>
+                        {t("partners.message")} {optional}
                       </span>
-                      <input value={form.contact_name} onChange={set("contact_name")} maxLength={120} autoComplete="name" />
+                      <textarea value={form.message} onChange={set("message")} rows={2} maxLength={1000} />
                     </label>
-                    <label className={styles.field}>
-                      <span>
-                        {t("partners.contactPhone")} <em className={styles.optional}>({t("partners.optional")})</em>
-                      </span>
-                      <input type="tel" value={form.contact_phone} onChange={set("contact_phone")} maxLength={40} autoComplete="tel" />
-                    </label>
-                  </div>
-                  <label className={styles.field}>
-                    <span>
-                      {t("partners.message")} <em className={styles.optional}>({t("partners.optional")})</em>
-                    </span>
-                    <textarea value={form.message} onChange={set("message")} rows={2} maxLength={1000} />
-                  </label>
-                  {/* Invisible to people: a bot that fills it is ignored. */}
-                  <input
-                    className={styles.hp}
-                    tabIndex={-1}
-                    autoComplete="off"
-                    aria-hidden="true"
-                    value={form.website}
-                    onChange={set("website")}
-                    name="website"
-                  />
-                </>
-              )}
-
-              {error && <p className={styles.error}>{error}</p>}
-
-              <div className={styles.nav}>
-                {step > 1 ? (
-                  <button type="button" className={styles.secondary} onClick={() => goTo(step - 1)}>
-                    {t("partners.back")}
-                  </button>
+                  </>
                 ) : (
-                  <span />
-                )}
-                {step < 3 ? (
-                  <button type="submit" className={styles.primary} disabled={step === 1 ? !placeReady : !giftReady}>
-                    {t("partners.next")}
-                  </button>
-                ) : (
-                  <button type="submit" className={styles.primary} disabled={sending || !form.contact_email.trim()}>
-                    {sending ? t("partners.sending") : t("partners.send")}
+                  <button type="button" className={styles.moreContact} onClick={() => setShowContact(true)}>
+                    <Icon name="plus" size={16} />
+                    {t("partners.contactMore")}
                   </button>
                 )}
-              </div>
-            </form>
+                {/* Invisible to people: a bot that fills it is ignored. */}
+                <input
+                  className={styles.hp}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  value={form.website}
+                  onChange={set("website")}
+                  name="website"
+                />
 
-            <ol className={styles.steps}>
-              <li>{t("partners.how1")}</li>
-              <li>{t("partners.how2")}</li>
-              <li>{t("partners.how3")}</li>
-            </ol>
+                {error && (
+                  <p className={styles.error} role="alert">
+                    {error}
+                  </p>
+                )}
+
+                <button type="submit" className={styles.primary} disabled={sending}>
+                  {sending ? t("partners.sending") : gift ? t("partners.sendGift") : t("partners.sendPlace")}
+                </button>
+                <p className={styles.submitNote}>{t("partners.submitNote")}</p>
+              </form>
+            )}
           </>
         )}
         <p className={styles.more}>

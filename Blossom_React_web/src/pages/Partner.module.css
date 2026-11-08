@@ -23,13 +23,6 @@
   color: #574d46;
 }
 
-.steps {
-  margin: 0 0 22px;
-  padding-left: 20px;
-  color: #574d46;
-  line-height: 1.7;
-}
-
 .form,
 .sent {
   background: #fff;
@@ -301,69 +294,6 @@
   color: #7e2a44;
 }
 
-/* ---- ① ② ③ progress ---- */
-.progress {
-  display: flex;
-  gap: 6px;
-  margin: 0 0 14px;
-  padding: 0;
-  list-style: none;
-}
-
-.progressStep {
-  flex: 1;
-}
-
-.progressStep button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  padding: 10px 4px 0;
-  border: none;
-  border-top: 4px solid #efe7e1;
-  background: none;
-  font: inherit;
-  color: #8a7e76;
-  cursor: default;
-}
-
-.stepDone button {
-  border-top-color: #c1466b;
-  color: #7e2a44;
-  cursor: pointer;
-}
-
-.stepNow button {
-  border-top-color: #c1466b;
-  color: #2a2420;
-}
-
-.progressDot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #efe7e1;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.stepNow .progressDot,
-.stepDone .progressDot {
-  background: #c1466b;
-  color: #fff;
-}
-
-.progressName {
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-}
-
 .optional {
   font-style: normal;
   font-weight: 400;
@@ -539,17 +469,6 @@
 }
 
 /* ---- Back / Next ---- */
-.nav {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.nav .primary,
-.nav .secondary {
-  flex: 1;
-  width: auto;
-}
 
 /* ---- sent: what happens next ---- */
 .nextTitle {
@@ -582,4 +501,210 @@
 .linkError {
   color: var(--danger, #d64545) !important;
   font-weight: 700;
+}
+
+/* ---- Two ways in: just the place, or the place with a gift ---- */
+.chooseTitle {
+  margin: 22px 0 10px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #2a2420;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 520px) {
+  .choices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px 16px 16px;
+  border-radius: 18px;
+  border: 2px solid #ece2da;
+  background: #fff;
+  color: #2a2420;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  box-shadow: 0 2px 14px rgba(63, 44, 38, 0.05);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.choice:hover {
+  border-color: #dccec3;
+  transform: translateY(-2px);
+}
+
+.choice:focus-visible {
+  outline: 3px solid #c1466b;
+  outline-offset: 2px;
+}
+
+.choiceOn,
+.choiceOn:hover {
+  border-color: #c1466b;
+  box-shadow: 0 0 0 4px rgba(193, 70, 107, 0.12);
+}
+
+.choiceIcon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 4px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7e6ec;
+  color: #c1466b;
+}
+
+.choiceIconGift {
+  background: #fff3dc;
+  color: #b7791f;
+}
+
+.choiceTitle {
+  font-size: 16.5px;
+  font-weight: 800;
+}
+
+.choiceText {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #574d46;
+}
+
+.choiceFree,
+.choiceBadge {
+  margin-top: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.choiceFree {
+  background: #e8f6ee;
+  color: #1f6b45;
+}
+
+.choiceBadge {
+  background: #fff3dc;
+  color: #8a5a00;
+}
+
+.form {
+  scroll-margin-top: 90px;
+}
+
+/* Type of place: chips. */
+.types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* "No gift for now? List my place without one" */
+.skipGift {
+  display: block;
+  margin: 6px 0 4px;
+  padding: 10px 0;
+  border: none;
+  background: none;
+  color: #7e2a44;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* "Already on Blossom" */
+.listedNotice {
+  margin: 14px 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fbf1f4;
+  border: 1px solid #f0c9d5;
+}
+
+.listedNotice p {
+  margin: 6px 0 10px;
+  font-size: 14px;
+  color: #574d46;
+}
+
+.listedActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.listedGift {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 999px;
+  background: #c1466b;
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.listedActions a {
+  color: #7e2a44;
+  font-weight: 700;
+}
+
+/* "+ Add your name and phone (optional)" */
+.moreContact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  margin-bottom: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #7e2a44;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submitNote {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: #8a7e76;
+}
+
+.sentIcon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f6ee;
+  color: #1f6b45;
 }

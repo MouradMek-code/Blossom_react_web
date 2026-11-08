@@ -5,6 +5,7 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { formatDeadline, formatHours } from "../api/offers";
 import { IMG } from "../api/images";
+import { categoryLabel } from "../api/categories";
 import styles from "../pages/AdminPromos.module.css";
 
 // Admin: places members suggested. Approve publishes one (the member gets a
@@ -233,7 +234,7 @@ export function PartnerRequests({ token, onApproved }) {
               {done.map((r) => (
                 <tr key={r.id}>
                   <td>{r.venue_name}</td>
-                  <td>{r.offer_title}</td>
+                  <td>{r.offer_title || t("partners.noGift")}</td>
                   <td>{t(`partners.status_${r.status}`)}</td>
                   <td className={styles.muted}>{formatDeadline(r.reviewed_at, i18n.language)}</td>
                 </tr>
@@ -261,7 +262,9 @@ function RequestCard({ request: r, token, language, onDone }) {
     offer_details: r.offer_details || "",
     max_couples: r.max_couples == null ? "" : String(r.max_couples),
   });
-  const newVenue = r.kind === "new_venue";
+  // new_place: "just list my place" - no gift.
+  const newPlace = r.kind === "new_place";
+  const newVenue = r.kind === "new_venue" || newPlace;
 
   async function send(path, body) {
     setBusy(true);
@@ -299,11 +302,13 @@ function RequestCard({ request: r, token, language, onDone }) {
   function approve() {
     const body = {};
     if (editing) {
-      Object.assign(body, {
-        offer_title: edits.offer_title,
-        offer_details: edits.offer_details || null,
-        max_couples: edits.max_couples ? parseInt(edits.max_couples, 10) : null,
-      });
+      if (!newPlace) {
+        Object.assign(body, {
+          offer_title: edits.offer_title,
+          offer_details: edits.offer_details || null,
+          max_couples: edits.max_couples ? parseInt(edits.max_couples, 10) : null,
+        });
+      }
       if (newVenue) Object.assign(body, { venue_name: edits.venue_name, city: edits.city, country: edits.country });
     }
     send("approve", body);
@@ -320,7 +325,11 @@ function RequestCard({ request: r, token, language, onDone }) {
     <article className={styles.card}>
       <div className={styles.cardTop}>
         <span className={styles.spot}>
-          {newVenue ? t("partners.newVenue") : t("partners.newOfferFrom", { name: r.venue?.name || r.venue_name })}
+          {newPlace
+            ? t("partners.newPlace")
+            : newVenue
+              ? t("partners.newVenue")
+              : t("partners.newOfferFrom", { name: r.venue?.name || r.venue_name })}
         </span>
         <span className={styles.muted}>{formatDeadline(r.created_at, language)}</span>
       </div>
@@ -336,15 +345,22 @@ function RequestCard({ request: r, token, language, onDone }) {
           </>
         )}
       </p>
+      {r.category && <p className={styles.line}>{categoryLabel(r.category, t)}</p>}
       {r.about && <p className={styles.muted}>{r.about}</p>}
-      <p className={styles.stats}>🎁 {r.offer_title}</p>
-      {r.offer_details && <p className={styles.muted}>{r.offer_details}</p>}
-      <p className={styles.line}>
-        {r.max_couples == null ? t("offers.noLimit") : t("offers.placesLeft", { count: r.max_couples })}
-        {r.ends_at && <> · {t("offers.until", { date: formatDeadline(r.ends_at, language) })}</>}
-        {r.valid_hours && <> · {t("offers.validAfterYes", { time: formatHours(r.valid_hours, t) })}</>}
-      </p>
-      {!r.ends_at && !r.valid_hours && <p className={styles.muted}>{t("partners.defaults")}</p>}
+      {newPlace ? (
+        <p className={styles.muted}>{t("partners.noGift")}</p>
+      ) : (
+        <>
+          <p className={styles.stats}>🎁 {r.offer_title}</p>
+          {r.offer_details && <p className={styles.muted}>{r.offer_details}</p>}
+          <p className={styles.line}>
+            {r.max_couples == null ? t("offers.noLimit") : t("offers.placesLeft", { count: r.max_couples })}
+            {r.ends_at && <> · {t("offers.until", { date: formatDeadline(r.ends_at, language) })}</>}
+            {r.valid_hours && <> · {t("offers.validAfterYes", { time: formatHours(r.valid_hours, t) })}</>}
+          </p>
+          {!r.ends_at && !r.valid_hours && <p className={styles.muted}>{t("partners.defaults")}</p>}
+        </>
+      )}
       {(r.contact_name || r.contact_email || r.contact_phone) && (
         <p className={styles.line}>
           👤 {t("partners.contact")}: {[r.contact_name, r.contact_email, r.contact_phone].filter(Boolean).join(" · ")}
@@ -363,9 +379,9 @@ function RequestCard({ request: r, token, language, onDone }) {
           {newVenue && field("venue_name", t("partners.venueName"))}
           {newVenue && field("city", t("partners.city"))}
           {newVenue && field("country", t("partners.country"))}
-          {field("offer_title", t("partners.offerTitle"))}
-          {field("offer_details", t("partners.offerDetails"))}
-          {field("max_couples", t("partners.maxCouples"))}
+          {!newPlace && field("offer_title", t("partners.offerTitle"))}
+          {!newPlace && field("offer_details", t("partners.offerDetails"))}
+          {!newPlace && field("max_couples", t("partners.maxCouples"))}
         </div>
       )}
       {refusing && (
