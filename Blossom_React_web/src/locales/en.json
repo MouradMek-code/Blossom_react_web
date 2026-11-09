@@ -1305,5 +1305,37 @@
     "title": "Spots for dating",
     "text": "Cafés, walks and views picked for a first date.",
     "button": "Discover the spots"
+  },
+  "editProfile": {
+    "title": "Edit profile",
+    "edit": "Edit",
+    "save": "Save",
+    "failed": "Couldn't save. Check your connection and try again.",
+    "hint": "Everything here is optional. Tap a chosen answer again to remove it.",
+    "needLanguage": "Keep at least one language you speak.",
+    "discardTitle": "Leave without saving?",
+    "discardText": "Your changes will be lost.",
+    "discard": "Leave",
+    "keepEditing": "Keep editing",
+    "completeTitle": "Complete your profile",
+    "completeText": "Profiles with more answers get more likes and better matches.",
+    "completeButton": "Complete my profile",
+    "saved": "Saved ✓"
+  },
+  "firstMove": {
+    "yourMove": "Your move",
+    "bannerOne": "On Blossom, women send the first message. {{name}} is waiting for your hello!",
+    "bannerMany": "On Blossom, women send the first message. {{count}} matches are waiting for your hello!",
+    "youTitle": "You make the first move 💬",
+    "youText": "On Blossom, women send the first message: {{name}} can't write to you until you do. Say hi!",
+    "themTitle": "{{name}} writes first",
+    "themText": "On Blossom, women send the first message. You'll get a notification as soon as {{name}} writes.",
+    "waitPlaceholder": "{{name}} writes first…",
+    "ideas": "Need an idea?",
+    "ice1": "Hi {{name}}! What made you smile today?",
+    "ice2": "Hey {{name}} 🌸 Coffee or tea?",
+    "ice3": "Hi {{name}}! What would be your perfect first date?",
+    "celebrate": "On Blossom, you send the first message - {{name}} is waiting for your hello!",
+    "sayHi": "Say hi first"
   }
 }

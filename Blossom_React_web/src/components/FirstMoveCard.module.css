@@ -1,0 +1,98 @@
+/* The empty chat's card: "You make the first move" (her) / "Sara writes
+   first" (him). */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 440px;
+  margin: 18px auto;
+  padding: 22px 20px;
+  border-radius: 20px;
+  border: 1.5px solid;
+  text-align: center;
+}
+
+.cardYou {
+  background: var(--primary-tint);
+  border-color: var(--primary-soft);
+}
+
+.cardThem {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconYou {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.iconThem {
+  background: var(--surface-muted);
+  color: var(--text-soft);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.ideas {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary-deep);
+}
+
+:global(html[lang="ar"]) .ideas,
+:global(html[lang="zh"]) .ideas {
+  letter-spacing: 0;
+}
+
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.chip {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--primary-soft);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.chip:hover,
+.chip:focus-visible {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}

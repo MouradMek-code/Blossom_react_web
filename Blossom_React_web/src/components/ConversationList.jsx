@@ -5,7 +5,7 @@ import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { NETWORK_ERROR, postJson } from "../api/errors";
 import { shortTime } from "../api/chatTime";
-import { Button, EmptyState, SkeletonRows } from "../ui";
+import { Button, EmptyState, Icon, SkeletonRows } from "../ui";
 import styles from "../pages/Messages.module.css";
 
 // Refresh while it's on screen, so new messages and badges show up without
@@ -88,6 +88,8 @@ export default function ConversationList({ compact = false, activeConversationId
   }
 
   const newMatches = (items || []).filter((item) => !item.last_message);
+  // Women write first: the new matches waiting for her hello.
+  const yourMove = newMatches.filter((item) => item.your_move);
   const conversations = (items || []).filter((item) => item.last_message);
 
   return (
@@ -100,6 +102,17 @@ export default function ConversationList({ compact = false, activeConversationId
       {/* Likes and new matches, always on top: the "Likes you" circle
           first (their photos blurred - tap to see who), then the faces of
           new matches nobody has written to yet. */}
+      {yourMove.length > 0 && (
+        <p className={styles.firstMoveBanner}>
+          <Icon name="message-circle" size={18} />
+          <span>
+            {yourMove.length === 1
+              ? t("firstMove.bannerOne", { name: yourMove[0].profile.first_name })
+              : t("firstMove.bannerMany", { count: yourMove.length })}
+          </span>
+        </p>
+      )}
+
       <section className={styles.matchesBlock}>
         <h2 className={styles.sectionTitle}>{t("messages.circlesTitle")}</h2>
         <ul className={styles.matchesRow}>
@@ -141,6 +154,7 @@ export default function ConversationList({ compact = false, activeConversationId
                 <span className={styles.matchName}>{item.profile.first_name}</span>
                 {/* Blossom's rule: she writes first. */}
                 {item.waiting_for_them && <span className={styles.matchWaiting}>{t("messages.waitingShort")}</span>}
+                {item.your_move && <span className={styles.matchYourMove}>{t("firstMove.yourMove")}</span>}
               </button>
             </li>
           ))}

@@ -1305,5 +1305,37 @@
     "title": "约会好去处",
     "text": "为第一次约会精选的咖啡馆、散步路线和美景。",
     "button": "去看看"
+  },
+  "editProfile": {
+    "title": "编辑资料",
+    "edit": "编辑",
+    "save": "保存",
+    "failed": "保存失败。请检查网络后重试。",
+    "hint": "这里的所有内容都是可选的。再次点击已选的答案即可取消。",
+    "needLanguage": "请至少保留一种你会说的语言。",
+    "discardTitle": "不保存就离开？",
+    "discardText": "你的修改将会丢失。",
+    "discard": "离开",
+    "keepEditing": "继续编辑",
+    "completeTitle": "完善你的资料",
+    "completeText": "资料越完整，收到的喜欢越多，配对也更合适。",
+    "completeButton": "完善我的资料",
+    "saved": "已保存 ✓"
+  },
+  "firstMove": {
+    "yourMove": "该你了",
+    "bannerOne": "在 Blossom，由女生发出第一条消息。{{name}} 正在等你打招呼！",
+    "bannerMany": "在 Blossom，由女生发出第一条消息。{{count}} 个配对正在等你打招呼！",
+    "youTitle": "由你迈出第一步 💬",
+    "youText": "在 Blossom，由女生发出第一条消息：在你开口之前，{{name}} 无法给你发消息。打个招呼吧！",
+    "themTitle": "{{name}} 会先发消息",
+    "themText": "在 Blossom，由女生发出第一条消息。{{name}} 一发消息，你就会收到通知。",
+    "waitPlaceholder": "{{name}} 会先发消息…",
+    "ideas": "需要点灵感？",
+    "ice1": "嗨 {{name}}！今天有什么让你开心的事吗？",
+    "ice2": "你好 {{name}} 🌸 你更喜欢咖啡还是茶？",
+    "ice3": "嗨 {{name}}！你理想中的第一次约会是什么样的？",
+    "celebrate": "在 Blossom，由你发出第一条消息——{{name}} 正在等你打招呼！",
+    "sayHi": "先打个招呼"
   }
 }

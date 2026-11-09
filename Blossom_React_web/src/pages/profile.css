@@ -471,3 +471,81 @@
 .photo-delete:hover {
   transform: scale(1.08);
 }
+
+/* A card's title with its "Edit" button. */
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.edit-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1.5px solid var(--primary);
+  border-radius: 999px;
+  color: var(--primary-deep);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.18s ease;
+}
+
+.edit-chip:hover {
+  background: var(--primary-tint);
+  color: var(--primary-deep);
+}
+
+.learning-label {
+  margin: 14px 0 8px;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+/* "Complete your profile" */
+.complete-card {
+  margin: 0 0 20px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: var(--primary-tint);
+  border: 1.5px solid var(--primary-soft);
+}
+
+.complete-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--primary-deep);
+  font-size: 1.05rem;
+}
+
+.complete-head span {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.complete-bar {
+  height: 7px;
+  margin: 10px 0;
+  border-radius: 4px;
+  background: rgba(193, 70, 107, 0.15);
+  overflow: hidden;
+}
+
+.complete-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--primary);
+}
+
+.complete-card p {
+  margin: 0 0 12px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}

@@ -11,6 +11,19 @@ import { IMG } from "../api/images";
 import { postJson } from "../api/errors";
 import { MIN_PROFILE_PHOTOS, deletePhoto, fetchOwnPhotos, isImageFile, uploadPhoto } from "../api/photoUpload";
 import { CONNECTION_EMOJI, CONNECTION_TYPES, connectionLabel, connectionOf } from "../api/connection";
+import { completion } from "../api/profileCompletion";
+import { Button, Icon } from "../ui";
+
+// "Edit" on a section: /profile/edit, opened at that section.
+function EditLink({ section }) {
+  const { t } = useTranslation();
+  return (
+    <Link to={`/profile/edit?section=${section}`} className="edit-chip">
+      <Icon name="edit-2" size={14} />
+      {t("editProfile.edit")}
+    </Link>
+  );
+}
 
 function Profile() {
   const { t } = useTranslation();
@@ -213,6 +226,9 @@ function Profile() {
           </div>
         </section>
 
+        {/* Answers skipped at sign-up: complete them here. */}
+        <CompleteCard profile={profile} />
+
         {/* ♡ The date spots I saved */}
         <SavedSpots />
 
@@ -369,7 +385,10 @@ function Profile() {
 
         {/* FACTS */}
         <section className="card">
-          <h2>Basic Information</h2>
+          <div className="card-head">
+            <h2>Basic Information</h2>
+            <EditLink section="basics" />
+          </div>
 
           <div className="grid">
             <div>
@@ -401,7 +420,10 @@ function Profile() {
 
         {/* LIFESTYLE */}
         <section className="card">
-          <h2>Lifestyle</h2>
+          <div className="card-head">
+            <h2>Lifestyle</h2>
+            <EditLink section="lifestyle" />
+          </div>
 
           <div className="grid">
             <div>
@@ -428,7 +450,10 @@ function Profile() {
         {connectionOf(profile) !== "language" && (
           <>
             <section className="card">
-              <h2>Family & Future</h2>
+              <div className="card-head">
+                <h2>Family & Future</h2>
+                <EditLink section="personal" />
+              </div>
 
               <div className="grid">
                 <div>
@@ -447,7 +472,10 @@ function Profile() {
             </section>
 
             <section className="card">
-              <h2>Dating Preferences</h2>
+              <div className="card-head">
+                <h2>Dating Preferences</h2>
+                <EditLink section="looking" />
+              </div>
 
               <div className="grid">
                 <div>
@@ -469,7 +497,10 @@ function Profile() {
 
         {/* LANGUAGES */}
         <section className="card">
-          <h2>Languages</h2>
+          <div className="card-head">
+            <h2>Languages</h2>
+            <EditLink section="languages" />
+          </div>
 
           <div className="tags">
             {profile.languages?.length ? (
@@ -480,10 +511,45 @@ function Profile() {
               <span>No languages listed</span>
             )}
           </div>
+          {profile.learning_languages?.length > 0 && (
+            <>
+              <p className="learning-label">📚 Learning</p>
+              <div className="tags tags-learning">
+                {profile.learning_languages.map((l, i) => (
+                  <span key={i}>{l.language_name || l}</span>
+                ))}
+              </div>
+            </>
+          )}
         </section>
 
       </div>
     </div>
+  );
+}
+
+// "Complete your profile": how many answers are in, and a button to the
+// first section with one missing. Gone once everything is answered.
+function CompleteCard({ profile }) {
+  const { t } = useTranslation();
+  const { done, total, firstMissing } = completion(profile);
+  if (done >= total) return null;
+  return (
+    <section className="complete-card">
+      <div className="complete-head">
+        <strong>{t("editProfile.completeTitle")}</strong>
+        <span>
+          {done}/{total}
+        </span>
+      </div>
+      <div className="complete-bar" aria-hidden="true">
+        <span style={{ width: `${Math.round((done / total) * 100)}%` }} />
+      </div>
+      <p>{t("editProfile.completeText")}</p>
+      <Button to={`/profile/edit?section=${firstMissing}`} icon="edit-2" small>
+        {t("editProfile.completeButton")}
+      </Button>
+    </section>
   );
 }
 

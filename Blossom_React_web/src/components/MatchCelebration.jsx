@@ -8,7 +8,7 @@ import styles from "./MatchCelebration.module.css";
 // The match moment (Browse and "Likes you"): both photos, a heart, then the
 // choice - write now, or keep browsing. It stays until they choose; Escape or
 // a click outside closes it. The app has the same screen.
-export default function MatchCelebration({ myPhoto, them, onClose }) {
+export default function MatchCelebration({ myPhoto, them, onClose, youWriteFirst = false }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -38,9 +38,11 @@ export default function MatchCelebration({ myPhoto, them, onClose }) {
         <p className={styles.text}>
           {t("likesYou.matchText")} · <strong>{them.first_name}</strong>
         </p>
+        {/* Women write first: she's told right here. */}
+        {youWriteFirst && <p className={styles.firstMove}>💬 {t("firstMove.celebrate", { name: them.first_name })}</p>}
         <div className={styles.actions}>
           <Button icon="message-circle" onClick={() => navigate("/messages")} autoFocus>
-            {t("likesYou.matchMessage")}
+            {youWriteFirst ? t("firstMove.sayHi") : t("likesYou.matchMessage")}
           </Button>
           <button type="button" className={styles.later} onClick={onClose}>
             {t("likesYou.matchKeepGoing")}

@@ -6,6 +6,7 @@ import MatchCelebration from "../components/MatchCelebration";
 import styles from "./LikedYou.module.css";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
+import { firstMove } from "../api/connection";
 import { Button, EmptyState, Icon, SkeletonTiles } from "../ui";
 
 // /likes/profile_likes only returns the ids of profiles that liked the
@@ -25,6 +26,20 @@ function LikedYou() {
   const [likedByProfiles, setLikedByProfiles] = useState(null); // null while loading
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [likingId, setLikingId] = useState(null);
+  // Who I am, for "you write first" on the match pop-up.
+  const [me, setMe] = useState(null);
+
+  useEffect(() => {
+    if (!token) return undefined;
+    let alive = true;
+    fetch(`${BASE_URL}/profile`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((resp) => (resp.ok ? resp.json() : null))
+      .then((data) => alive && data && setMe(data))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [token]);
 
   const fetchLikedBy = useCallback(async () => {
     try {
@@ -104,7 +119,12 @@ function LikedYou() {
   return (
     <div>
       <PageNav />
-      <MatchCelebration them={matchedProfile} onClose={closeMatch} />
+      <MatchCelebration
+        myPhoto={me?.photos?.[0]?.image_url}
+        them={matchedProfile}
+        onClose={closeMatch}
+        youWriteFirst={firstMove(me, matchedProfile) === "you"}
+      />
 
       <div className={styles.head}>
         {/* Reached from the "Likes you" circle in Chats. */}

@@ -406,3 +406,28 @@
 .rowActive {
   background: var(--primary-soft) !important;
 }
+
+/* Women write first: "Your move" under her new matches, and a banner. */
+.matchYourMove {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.firstMoveBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--primary-tint);
+  border: 1px solid var(--primary-soft);
+  color: var(--primary-deep);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.firstMoveBanner svg {
+  flex-shrink: 0;
+}

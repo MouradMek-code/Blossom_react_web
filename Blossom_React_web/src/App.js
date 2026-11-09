@@ -8,6 +8,7 @@ import Homepage from "./pages/Homepage";
 import PageNotFound from "./pages/PageNotFound";
 import Login from "./pages/Login";
 import ProfileDetails from "./pages/ProfileDetails";
+import EditProfile from "./pages/EditProfile";
 import Settings from "./pages/Settings";
 import ChatPage from "./pages/ChatPage";
 import Messages from "./pages/Messages";
@@ -70,6 +71,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot_password" element={<ForgotPassword />} />
+        <Route path="/profile/edit" element={<EditProfile />} />
         <Route path="/profile/:id" element={<ProfileDetails />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<Terms />} />

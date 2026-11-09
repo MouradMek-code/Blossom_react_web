@@ -6,6 +6,7 @@ import PageNav from "../components/PageNav";
 import ConversationList from "../components/ConversationList";
 import { useWide } from "../api/useWide";
 import { Icon } from "../ui";
+import FirstMoveCard from "../components/FirstMoveCard";
 
 import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
@@ -233,6 +234,8 @@ function ChatPage() {
 
   const profileId = details?.me_profile_id ?? sessionStorage.getItem("profile_id");
   const partner = details?.profile;
+  // Empty chat, a man with a woman: she writes first - his box waits.
+  const waitingForHer = messages.length === 0 && details?.first_move === "them";
   // WhatsApp, crypto, money...: a warning under the first such message.
   const riskyId = useMemo(() => firstRiskyMessageId(messages, profileId), [messages, profileId]);
 
@@ -428,6 +431,16 @@ function ChatPage() {
         )}
 
         <div className={styles.messagesContainer}>
+          {messages.length === 0 && details?.first_move && (
+            <FirstMoveCard
+              move={details.first_move}
+              name={partner?.first_name || ""}
+              onPick={(line) => {
+                updateText(line);
+                inputRef.current?.focus();
+              }}
+            />
+          )}
           {messages.map((message) => {
             const isMine =
               Number(message.sender_profile_id) === Number(profileId);
@@ -508,7 +521,7 @@ function ChatPage() {
             empty - which it is right after a send, so a second click can't
             post the same message again. */}
         <form className={styles.inputBox} onSubmit={sendMessage}>
-          {partner && (
+          {partner && !waitingForHer && (
             <button
               type="button"
               className={styles.suggestBtn}
@@ -523,9 +536,12 @@ function ChatPage() {
             ref={inputRef}
             value={text}
             onChange={(e) => updateText(e.target.value)}
-            placeholder={t("messages.placeholder")}
+            placeholder={
+              waitingForHer ? t("firstMove.waitPlaceholder", { name: partner?.first_name || "" }) : t("messages.placeholder")
+            }
             className={styles.input}
             autoComplete="off"
+            disabled={waitingForHer}
           />
           <button type="submit" className={styles.button} disabled={!text.trim()}>
             {t("messages.send")}

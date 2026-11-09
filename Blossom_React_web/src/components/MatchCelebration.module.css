@@ -143,3 +143,13 @@
     animation: none;
   }
 }
+
+.firstMove {
+  margin: 14px auto 0;
+  max-width: 380px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  font-weight: 700;
+  line-height: 1.45;
+}

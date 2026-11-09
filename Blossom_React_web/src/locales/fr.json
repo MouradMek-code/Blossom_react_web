@@ -1305,5 +1305,37 @@
     "title": "Des lieux pour vos rendez-vous",
     "text": "Cafés, balades et points de vue choisis pour un premier rendez-vous.",
     "button": "Découvrir les lieux"
+  },
+  "editProfile": {
+    "title": "Modifier le profil",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "failed": "Impossible d'enregistrer. Vérifiez votre connexion et réessayez.",
+    "hint": "Tout est facultatif ici. Touchez à nouveau une réponse choisie pour la retirer.",
+    "needLanguage": "Gardez au moins une langue que vous parlez.",
+    "discardTitle": "Quitter sans enregistrer ?",
+    "discardText": "Vos modifications seront perdues.",
+    "discard": "Quitter",
+    "keepEditing": "Continuer",
+    "completeTitle": "Complétez votre profil",
+    "completeText": "Les profils plus complets reçoivent plus de likes et de meilleurs matchs.",
+    "completeButton": "Compléter mon profil",
+    "saved": "Enregistré ✓"
+  },
+  "firstMove": {
+    "yourMove": "À vous",
+    "bannerOne": "Sur Blossom, ce sont les femmes qui envoient le premier message. {{name}} attend votre bonjour !",
+    "bannerMany": "Sur Blossom, ce sont les femmes qui envoient le premier message. {{count}} matchs attendent votre bonjour !",
+    "youTitle": "C'est à vous de faire le premier pas 💬",
+    "youText": "Sur Blossom, ce sont les femmes qui envoient le premier message : {{name}} ne peut pas vous écrire avant vous. Dites bonjour !",
+    "themTitle": "{{name}} écrit en premier",
+    "themText": "Sur Blossom, ce sont les femmes qui envoient le premier message. Vous serez prévenu dès que {{name}} écrira.",
+    "waitPlaceholder": "{{name}} écrit en premier…",
+    "ideas": "Besoin d'une idée ?",
+    "ice1": "Salut {{name}} ! Qu'est-ce qui t'a fait sourire aujourd'hui ?",
+    "ice2": "Coucou {{name}} 🌸 Plutôt café ou thé ?",
+    "ice3": "Salut {{name}} ! Ce serait quoi, ton premier rendez-vous idéal ?",
+    "celebrate": "Sur Blossom, c'est vous qui envoyez le premier message : {{name}} attend votre bonjour !",
+    "sayHi": "Dire bonjour en premier"
   }
 }

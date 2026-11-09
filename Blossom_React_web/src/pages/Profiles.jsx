@@ -10,7 +10,7 @@ import styles from "./Profiles.module.css";
 import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { isNewMember } from "../api/newMember";
-import { CONNECTION_DOTS, connectionOf, languagesLine } from "../api/connection";
+import { CONNECTION_DOTS, connectionOf, firstMove, languagesLine } from "../api/connection";
 import { Button, EmptyState, Icon, SkeletonTiles } from "../ui";
 
 // One person in the Browse grid. Several photos: bars on top, and the left or
@@ -133,6 +133,7 @@ function Profiles() {
   const token = sessionStorage.getItem("token");
   const [profiles, setProfiles] = useState([]);
   const [ownPhoto, setOwnPhoto] = useState(null);
+  const [ownProfile, setOwnProfile] = useState(null);
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [draftFilters, setDraftFilters] = useState(() => {
@@ -195,6 +196,7 @@ function Profiles() {
         if (ownResp.ok) {
           const ownData = await ownResp.json();
           setOwnPhoto(ownData.photos?.[0]?.image_url || null);
+          setOwnProfile(ownData);
           const saved = (() => { try { return JSON.parse(sessionStorage.getItem("blossom_filters") || "null"); } catch { return null; } })();
           const defaults = getDefaultFilters(ownData);
           const initial = saved !== null ? saved : defaults;
@@ -262,7 +264,12 @@ function Profiles() {
 
   return (
     <div className="profile-page">
-      <MatchCelebration myPhoto={ownPhoto} them={matchedProfile} onClose={closeMatch} />
+      <MatchCelebration
+        myPhoto={ownPhoto}
+        them={matchedProfile}
+        onClose={closeMatch}
+        youWriteFirst={firstMove(ownProfile, matchedProfile) === "you"}
+      />
 
       <PageNav />
 

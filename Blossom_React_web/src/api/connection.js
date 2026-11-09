@@ -41,3 +41,14 @@ export function questionsFor(questions, connectionType) {
   const type = CONNECTION_TYPES.includes(connectionType) ? connectionType : "both";
   return questions.filter((q) => !q.for || q.for.includes(type));
 }
+
+
+// Blossom's rule (the server's too): in a dating match between a woman and a
+// man, she sends the first message. From `me`'s side: "you", "them" or null.
+export function firstMove(me, them) {
+  if (!me || !them) return null;
+  if (connectionOf(me) === "language" || connectionOf(them) === "language") return null;
+  if (me.gender === "Woman" && them.gender === "Man") return "you";
+  if (me.gender === "Man" && them.gender === "Woman") return "them";
+  return null;
+}
