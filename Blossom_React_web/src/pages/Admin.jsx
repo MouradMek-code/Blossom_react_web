@@ -12,12 +12,12 @@ const th = {
   fontSize: "12px",
   fontWeight: "700",
   textTransform: "uppercase",
-  color: "#888",
-  borderBottom: "2px solid #f0f0f0",
+  color: "var(--text-muted)",
+  borderBottom: "2px solid var(--border)",
 };
 const td = {
   padding: "12px 16px",
-  borderBottom: "1px solid #f5f5f5",
+  borderBottom: "1px solid var(--border)",
   fontSize: "14px",
   verticalAlign: "middle",
 };
@@ -76,21 +76,21 @@ export default function Admin() {
   });
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#fafafa" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "var(--bg)" }}>
       <PageNav />
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 20px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: "24px", fontWeight: "800", color: "#222" }}>
+            <h1 style={{ margin: 0, fontSize: "24px", fontWeight: "800", color: "var(--text)" }}>
               🛡️ Admin Panel
             </h1>
-            <p style={{ margin: "4px 0 0", color: "#888", fontSize: "14px" }}>
+            <p style={{ margin: "4px 0 0", color: "var(--text-muted)", fontSize: "14px" }}>
               {users.length} users total ·{" "}
-              <Link to="/admin/dashboard" style={{ color: "#c1466b", fontWeight: 700 }}>
+              <Link to="/admin/dashboard" style={{ color: "var(--primary)", fontWeight: 700 }}>
                 📊 Dashboard
               </Link>{" "}
               ·{" "}
-              <Link to="/admin/friends" style={{ color: "#c1466b", fontWeight: 700 }}>
+              <Link to="/admin/friends" style={{ color: "var(--primary)", fontWeight: 700 }}>
                 👯 Profiles for friends
               </Link>
             </p>
@@ -103,7 +103,7 @@ export default function Admin() {
             style={{
               padding: "10px 16px",
               borderRadius: "999px",
-              border: "1.5px solid #e0e0e0",
+              border: "1.5px solid var(--border-strong)",
               fontSize: "14px",
               width: "280px",
               outline: "none",
@@ -119,9 +119,9 @@ export default function Admin() {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         {loading ? (
-          <p style={{ color: "#888", textAlign: "center", marginTop: "60px" }}>Loading...</p>
+          <p style={{ color: "var(--text-muted)", textAlign: "center", marginTop: "60px" }}>Loading...</p>
         ) : (
-          <div style={{ backgroundColor: "#fff", borderRadius: "16px", boxShadow: "0 2px 20px rgba(0,0,0,0.06)", overflowX: "auto" }}>
+          <div style={{ backgroundColor: "var(--surface)", borderRadius: "16px", boxShadow: "0 2px 20px rgba(0,0,0,0.06)", overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
@@ -138,14 +138,14 @@ export default function Admin() {
               <tbody>
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={8} style={{ ...td, textAlign: "center", color: "#aaa", padding: "40px" }}>
+                    <td colSpan={8} style={{ ...td, textAlign: "center", color: "var(--text-muted)", padding: "40px" }}>
                       No users found
                     </td>
                   </tr>
                 )}
                 {filtered.map((u) => (
                   <tr key={u.id} style={{ transition: "background 0.15s" }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "#fafafa"}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--surface-muted)"}
                     onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                   >
                     <td style={td}>
@@ -156,7 +156,7 @@ export default function Admin() {
                           style={{ width: "44px", height: "44px", borderRadius: "50%", objectFit: "cover" }}
                         />
                       ) : (
-                        <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "#f0e0f5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px" }}>
+                        <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "var(--dk-f0e0f5, #f0e0f5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px" }}>
                           🌸
                         </div>
                       )}
@@ -164,16 +164,16 @@ export default function Admin() {
                     <td style={{ ...td, fontWeight: "600" }}>
                       {u.profile?.first_name || "—"}
                       {u.pending_friend && (
-                        <span style={{ display: "block", marginTop: "3px", fontSize: "12px", fontWeight: 700, color: "#8a5300" }}>
+                        <span style={{ display: "block", marginTop: "3px", fontSize: "12px", fontWeight: 700, color: "var(--dk-8a5300, #8a5300)" }}>
                           ⏳ Waiting for friend
                         </span>
                       )}
                     </td>
                     <td style={td}>{u.username}</td>
-                    <td style={{ ...td, color: "#666" }}>{u.email}</td>
+                    <td style={{ ...td, color: "var(--dk-666666, #666)" }}>{u.email}</td>
                     <td style={td}>{u.profile ? `${u.profile.city || "—"}, ${u.profile.country || "—"}` : "—"}</td>
                     <td style={td}>{u.profile ? `${u.profile.gender || "—"} · ${u.profile.age || "—"}` : "—"}</td>
-                    <td style={{ ...td, color: "#888", fontSize: "13px" }}>
+                    <td style={{ ...td, color: "var(--text-muted)", fontSize: "13px" }}>
                       {u.profile?.created_at ? new Date(u.profile.created_at).toLocaleDateString() : "—"}
                     </td>
                     <td style={{ ...td, maxWidth: "170px" }}>

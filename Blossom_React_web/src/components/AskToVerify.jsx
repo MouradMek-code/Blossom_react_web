@@ -19,10 +19,10 @@ export default function AskToVerify({ profile, name, onAsked }) {
   if (profile.verify_by) {
     // Nothing is deleted automatically: past the deadline, the admin decides.
     if (new Date(profile.verify_by) < new Date()) {
-      return <span style={{ color: "#C0392B", fontWeight: 800, fontSize: 13 }}>⌛ {t("verified.askExpired")}</span>;
+      return <span style={{ color: "var(--danger)", fontWeight: 800, fontSize: 13 }}>⌛ {t("verified.askExpired")}</span>;
     }
     return (
-      <span style={{ color: "#B4581E", fontWeight: 700, fontSize: 13 }}>
+      <span style={{ color: "var(--dk-b4581e, #B4581E)", fontWeight: 700, fontSize: 13 }}>
         ⏳ {t("verified.asked", { date: formatDeadline(profile.verify_by, i18n.language) })}
       </span>
     );

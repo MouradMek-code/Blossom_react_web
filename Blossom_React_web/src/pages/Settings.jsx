@@ -8,6 +8,7 @@ import { postJson } from "../api/errors";
 import { SUPPORT_EMAIL } from "../api/links";
 import { tidyCity } from "../api/geo";
 import { Icon } from "../ui";
+import { getThemeMode, setThemeMode } from "../api/theme";
 import i18n from "../i18n";
 import styles from "./Settings.module.css";
 
@@ -16,6 +17,13 @@ const LANGUAGES = [
   { code: "fr", label: "Français" },
   { code: "zh", label: "中文" },
   { code: "ar", label: "العربية" },
+];
+
+// Light, dark, or like the device (the default).
+const THEMES = [
+  { mode: "system", icon: "smartphone" },
+  { mode: "light", icon: "sun" },
+  { mode: "dark", icon: "moon" },
 ];
 
 // Everything about the account rather than about dating: language, where you
@@ -27,6 +35,7 @@ function Settings() {
   const token = sessionStorage.getItem("token");
 
   const [language, setLanguage] = useState(i18n.language?.slice(0, 2) || "en");
+  const [themeMode, setThemeModeState] = useState(getThemeMode);
   const [profile, setProfile] = useState(null);
   const [editingLocation, setEditingLocation] = useState(false);
   const [locationDraft, setLocationDraft] = useState({ country: "", city: "" });
@@ -56,6 +65,11 @@ function Settings() {
   function switchLanguage(code) {
     i18n.changeLanguage(code);
     setLanguage(code);
+  }
+
+  function switchTheme(mode) {
+    setThemeMode(mode);
+    setThemeModeState(mode);
   }
 
   function startEditingLocation() {
@@ -131,6 +145,28 @@ function Settings() {
               >
                 {option.label}
                 {language === option.code && <span aria-hidden="true">✓</span>}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className={styles.card}>
+          <h2 className={styles.cardTitle}>{t("settings.appearance")}</h2>
+          <div className={styles.langGrid} role="radiogroup" aria-label={t("settings.appearance")}>
+            {THEMES.map((option) => (
+              <button
+                key={option.mode}
+                type="button"
+                role="radio"
+                aria-checked={themeMode === option.mode}
+                className={`${styles.langBtn} ${themeMode === option.mode ? styles.langBtnActive : ""}`}
+                onClick={() => switchTheme(option.mode)}
+              >
+                <span className={styles.themeLabel}>
+                  <Icon name={option.icon} size={18} />
+                  {t(`settings.theme_${option.mode}`)}
+                </span>
+                {themeMode === option.mode && <span aria-hidden="true">✓</span>}
               </button>
             ))}
           </div>

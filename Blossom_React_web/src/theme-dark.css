@@ -4,6 +4,8 @@
    in the stylesheets: each one is written var(--dk-xxxxxx, #xxxxxx), so light
    mode keeps the literal and only dark mode defines the variable. */
 :root[data-theme="dark"] {
+  --dk-b4581e: #eaab83;
+  --dk-f0e0f5: #301e36;
   --dk-1a1a2a: #c0c0d8;
   --dk-1a1a2e: #bdbdda;
   --dk-1f5c3d: #a6e1c3;

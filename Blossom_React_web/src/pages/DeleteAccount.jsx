@@ -10,7 +10,7 @@ function DeleteAccount() {
       <PageNav />
       <div style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 20px 80px", lineHeight: 1.6 }}>
         <h1>Delete Your Account</h1>
-        <p style={{ color: "#666" }}>
+        <p style={{ color: "var(--dk-666666, #666)" }}>
           You can permanently delete your Blossom account and all associated data at any time.
         </p>
 

@@ -47,7 +47,7 @@ function PrivacyPolicy() {
         style={{ maxWidth: "720px", margin: "0 auto", padding: "32px 20px 80px", lineHeight: 1.6 }}
       >
         <h1>{policy.title}</h1>
-        <p style={{ color: "#666" }}>{policy.updated}</p>
+        <p style={{ color: "var(--dk-666666, #666)" }}>{policy.updated}</p>
 
         {policy.sections.map((section, s) => (
           <section key={s} style={sectionStyle}>

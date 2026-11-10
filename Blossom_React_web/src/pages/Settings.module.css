@@ -262,3 +262,10 @@
 .linkRow {
   min-height: 48px;
 }
+
+/* Appearance: an icon before each choice. */
+.themeLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

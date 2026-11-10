@@ -15,6 +15,16 @@ export default function Poster() {
   const [qr, setQr] = useState("");
   const [error, setError] = useState(false);
 
+  // A poster to print: always on white, even for someone in dark mode.
+  useEffect(() => {
+    const html = document.documentElement;
+    const before = html.getAttribute("data-theme");
+    html.setAttribute("data-theme", "light");
+    return () => {
+      if (before) html.setAttribute("data-theme", before);
+    };
+  }, []);
+
   useEffect(() => {
     fetch(`${BASE_URL}/offers/${offerId}/poster`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`poster ${r.status}`))))

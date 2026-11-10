@@ -2,7 +2,7 @@ import {
   AlertTriangle, ArrowLeft, ArrowRight, Bell, BookOpen, Bookmark, Briefcase, Calendar, Camera, Check,
   ChevronDown, ChevronLeft, ChevronRight, CircleCheck, Clock, Coffee, Compass, Eye, EyeOff, Flag, Gift, Globe, Heart, HelpCircle, Image,
   Hourglass, Info, Key, LifeBuoy, Lock, LogOut, Mail, Map, MapPin, MessageCircle, Moon, Navigation, Pencil, Plus,
-  RefreshCw, Search, Send, Settings, Share2, Shield, Slash, SlidersHorizontal, Star, Trash2, User, Users, Wrench, X,
+  RefreshCw, Search, Send, Settings, Share2, Shield, Slash, SlidersHorizontal, Smartphone, Star, Sun, Trash2, User, Users, Wrench, X,
 } from "lucide-react";
 
 // Blossom's one icon set: Lucide line icons (the app uses Feather, the same
@@ -47,6 +47,8 @@ const ICONS = {
   "map-pin": MapPin,
   "message-circle": MessageCircle,
   moon: Moon,
+  smartphone: Smartphone,
+  sun: Sun,
   navigation: Navigation,
   plus: Plus,
   "refresh-cw": RefreshCw,
