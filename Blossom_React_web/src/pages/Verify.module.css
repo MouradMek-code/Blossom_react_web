@@ -21,7 +21,7 @@
 }
 
 .card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 20px;
   padding: 22px;
   box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
@@ -73,7 +73,7 @@
   padding: 14px 16px;
   border-radius: 14px;
   border: 1.5px solid var(--danger, #d64545);
-  background: #fdecea;
+  background: var(--dk-fdecea, #fdecea);
   color: var(--danger, #d64545);
   font-weight: 700;
   line-height: 1.45;
@@ -83,7 +83,7 @@
   margin: 0;
   padding: 14px 16px;
   border-radius: 14px;
-  background: #fdf1ec;
+  background: var(--dk-fdf1ec, #fdf1ec);
   border-left: 4px solid var(--primary);
   font-weight: 600;
   line-height: 1.45;
@@ -105,7 +105,7 @@
   gap: 8px;
   padding: 18px 12px;
   border-radius: 16px;
-  background: #eef4fe;
+  background: var(--dk-eef4fe, #eef4fe);
   font-size: 17px;
   text-align: center;
 }
@@ -120,7 +120,7 @@
   aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 16px;
-  background: #eee;
+  background: var(--dk-eeeeee, #eeeeee);
 }
 
 .primary {

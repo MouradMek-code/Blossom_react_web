@@ -133,7 +133,7 @@
   gap: 2px;
   padding: 10px 14px;
   border-radius: var(--r-md);
-  background: linear-gradient(135deg, #fff4e0, #ffe6bd);
+  background: linear-gradient(135deg, var(--dk-fff4e0, #fff4e0), var(--dk-ffe6bd, #ffe6bd));
   border: 1.5px solid #f0c27a;
 }
 
@@ -142,17 +142,17 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #8a5a10;
+  color: var(--dk-8a5a10, #8a5a10);
 }
 
 .giftTitle {
   font-size: 1.08rem;
-  color: #3d2300;
+  color: var(--dk-3d2300, #3d2300);
 }
 
 .giftHow {
   font-size: 0.78rem;
-  color: #6b4a14;
+  color: var(--dk-6b4a14, #6b4a14);
 }
 
 .quote {

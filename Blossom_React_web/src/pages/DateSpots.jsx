@@ -915,7 +915,9 @@ function DateSpots() {
             ))}
 
           <h2 className={styles.sectionTitle}>
-            {t("dateSpots.allSpots")} · {shownSpots.length}
+            {/* No count until the list is in: "· 0" while loading reads as "no spots". */}
+            {t("dateSpots.allSpots")}
+            {!loading && ` · ${shownSpots.length}`}
           </h2>
 
           {loading ? (

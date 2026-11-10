@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { BASE_URL } from "../api/config";
@@ -60,6 +60,8 @@ async function checkPosition(coords) {
 export default function EnableLocation() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  // Sign-up goes on to the welcome guide; anyone else to Browse.
+  const next = useLocation().state?.next === "/welcome" ? "/welcome" : "/profiles";
   const [busy, setBusy] = useState(false);
 
   async function enable() {
@@ -77,7 +79,7 @@ export default function EnableLocation() {
       window.location.assign("/");
       return;
     }
-    navigate("/profiles", { replace: true });
+    navigate(next, { replace: true });
   }
 
   return (

@@ -2,9 +2,9 @@
   margin: 0 0 18px;
   padding: 10px 14px;
   border-radius: 12px;
-  background: #e8f6ee;
-  border: 1px solid #b9e2c9;
-  color: #1f6b45;
+  background: var(--dk-e8f6ee, #e8f6ee);
+  border: 1px solid var(--dk-b9e2c9, #b9e2c9);
+  color: var(--dk-1f6b45, #1f6b45);
   font-size: 15px;
   font-weight: 700;
   line-height: 1.45;
@@ -15,9 +15,9 @@
   margin: 6px auto 14px;
   padding: 10px 14px;
   border-radius: 12px;
-  background: #fff8ec;
-  border: 1px solid #f3dcb3;
-  color: #574d46;
+  background: var(--dk-fff8ec, #fff8ec);
+  border: 1px solid var(--dk-f3dcb3, #f3dcb3);
+  color: var(--text-soft);
   font-size: 13.5px;
   line-height: 1.5;
   text-align: center;
@@ -25,5 +25,5 @@
 
 .notice a {
   font-weight: 700;
-  color: #7e2a44;
+  color: var(--primary-deep);
 }

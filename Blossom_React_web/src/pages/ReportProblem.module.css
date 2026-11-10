@@ -22,7 +22,7 @@
 }
 
 .card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
@@ -63,8 +63,8 @@
 .kind {
   padding: 9px 14px;
   border-radius: 999px;
-  border: 1.5px solid #e6dcd5;
-  background: #fff;
+  border: 1.5px solid var(--dk-e6dcd5, #e6dcd5);
+  background: var(--surface);
   color: var(--text);
   font-size: 14px;
   font-weight: 600;
@@ -79,7 +79,7 @@
 
 .kindChild {
   border-color: var(--danger, #d64545);
-  background: #fdecea;
+  background: var(--dk-fdecea, #fdecea);
 }
 
 .childNote {
@@ -98,7 +98,7 @@
 
 .field textarea,
 .field input {
-  border: 1.5px solid #e6dcd5;
+  border: 1.5px solid var(--dk-e6dcd5, #e6dcd5);
   border-radius: 14px;
   padding: 10px 14px;
   font-size: 15px;

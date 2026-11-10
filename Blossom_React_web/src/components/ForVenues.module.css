@@ -1,6 +1,6 @@
 .section {
   padding: 48px 16px;
-  background: #fbf8f6;
+  background: var(--bg);
 }
 
 .card {
@@ -11,8 +11,8 @@
   align-items: center;
   padding: 28px;
   border-radius: 22px;
-  background: #fff4e5;
-  border: 1px solid #ffd8a3;
+  background: var(--dk-fff4e5, #fff4e5);
+  border: 1px solid var(--dk-ffd8a3, #ffd8a3);
 }
 
 .icon {
@@ -23,14 +23,14 @@
 .title {
   margin: 0;
   font-size: 26px;
-  color: #3d2300;
+  color: var(--dk-3d2300, #3d2300);
 }
 
 .body {
   margin: 8px 0 0;
   font-size: 16px;
   line-height: 1.55;
-  color: #5c3a0a;
+  color: var(--dk-5c3a0a, #5c3a0a);
 }
 
 .actions {
@@ -44,7 +44,7 @@
 .primary {
   padding: 12px 22px;
   border-radius: 999px;
-  background: #c1466b;
+  background: var(--primary);
   color: #fff;
   font-weight: 800;
   text-decoration: none;
@@ -52,7 +52,7 @@
 
 .secondary {
   font-weight: 700;
-  color: #7e2a44;
+  color: var(--primary-deep);
 }
 
 @media (max-width: 600px) {
@@ -72,8 +72,8 @@
   margin: 0 0 14px;
   padding: 5px 12px;
   border-radius: 999px;
-  background: #e8f6ee;
-  color: #1f6b45;
+  background: var(--dk-e8f6ee, #e8f6ee);
+  color: var(--dk-1f6b45, #1f6b45);
   font-size: 0.88rem;
   font-weight: 800;
 }

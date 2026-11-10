@@ -57,19 +57,19 @@
 }
 
 .secondary {
-  background: #fff;
+  background: var(--surface);
   border-color: var(--primary);
   color: var(--primary);
 }
 
 .quiet {
-  background: #fff;
-  border-color: #dccec3;
+  background: var(--surface);
+  border-color: var(--border-strong);
   color: var(--text-soft);
 }
 
 .danger {
-  background: #fff;
+  background: var(--surface);
   border-color: var(--danger, #c0392b);
   color: var(--danger, #c0392b);
 }
@@ -102,7 +102,7 @@
 
 /* ---- Card ---- */
 .card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 22px;
   padding: 20px;
   box-shadow: 0 2px 14px rgba(63, 44, 38, 0.06);
@@ -112,12 +112,12 @@
 }
 
 .cardDanger {
-  border: 1.5px solid #f3b7b0;
+  border: 1.5px solid var(--dk-f3b7b0, #f3b7b0);
 }
 
 .cardInfo {
-  border: 1.5px solid #bfd6fa;
-  background: #f5f9ff;
+  border: 1.5px solid var(--dk-bfd6fa, #bfd6fa);
+  background: var(--dk-f5f9ff, #f5f9ff);
 }
 
 /* ---- Chip ---- */
@@ -128,8 +128,8 @@
   min-height: 40px;
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1.5px solid #ece2da;
-  background: #fff;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
   color: var(--text);
   font: inherit;
   font-size: 14px;
@@ -139,14 +139,14 @@
 
 .chipOn {
   border-color: var(--primary);
-  background: var(--primary-tint, #fbf1f4);
+  background: var(--primary-tint, var(--primary-tint));
   color: var(--primary);
   font-weight: 800;
 }
 
 .chipOnDanger {
   border-color: var(--danger, #c0392b);
-  background: #fdecea;
+  background: var(--dk-fdecea, #fdecea);
   color: var(--danger, #c0392b);
   font-weight: 800;
 }
@@ -198,7 +198,7 @@ span.chip {
 
 /* ---- Skeleton ---- */
 .skeleton {
-  background: linear-gradient(90deg, #f3ece6 25%, #faf6f2 50%, #f3ece6 75%);
+  background: linear-gradient(90deg, var(--dk-f3ece6, #f3ece6) 25%, var(--dk-faf6f2, #faf6f2) 50%, var(--dk-f3ece6, #f3ece6) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.3s ease-in-out infinite;
 }

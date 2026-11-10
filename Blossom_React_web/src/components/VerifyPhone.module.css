@@ -11,7 +11,7 @@
   width: 360px;
   padding: 30px;
   border-radius: 16px;
-  background: #ffffff;
+  background: var(--surface);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
@@ -25,12 +25,12 @@
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #222;
+  color: var(--dk-222222, #222222);
 }
 
 .subtitle {
   font-size: 14px;
-  color: #666;
+  color: var(--dk-666666, #666666);
   margin-bottom: 20px;
   line-height: 1.4;
 }
@@ -42,7 +42,7 @@
   text-align: center;
   letter-spacing: 6px;
   border-radius: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--dk-dddddd, #dddddd);
   outline: none;
   margin-bottom: 20px;
   transition: 0.2s;
@@ -72,7 +72,7 @@
 .footerText {
   margin-top: 15px;
   font-size: 13px;
-  color: #777;
+  color: var(--dk-777777, #777777);
 }
 
 .spamHint {

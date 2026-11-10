@@ -196,7 +196,7 @@ export default function ImageUploader() {
             {uploading ? t("photos.uploading") : t(missing === 1 ? "photos.addOne" : "photos.addMore", { count: missing })}
           </p>
         ) : (
-          <button type="button" className={styles.button} onClick={() => navigate("/enable_location", { replace: true })}>
+          <button type="button" className={styles.button} onClick={() => navigate("/enable_location", { replace: true, state: { next: "/welcome" } })}>
             {t("photos.continue")}
           </button>
         )}

@@ -2,8 +2,8 @@
   margin-bottom: 28px;
   padding: 18px 20px;
   border-radius: 16px;
-  background: #fff;
-  border: 1.5px solid #f3b7b0;
+  background: var(--surface);
+  border: 1.5px solid var(--dk-f3b7b0, #f3b7b0);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
 
@@ -23,7 +23,7 @@
   margin: 0;
   font-size: 20px;
   font-weight: 800;
-  color: #222;
+  color: var(--dk-222222, #222222);
 }
 
 .count {
@@ -47,7 +47,7 @@
 }
 
 .error {
-  color: #c0392b;
+  color: var(--dk-c0392b, #c0392b);
   font-weight: 600;
 }
 
@@ -68,8 +68,8 @@
 .card {
   padding: 14px;
   border-radius: 12px;
-  background: #fdf7f6;
-  border: 1px solid #f3dcd8;
+  background: var(--dk-fdf7f6, #fdf7f6);
+  border: 1px solid var(--dk-f3dcd8, #f3dcd8);
 }
 
 .cardHandled {
@@ -95,15 +95,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #fbe4ec;
+  background: var(--dk-fbe4ec, #fbe4ec);
 }
 
 .deleted {
   margin-left: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: #eee;
-  color: #666;
+  background: var(--dk-eeeeee, #eeeeee);
+  color: var(--dk-666666, #666666);
   font-size: 12px;
   font-weight: 700;
 }
@@ -118,8 +118,8 @@
   margin-left: auto;
   padding: 4px 10px;
   border-radius: 999px;
-  background: #fdecea;
-  color: #c0392b;
+  background: var(--dk-fdecea, #fdecea);
+  color: var(--dk-c0392b, #c0392b);
   font-size: 12.5px;
   font-weight: 800;
   white-space: nowrap;
@@ -129,10 +129,10 @@
   margin: 10px 0;
   padding: 8px 12px;
   border-left: 3px solid #c0392b;
-  background: #fff;
+  background: var(--surface);
   border-radius: 0 8px 8px 0;
   white-space: pre-line;
-  color: #333;
+  color: var(--dk-333333, #333333);
 }
 
 .actions {
@@ -154,15 +154,15 @@
 }
 
 .secondary {
-  border: 1.5px solid #ddd;
-  background: #fff;
-  color: #444;
+  border: 1.5px solid var(--dk-dddddd, #dddddd);
+  background: var(--surface);
+  color: var(--dk-444444, #444444);
 }
 
 .danger {
   border: 1.5px solid #c0392b;
-  background: #fff;
-  color: #c0392b;
+  background: var(--surface);
+  color: var(--dk-c0392b, #c0392b);
 }
 
 .done {
@@ -178,7 +178,7 @@
 }
 
 .handled {
-  color: #2e7d4f;
+  color: var(--dk-2e7d4f, #2e7d4f);
   font-weight: 700;
   font-size: 13px;
 }

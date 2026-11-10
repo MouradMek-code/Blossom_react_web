@@ -411,7 +411,11 @@
     "deleteFailed": "Couldn't delete your account. Check your connection and try again.",
     "footnote": "© {{year}} Blossom · 18+ only",
     "deleteButton": "Delete my account",
-    "deleteYes": "Yes, delete my account forever"
+    "deleteYes": "Yes, delete my account forever",
+    "appearance": "Appearance",
+    "theme_system": "Like my device",
+    "theme_light": "Light",
+    "theme_dark": "Dark"
   },
   "menu": {
     "open": "Your account",
@@ -1337,5 +1341,17 @@
     "ice3": "Hi {{name}}! What would be your perfect first date?",
     "celebrate": "On Blossom, you send the first message - {{name}} is waiting for your hello!",
     "sayHi": "Say hi first"
+  },
+  "welcome": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Let's go!",
+    "stepOf": "Step {{n}} of {{total}}",
+    "womenTitle": "Here, women write first",
+    "womenText": "When a woman and a man match, she sends the first message. Ladies, we'll suggest ideas to break the ice. Gentlemen, you'll be notified as soon as she writes.",
+    "spotsTitle": "Find the perfect spot for your date",
+    "spotsText": "Cafés, restaurants, walks… chosen by the community. Invite your match to a spot in one tap, right from the chat.",
+    "giftsTitle": "Gifts from our partners",
+    "giftsText": "Some cafés and restaurants offer a gift to Blossom couples: a drink, a dessert… Invite your match there and show your code."
   }
 }

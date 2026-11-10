@@ -1,7 +1,7 @@
 .page {
   min-height: 100vh;
-  background: #fbf8f6;
-  color: #2a2420;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .wrap {
@@ -20,11 +20,11 @@
   margin: 10px 0 20px;
   font-size: 16px;
   line-height: 1.55;
-  color: #574d46;
+  color: var(--text-soft);
 }
 
 .card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 18px;
   padding: 20px 18px;
   margin-bottom: 16px;
@@ -39,13 +39,13 @@
 
 .card p {
   margin: 0 0 14px;
-  color: #574d46;
+  color: var(--text-soft);
   line-height: 1.5;
 }
 
 .highlight {
-  background: #fff4e5;
-  border: 1px solid #ffd8a3;
+  background: var(--dk-fff4e5, #fff4e5);
+  border: 1px solid var(--dk-ffd8a3, #ffd8a3);
 }
 
 .primary,
@@ -54,7 +54,7 @@
   border: none;
   border-radius: 999px;
   padding: 12px 22px;
-  background: #c1466b;
+  background: var(--primary);
   color: #fff;
   font-weight: 800;
   font-size: 15px;
@@ -68,10 +68,10 @@
 
 .secondary {
   display: inline-block;
-  border: 1.5px solid #dccec3;
+  border: 1.5px solid var(--border-strong);
   border-radius: 999px;
   padding: 10px 20px;
-  color: #574d46;
+  color: var(--text-soft);
   font-weight: 700;
   text-decoration: none;
 }
@@ -99,7 +99,7 @@
   gap: 6px;
   font-size: 13.5px;
   font-weight: 700;
-  color: #574d46;
+  color: var(--text-soft);
   min-width: 0;
 }
 
@@ -109,11 +109,11 @@
   font: inherit;
   font-size: 15px;
   font-weight: 400;
-  color: #2a2420;
+  color: var(--text);
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1.5px solid #dccec3;
-  background: #fff;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
   box-sizing: border-box;
   width: 100%;
 }
@@ -139,11 +139,11 @@
 }
 
 .ok {
-  color: #1f7a4d !important;
+  color: var(--dk-1f7a4d, #1f7a4d) !important;
   font-weight: 700;
 }
 
 .error {
-  color: #b3261e !important;
+  color: var(--dk-b3261e, #b3261e) !important;
   font-size: 14px;
 }

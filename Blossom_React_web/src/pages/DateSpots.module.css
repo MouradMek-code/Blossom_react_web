@@ -185,7 +185,7 @@
 
 .whereMissing {
   border-color: var(--danger);
-  background: #fdf1ef;
+  background: var(--dk-fdf1ef, #fdf1ef);
 }
 
 .whereTitle {
@@ -366,7 +366,7 @@
   height: 38px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--dk-glass-92, rgba(255, 255, 255, 0.92));
   color: var(--text);
   font-size: 1rem;
   font-weight: 700;
@@ -376,7 +376,7 @@
 }
 
 .detailClose:hover {
-  background: #fff;
+  background: var(--surface);
 }
 
 .detailImage {
@@ -625,7 +625,7 @@
   position: absolute;
   top: 18px;
   left: 18px;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--dk-glass-94, rgba(255, 255, 255, 0.94));
   color: var(--primary-deep);
   border-radius: var(--r-pill);
   padding: 6px 14px;
@@ -809,9 +809,9 @@
    detail card. Visually separated with a tinted strip so it never reads as
    part of the public listing. */
 .adminBox {
-  background: #FFF6F9;
-  border-top: 1px solid #F2D9E2;
-  border-bottom: 1px solid #F2D9E2;
+  background: var(--dk-fff6f9, #fff6f9);
+  border-top: 1px solid var(--dk-f2d9e2, #f2d9e2);
+  border-bottom: 1px solid var(--dk-f2d9e2, #f2d9e2);
   padding: 14px 30px;
 }
 
@@ -821,7 +821,7 @@
   font-weight: 800;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: #C1466B;
+  color: var(--primary);
 }
 
 .adminRow {
@@ -843,9 +843,9 @@
 .adminInput {
   width: 110px;
   padding: 9px 12px;
-  border: 1.5px solid #E8CCD7;
+  border: 1.5px solid var(--dk-e8ccd7, #e8ccd7);
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text);
@@ -853,14 +853,14 @@
 }
 
 .adminInput:focus {
-  border-color: #C1466B;
+  border-color: var(--primary);
 }
 
 .adminSave {
   padding: 10px 22px;
   border: none;
   border-radius: 999px;
-  background: #C1466B;
+  background: var(--primary);
   color: #fff;
   font-size: 0.85rem;
   font-weight: 700;
@@ -868,14 +868,14 @@
   transition: background 0.18s;
 }
 
-.adminSave:hover:not(:disabled) { background: #A3395A; }
+.adminSave:hover:not(:disabled) { background: var(--primary-dark); }
 .adminSave:disabled { opacity: 0.6; cursor: default; }
 
 .adminStatus {
   margin: 9px 0 0;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #C1466B;
+  color: var(--primary);
 }
 
 @media (max-width: 640px) {
@@ -1105,9 +1105,9 @@
 }
 
 .seedBtn {
-  border: 1.5px dashed #E8CCD7;
-  background: #FFF6F9;
-  color: #C1466B;
+  border: 1.5px dashed var(--dk-e8ccd7, #e8ccd7);
+  background: var(--dk-fff6f9, #fff6f9);
+  color: var(--primary);
   border-radius: var(--r-pill);
   padding: 9px 18px;
   font-family: var(--font-body);
@@ -1141,9 +1141,9 @@
   margin: 14px 0;
   padding: 14px 16px;
   border-radius: 14px;
-  background: #fff4e5;
-  border: 1px solid #ffd8a3;
-  color: #3d2300;
+  background: var(--dk-fff4e5, #fff4e5);
+  border: 1px solid var(--dk-ffd8a3, #ffd8a3);
+  color: var(--dk-3d2300, #3d2300);
 }
 
 .offerBoxTitle {
@@ -1160,11 +1160,11 @@
 
 .offerBoxTerms {
   font-weight: 600;
-  color: #6b3e00;
+  color: var(--dk-6b3e00, #6b3e00);
 }
 
 .offerBoxHow {
-  color: #6b4a1e;
+  color: var(--dk-6b4a1e, #6b4a1e);
 }
 
 .myPromos {
@@ -1173,8 +1173,8 @@
   padding: 8px 16px;
   border-radius: 999px;
   border: 1.5px solid #ffb547;
-  background: #fff4e5;
-  color: #6b3e00;
+  background: var(--dk-fff4e5, #fff4e5);
+  color: var(--dk-6b3e00, #6b3e00);
   font-weight: 700;
   font-size: 0.9rem;
   text-decoration: none;
@@ -1203,9 +1203,9 @@
   flex-direction: column;
   gap: 4px;
   padding: 0 0 10px;
-  border: 1.5px solid #ffd8a3;
+  border: 1.5px solid var(--dk-ffd8a3, #ffd8a3);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
   overflow: hidden;
   text-align: left;
   cursor: pointer;
@@ -1237,7 +1237,7 @@
 .promoCardOffer {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #6b3e00;
+  color: var(--dk-6b3e00, #6b3e00);
 }
 
 .partnerLink {
@@ -1245,19 +1245,19 @@
   margin-top: 10px;
   font-size: 0.88rem;
   font-weight: 700;
-  color: #7e2a44;
+  color: var(--primary-deep);
 }
 
 /* Delete (admins and whoever shared the spot). */
 .deleteBtn {
   color: var(--danger);
-  border-color: #f0c9c6;
+  border-color: var(--dk-f0c9c6, #f0c9c6);
 }
 
 .deleteBtn:hover {
   color: var(--danger);
   border-color: var(--danger);
-  background: #fdecea;
+  background: var(--dk-fdecea, #fdecea);
 }
 
 .deleteBtn:disabled {
@@ -1283,8 +1283,8 @@
   margin: 8px 0 28px;
   padding: 22px 20px 24px;
   border-radius: var(--r-lg);
-  background: linear-gradient(180deg, #fff6e6 0%, #fffaf3 100%);
-  border: 1px solid #ffdca3;
+  background: linear-gradient(180deg, var(--dk-fff6e6, #fff6e6) 0%, var(--dk-fffaf3, #fffaf3) 100%);
+  border: 1px solid var(--dk-ffdca3, #ffdca3);
 }
 
 .giftsHead {
@@ -1294,14 +1294,14 @@
 .giftsTitle {
   margin: 0;
   font-size: clamp(1.4rem, 2.6vw, 1.8rem);
-  color: #5c3a0a;
+  color: var(--dk-5c3a0a, #5c3a0a);
 }
 
 .giftsSubtitle {
   margin: 6px 0 0;
   font-size: 0.98rem;
   line-height: 1.5;
-  color: #7a5520;
+  color: var(--dk-7a5520, #7a5520);
 }
 
 .giftsList {
@@ -1368,7 +1368,7 @@
   font-family: var(--font-display);
   font-size: 1.25rem;
   line-height: 1.25;
-  color: #3d2300;
+  color: var(--dk-3d2300, #3d2300);
 }
 
 .giftVenue {
@@ -1415,7 +1415,7 @@
 .giftSee {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #7e2a44;
+  color: var(--primary-deep);
 }
 
 .inlineLink {
@@ -1424,7 +1424,7 @@
   padding: 0;
   font: inherit;
   font-weight: 800;
-  color: #7e2a44;
+  color: var(--primary-deep);
   cursor: pointer;
 }
 
@@ -1470,7 +1470,7 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #1f5c3d;
+  color: var(--dk-1f5c3d, #1f5c3d);
 }
 
 .giftWish {
@@ -1480,9 +1480,9 @@
   margin: 14px 0 4px;
   padding: 10px 12px;
   border-radius: var(--r-sm);
-  background: #fff6e6;
+  background: var(--dk-fff6e6, #fff6e6);
   font-size: 0.92rem;
-  color: #5c3a0a;
+  color: var(--dk-5c3a0a, #5c3a0a);
   cursor: pointer;
 }
 
@@ -1531,8 +1531,8 @@
 }
 
 .giftToggleOn {
-  background: var(--text);
-  color: #fff;
+  background: var(--inverse);
+  color: var(--on-inverse);
 }
 
 .giftToggleGift {
@@ -1664,8 +1664,8 @@
 
 .newTag {
   margin-right: 6px;
-  background: #e8f6ee;
-  color: #1f6b45;
+  background: var(--dk-e8f6ee, #e8f6ee);
+  color: var(--dk-1f6b45, #1f6b45);
 }
 
 /* Search + List | Map, on one line (two on a phone). */
@@ -1703,8 +1703,8 @@
 }
 
 .viewOn {
-  background: var(--text);
-  color: #fff;
+  background: var(--inverse);
+  color: var(--on-inverse);
 }
 
 .viewOff {
@@ -1753,13 +1753,13 @@
 
 .quickGift {
   border-color: #f0a020;
-  background: #fff4e0;
-  color: #6b3e00;
+  background: var(--dk-fff4e0, #fff4e0);
+  color: var(--dk-6b3e00, #6b3e00);
 }
 
 .quickGift:hover {
-  background: #ffe6bd;
-  color: #6b3e00;
+  background: var(--dk-ffe6bd, #ffe6bd);
+  color: var(--dk-6b3e00, #6b3e00);
 }
 
 /* ♡ in the top-right corner of a spot's card. */
@@ -1775,7 +1775,7 @@
   height: 38px;
   border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--dk-glass-92, rgba(255, 255, 255, 0.92));
   color: var(--text-soft);
   font-size: 1.2rem;
   line-height: 1;
@@ -1850,8 +1850,8 @@
   align-self: flex-start;
   padding: 5px 12px;
   border-radius: var(--r-pill);
-  background: #fff4e0;
-  color: #8a5a10;
+  background: var(--dk-fff4e0, #fff4e0);
+  color: var(--dk-8a5a10, #8a5a10);
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -2024,8 +2024,8 @@
 
 .chipGift {
   border-color: #f0a020;
-  background: #fff4e0;
-  color: #6b3e00;
+  background: var(--dk-fff4e0, #fff4e0);
+  color: var(--dk-6b3e00, #6b3e00);
 }
 
 .chipGiftOn {
@@ -2154,7 +2154,7 @@
   padding: 12px 14px;
   border: 1.5px dashed #f0a020;
   border-radius: var(--r-md);
-  background: #fff8ec;
+  background: var(--dk-fff8ec, #fff8ec);
   font-size: 0.9rem;
 }
 
@@ -2192,7 +2192,7 @@
 
 .featureMessage {
   margin: 0;
-  color: #6b3e00;
+  color: var(--dk-6b3e00, #6b3e00);
   font-weight: 700;
 }
 
@@ -2244,8 +2244,8 @@
   height: 22px;
   border: none;
   border-radius: 50%;
-  background: #2a2420;
-  color: #fff;
+  background: var(--inverse);
+  color: var(--on-inverse);
   font-size: 11px;
   cursor: pointer;
 }

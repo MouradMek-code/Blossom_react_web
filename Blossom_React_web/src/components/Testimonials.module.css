@@ -1,13 +1,13 @@
 .section {
   padding: 80px 40px;
-  background: #fff8fb;
+  background: var(--dk-fff8fb, #fff8fb);
   text-align: center;
 }
 
 .heading {
   font-size: 2rem;
   font-weight: 800;
-  color: #1a1a2a;
+  color: var(--dk-1a1a2a, #1a1a2a);
   margin: 0 0 48px;
 }
 
@@ -20,11 +20,11 @@
 }
 
 .card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 20px;
   padding: 36px 28px 28px;
   box-shadow: 0 4px 24px rgba(214, 51, 108, 0.08);
-  border: 1px solid #fde4ef;
+  border: 1px solid var(--dk-fde4ef, #fde4ef);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,7 +45,7 @@
 .quote {
   font-size: 1rem;
   line-height: 1.7;
-  color: #444;
+  color: var(--dk-444444, #444444);
   flex: 1;
   margin: 0 0 24px;
   font-style: italic;

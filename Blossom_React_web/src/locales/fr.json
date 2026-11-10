@@ -411,7 +411,11 @@
     "deleteFailed": "Impossible de supprimer votre compte. Vérifiez votre connexion et réessayez.",
     "footnote": "© {{year}} Blossom · 18+ uniquement",
     "deleteButton": "Supprimer mon compte",
-    "deleteYes": "Oui, supprimer mon compte définitivement"
+    "deleteYes": "Oui, supprimer mon compte définitivement",
+    "appearance": "Apparence",
+    "theme_system": "Comme mon appareil",
+    "theme_light": "Clair",
+    "theme_dark": "Sombre"
   },
   "menu": {
     "open": "Votre compte",
@@ -1337,5 +1341,17 @@
     "ice3": "Salut {{name}} ! Ce serait quoi, ton premier rendez-vous idéal ?",
     "celebrate": "Sur Blossom, c'est vous qui envoyez le premier message : {{name}} attend votre bonjour !",
     "sayHi": "Dire bonjour en premier"
+  },
+  "welcome": {
+    "skip": "Passer",
+    "next": "Suivant",
+    "start": "C'est parti !",
+    "stepOf": "Étape {{n}} sur {{total}}",
+    "womenTitle": "Ici, les femmes écrivent en premier",
+    "womenText": "Quand une femme et un homme matchent, c'est elle qui envoie le premier message. Mesdames, on vous propose des idées pour briser la glace. Messieurs, vous êtes prévenus dès qu'elle écrit.",
+    "spotsTitle": "Trouvez le lieu parfait pour votre rendez-vous",
+    "spotsText": "Cafés, restaurants, balades… choisis par la communauté. Invitez votre match dans un spot en un geste, directement depuis le chat.",
+    "giftsTitle": "Des cadeaux offerts par nos partenaires",
+    "giftsText": "Certains cafés et restaurants offrent un cadeau aux couples Blossom : une boisson, un dessert… Invitez votre match là-bas et montrez votre code."
   }
 }

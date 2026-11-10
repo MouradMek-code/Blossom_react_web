@@ -111,8 +111,8 @@
 }
 
 .switchOn {
-  background: var(--text);
-  color: #fff;
+  background: var(--inverse);
+  color: var(--on-inverse);
 }
 
 .switchOff {
@@ -214,7 +214,7 @@
   min-width: 48px;
   padding: 6px 8px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--dk-glass-95, rgba(255, 255, 255, 0.95));
   box-shadow: var(--shadow-sm);
   line-height: 1;
 }
@@ -287,12 +287,12 @@
 }
 
 .giftTag {
-  background: #fff4e5;
-  color: #6b3e00;
+  background: var(--dk-fff4e5, #fff4e5);
+  color: var(--dk-6b3e00, #6b3e00);
 }
 
 .tagWarn {
-  background: #fdecea;
+  background: var(--dk-fdecea, #fdecea);
   color: var(--danger);
 }
 

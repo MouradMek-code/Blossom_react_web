@@ -63,10 +63,68 @@
   --sp-7: 48px;
   --sp-8: 64px;
 
+  /* A selected switch or a badge: dark on light pages, light on dark ones. */
+  --inverse: #2a2420;
+  --on-inverse: #ffffff;
+
   /* ---- Legacy aliases (kept so existing rules keep working) ---- */
   --shadow: var(--shadow-md);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  color-scheme: light;
+}
+
+/* ---- Dark mode: the same roles on warm near-black surfaces, the rose a
+   little lighter so it still reads. Chosen in Settings (or following the
+   device); <html data-theme="dark"> is set before the page paints
+   (public/index.html, src/api/theme.js). The light-mode tints used here and
+   there have their dark versions in theme-dark.css. ---- */
+:root[data-theme="dark"] {
+  --bg: #171311;
+  --bg-warm: #1c1714;
+  --surface: #221c19;
+  --surface-muted: #2b2421;
+  --surface-sunk: #1d1816;
+
+  --text: #f3ece7;
+  --text-soft: #d2c6bd;
+  --text-muted: #9f928a;
+
+  --border: #3a302b;
+  --border-strong: #4d413b;
+
+  --primary: #d4567e;
+  --primary-dark: #b8456a;
+  --primary-deep: #f2a7bf;
+  --primary-soft: #3f2531;
+  --primary-tint: #2c1d23;
+
+  --gold: #cfae78;
+  --gold-soft: #3a3020;
+
+  --danger: #e5604f;
+
+  --nav-bg: rgba(23, 19, 17, 0.78);
+  --card-bg: #221c19;
+  --input-bg: #2b2421;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --shadow-primary: 0 14px 34px rgba(212, 86, 126, 0.22);
+
+  --inverse: #f3ece7;
+  --on-inverse: #1b1614;
+
+  /* The profile page's own names (pages/profile.css). */
+  --rose-primary: #d4567e;
+  --rose-light: #e0698d;
+  --rose-soft: #2c1d23;
+  --text-main: #f3ece7;
+
+  color-scheme: dark;
 }
 
 html,

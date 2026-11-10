@@ -65,14 +65,14 @@
 
 .ok {
   display: block;
-  color: #1f7a4d;
+  color: var(--dk-1f7a4d, #1f7a4d);
   font-size: 13px;
   font-weight: 700;
 }
 
 .warn {
   display: block;
-  color: #9a5b00;
+  color: var(--dk-9a5b00, #9a5b00);
   font-size: 13px;
   font-weight: 600;
 }
@@ -81,9 +81,9 @@
   margin: 0 0 18px;
   padding: 12px 16px;
   border-radius: var(--r-md);
-  background: #e9f7ef;
-  border: 1px solid #bfe6cf;
-  color: #1f5c3d;
+  background: var(--dk-e9f7ef, #e9f7ef);
+  border: 1px solid var(--dk-bfe6cf, #bfe6cf);
+  color: var(--dk-1f5c3d, #1f5c3d);
   font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
@@ -262,7 +262,7 @@
 }
 
 .tick {
-  color: #1f7a4d;
+  color: var(--dk-1f7a4d, #1f7a4d);
   font-weight: 800;
 }
 
@@ -445,13 +445,13 @@
 }
 
 .status_sent {
-  color: #8a5300;
-  background: #fff4e0;
+  color: var(--dk-8a5300, #8a5300);
+  background: var(--dk-fff4e0, #fff4e0);
 }
 
 .status_active {
-  color: #1f5c3d;
-  background: #e3f5ea;
+  color: var(--dk-1f5c3d, #1f5c3d);
+  background: var(--dk-e3f5ea, #e3f5ea);
 }
 
 .rowActions {
@@ -489,7 +489,7 @@
 .smallBtnDanger {
   color: var(--danger);
   background: transparent;
-  border: 1.5px solid #f0c9c6;
+  border: 1.5px solid var(--dk-f0c9c6, #f0c9c6);
 }
 
 .smallBtn:disabled,

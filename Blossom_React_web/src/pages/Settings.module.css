@@ -128,7 +128,7 @@
 }
 
 .danger {
-  color: #c0392b;
+  color: var(--dk-c0392b, #c0392b);
 }
 
 .editor {
@@ -181,7 +181,7 @@
 /* "Delete account": its own section, well below "Log out". */
 .deleteZone {
   margin-top: 40px;
-  border: 1px solid #f3b7b0;
+  border: 1px solid var(--dk-f3b7b0, #f3b7b0);
 }
 
 .deleteText {
@@ -205,7 +205,7 @@
 }
 
 .deleteOpen:hover {
-  background: #fdf1ef;
+  background: var(--dk-fdf1ef, #fdf1ef);
 }
 
 .deleteConfirm {

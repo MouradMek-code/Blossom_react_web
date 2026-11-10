@@ -16,27 +16,27 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, #8a7e76);
+  color: var(--text-muted, var(--text-muted));
 }
 
 .control {
   width: 100%;
   box-sizing: border-box;
   padding: 12px 14px;
-  border: 1.5px solid var(--border, #ece2da);
+  border: 1.5px solid var(--border, var(--border));
   border-radius: var(--r-sm, 12px);
-  background: var(--surface-muted, #f7f1ec);
+  background: var(--surface-muted, var(--surface-muted));
   font-family: inherit;
   font-size: 1rem;
-  color: var(--text, #2a2420);
+  color: var(--text, var(--text));
   outline: none;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .control:focus {
-  border-color: var(--primary, #c1466b);
+  border-color: var(--primary, var(--primary));
   background: var(--surface, #fff);
-  box-shadow: 0 0 0 4px var(--primary-tint, #fbf1f4);
+  box-shadow: 0 0 0 4px var(--primary-tint, var(--primary-tint));
 }
 
 .control:disabled {
@@ -60,7 +60,7 @@
   padding: 6px;
   list-style: none;
   background: var(--surface, #fff);
-  border: 1px solid var(--border, #ece2da);
+  border: 1px solid var(--border, var(--border));
   border-radius: var(--r-sm, 12px);
   box-shadow: 0 12px 30px rgba(63, 44, 38, 0.14);
 }
@@ -73,27 +73,27 @@
   background: transparent;
   font-family: inherit;
   font-size: 0.95rem;
-  color: var(--text, #2a2420);
+  color: var(--text, var(--text));
   text-align: left;
   cursor: pointer;
 }
 
 .option:hover,
 .optionActive {
-  background: var(--primary-tint, #fbf1f4);
-  color: var(--primary, #c1466b);
+  background: var(--primary-tint, var(--primary-tint));
+  color: var(--primary, var(--primary));
 }
 
 .hint {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--text-muted, #8a7e76);
+  color: var(--text-muted, var(--text-muted));
 }
 
 .error {
   margin: 0;
   font-size: 0.9rem;
-  color: #c0392b;
+  color: var(--dk-c0392b, #c0392b);
 }
 
 .retry {
@@ -102,7 +102,7 @@
   padding: 0;
   font: inherit;
   font-weight: 700;
-  color: var(--primary, #c1466b);
+  color: var(--primary, var(--primary));
   text-decoration: underline;
   cursor: pointer;
 }
@@ -110,7 +110,7 @@
 .credit {
   margin: 0;
   font-size: 0.72rem;
-  color: var(--text-muted, #8a7e76);
+  color: var(--text-muted, var(--text-muted));
 }
 
 .credit a {

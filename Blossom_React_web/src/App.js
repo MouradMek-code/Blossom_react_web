@@ -20,6 +20,7 @@ import DateSpots from "./pages/DateSpots";
 import DeleteAccount from "./pages/DeleteAccount";
 import Verify from "./pages/Verify";
 import EnableLocation from "./pages/EnableLocation";
+import Welcome from "./pages/Welcome";
 import ReportProblem from "./pages/ReportProblem";
 import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -86,6 +87,7 @@ function App() {
         <Route path="/verify" element={<Verify />} />
         {/* After the photos at sign-up. */}
         <Route path="/enable_location" element={<EnableLocation />} />
+        <Route path="/welcome" element={<Welcome />} />
         {/* "Report a problem" - members and visitors (the child safety page links here). */}
         <Route path="/report" element={<ReportProblem />} />
         <Route path="/admin" element={<Admin />} />

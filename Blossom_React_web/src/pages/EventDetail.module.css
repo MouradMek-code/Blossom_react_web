@@ -102,7 +102,7 @@
   margin: 0 0 12px;
   padding: 10px 14px;
   border-radius: var(--r-md);
-  background: #fdecea;
+  background: var(--dk-fdecea, #fdecea);
   color: var(--danger);
   font-weight: 700;
 }
@@ -144,11 +144,11 @@
 .giftFact {
   padding: 10px 12px;
   border-radius: var(--r-md);
-  background: #fff4e5;
+  background: var(--dk-fff4e5, #fff4e5);
 }
 
 .giftFact a {
-  color: #6b3e00;
+  color: var(--dk-6b3e00, #6b3e00);
 }
 
 .mapLink {
@@ -507,8 +507,8 @@
 }
 
 .organiserBadge {
-  background: var(--text);
-  color: #fff;
+  background: var(--inverse);
+  color: var(--on-inverse);
 }
 
 .interestedBadge {

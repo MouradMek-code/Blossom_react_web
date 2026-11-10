@@ -109,7 +109,7 @@
   height: 32px;
   border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--dk-glass-95, rgba(255, 255, 255, 0.95));
   color: var(--primary);
   font-size: 1.05rem;
   line-height: 1;

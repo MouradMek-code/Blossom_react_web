@@ -148,7 +148,7 @@
 }
 
 .rowUnread {
-  background: #fff7fa;
+  background: var(--dk-fff7fa, #fff7fa);
 }
 
 .avatarWrap {
@@ -384,8 +384,8 @@
   width: 380px;
   flex-shrink: 0;
   padding: 18px 16px 24px;
-  border-right: 1px solid #eee3dc;
-  background: #fff;
+  border-right: 1px solid var(--dk-eee3dc, #eee3dc);
+  background: var(--surface);
   overflow-y: auto;
   max-height: calc(100vh - 64px);
 }

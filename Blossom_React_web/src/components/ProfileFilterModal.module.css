@@ -9,7 +9,7 @@
 }
 
 .modal {
-  background: white;
+  background: var(--surface);
   width: min(560px, 92vw);
   max-height: 85vh;
   border-radius: 16px;
@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--dk-eeeeee, #eeeeee);
 }
 
 .header h2 {
@@ -35,7 +35,7 @@
   border: none;
   background: none;
   font-size: 1.2rem;
-  color: #777;
+  color: var(--dk-777777, #777777);
   cursor: pointer;
 }
 
@@ -56,7 +56,7 @@
   letter-spacing: 0.5px;
   margin: 0 0 12px;
   padding-bottom: 6px;
-  border-bottom: 2px solid #fde6ed;
+  border-bottom: 2px solid var(--dk-fde6ed, #fde6ed);
 }
 
 .section {
@@ -76,11 +76,11 @@
 
 .optionChip {
   width: auto;
-  border: 1px solid #ccc;
+  border: 1px solid var(--dk-cccccc, #cccccc);
   border-radius: 16px;
   padding: 6px 12px;
-  background: white;
-  color: #333;
+  background: var(--surface);
+  color: var(--dk-333333, #333333);
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -101,7 +101,7 @@
   display: flex;
   gap: 12px;
   padding: 16px 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--dk-eeeeee, #eeeeee);
 }
 
 .resetButton {
@@ -109,7 +109,7 @@
   border: 1px solid #d6336c;
   border-radius: 12px;
   padding: 12px;
-  background: white;
+  background: var(--surface);
   color: #d6336c;
   font-weight: 700;
   cursor: pointer;
