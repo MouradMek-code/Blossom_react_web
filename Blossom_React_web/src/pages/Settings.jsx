@@ -19,11 +19,11 @@ const LANGUAGES = [
   { code: "ar", label: "العربية" },
 ];
 
-// Light, dark, or like the device (the default).
+// Light (the default), dark, or like the device.
 const THEMES = [
-  { mode: "system", icon: "smartphone" },
   { mode: "light", icon: "sun" },
   { mode: "dark", icon: "moon" },
+  { mode: "system", icon: "smartphone" },
 ];
 
 // Everything about the account rather than about dating: language, where you

@@ -1,4 +1,4 @@
-// Light, dark, or like the device (the default) - chosen in Settings, kept in
+// Light (the default), dark, or like the device - chosen in Settings, kept in
 // this browser. public/index.html applies it before the page paints (no
 // flash of the wrong colours); this keeps it up to date afterwards.
 const KEY = "blossom_theme";
@@ -10,9 +10,9 @@ const media = typeof window !== "undefined" && window.matchMedia ? window.matchM
 export function getThemeMode() {
   try {
     const saved = localStorage.getItem(KEY);
-    return THEME_MODES.includes(saved) ? saved : "system";
+    return THEME_MODES.includes(saved) ? saved : "light";
   } catch {
-    return "system";
+    return "light";
   }
 }
 
