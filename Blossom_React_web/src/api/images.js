@@ -26,4 +26,10 @@ export const IMG = {
   thumb: (url) => optimizedImage(url, 200),
   card: (url) => optimizedImage(url, 800),
   full: (url) => optimizedImage(url, 1200),
+  // A photo not chosen to be seen yet (chat photos): tiny and blurred, so
+  // nothing can be made out until it's tapped.
+  hidden: (url) =>
+    url && url.includes("/image/upload/") && !/\/image\/upload\/[^/]*e_blur/.test(url)
+      ? url.replace("/image/upload/", "/image/upload/w_48,e_blur:1500,q_auto,f_auto/")
+      : url,
 };

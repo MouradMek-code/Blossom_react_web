@@ -14,6 +14,50 @@ import { IMG } from "../api/images";
 import { categoryEmoji, categoryGradient, shortPlace } from "../api/categories";
 import { formatDeadline } from "../api/offers";
 import { firstRiskyMessageId } from "../api/chatSafety";
+import { fetchChat, sendChatPhoto, sendTyping } from "../api/chatLive";
+import { activeLabel, clockTime, dayLabel, isActiveNow, startsDay } from "../api/chatTime";
+import { isImageFile } from "../api/photoUpload";
+
+// While the box is changing, "typing..." is sent at most this often.
+const TYPING_EVERY_MS = 3000;
+
+// A photo in the chat. Theirs stays blurred until clicked - nobody gets a
+// picture in their face they didn't choose to see; then a click opens it big.
+function PhotoMessage({ message, mine, revealed, onReveal, onOpen }) {
+  const { t } = useTranslation();
+  const hidden = !mine && !revealed;
+  if (message.pending) {
+    return (
+      <span className={styles.photoWrap}>
+        <img src={message.localUrl} alt="" className={styles.photo} />
+        <span className={styles.photoVeil}>
+          <span className={styles.photoSpinner} aria-hidden="true" />
+        </span>
+      </span>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className={styles.photoWrap}
+      onClick={hidden ? onReveal : onOpen}
+      aria-label={hidden ? t("messages.photoTap") : t("messages.photoOpen")}
+    >
+      <img
+        src={hidden ? IMG.hidden(message.image_url) : IMG.card(message.image_url)}
+        alt=""
+        className={`${styles.photo} ${hidden ? styles.photoHidden : ""}`}
+        loading="lazy"
+      />
+      {hidden && (
+        <span className={styles.photoVeil}>
+          <Icon name="eye" size={24} />
+          {t("messages.photoTap")}
+        </span>
+      )}
+    </button>
+  );
+}
 
 // A date spot sent with "Invite a match": the message text plus a tappable
 // card for the place. The invited person answers "I'm in"; when the spot has
@@ -201,6 +245,16 @@ function ChatPage() {
   const [accepting, setAccepting] = useState(null);
   const [notice, setNotice] = useState(null);
   const [suggestOpen, setSuggestOpen] = useState(false);
+  // From the poll: "typing...", when they were last on Blossom, photos allowed.
+  const [typing, setTyping] = useState(false);
+  const [lastActiveAt, setLastActiveAt] = useState(null);
+  const [photosAllowed, setPhotosAllowed] = useState(false);
+  const [sendingPhoto, setSendingPhoto] = useState(false);
+  // Their photos the reader chose to see, and the one open full screen.
+  const [revealed, setRevealed] = useState(() => new Set());
+  const [viewer, setViewer] = useState(null);
+  const lastTypingPing = useRef(0);
+  const fileRef = useRef(null);
 
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
@@ -212,6 +266,12 @@ function ChatPage() {
   function updateText(value) {
     textRef.current = value;
     setText(value);
+    // "typing..." for them, every few seconds while the box changes.
+    const now = Date.now();
+    if (value.trim() && now - lastTypingPing.current > TYPING_EVERY_MS) {
+      lastTypingPing.current = now;
+      sendTyping(conversationId);
+    }
   }
 
   // Who's on the other side (name + photo for the header), and our own
@@ -294,18 +354,16 @@ function ChatPage() {
 
   const loadMessages = useCallback(async () => {
     try {
-      const resp = await fetch(
-        `${BASE_URL}/messages/conversation/${conversationId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      if (!resp.ok) return;
-      setMessages(await resp.json());
+      const live = await fetchChat(conversationId);
+      if (!live) return;
+      setMessages(live.messages);
+      setTyping(live.typing);
+      setLastActiveAt(live.lastActiveAt);
+      setPhotosAllowed(live.photosAllowed);
     } catch {
       // Keep showing what we have; the next poll will retry.
     }
-  }, [conversationId, token]);
+  }, [conversationId]);
 
   useEffect(() => {
     loadMessages();
@@ -316,7 +374,17 @@ function ChatPage() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, pending]);
+  }, [messages, pending, typing]);
+
+  // The big photo closes with Escape.
+  useEffect(() => {
+    if (!viewer) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") setViewer(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [viewer]);
 
   // Sends feel instant: the input clears and the bubble appears straight away
   // (faded, "Sending…"), then turns solid once the server confirms. On failure
@@ -328,6 +396,8 @@ function ChatPage() {
     updateText("");
     setError("");
     inputRef.current?.focus();
+    // Sending ends "typing..." on the server; the next words start it again.
+    lastTypingPing.current = 0;
 
     const tempId = `pending-${Date.now()}-${Math.random()}`;
     const afterId = messages.reduce((max, m) => Math.max(max, Number(m.id) || 0), 0);
@@ -353,6 +423,42 @@ function ChatPage() {
     );
   }
 
+  // Photos wait until both have written (the server says so on each poll).
+  function choosePhoto() {
+    if (sendingPhoto) return;
+    if (!photosAllowed) {
+      setNotice({ title: t("messages.photoLockedTitle"), text: t("messages.photoLocked") });
+      return;
+    }
+    fileRef.current?.click();
+  }
+
+  // The bubble shows at once, with a spinner, while the photo goes up.
+  async function sendPhoto(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!isImageFile(file)) {
+      setError(t("photos.notImage", { defaultValue: t("messages.photoFailed") }));
+      return;
+    }
+    setError("");
+    setSendingPhoto(true);
+    const tempId = `pending-photo-${Date.now()}`;
+    const localUrl = URL.createObjectURL(file);
+    const afterId = messages.reduce((max, m) => Math.max(max, Number(m.id) || 0), 0);
+    setPending((cur) => [...cur, { id: tempId, content: "", localUrl, photo: true, afterId, pending: true }]);
+    const result = await sendChatPhoto(conversationId, file);
+    setPending((cur) => cur.filter((m) => m.id !== tempId));
+    URL.revokeObjectURL(localUrl);
+    setSendingPhoto(false);
+    if (!result.ok) {
+      setError(result.message || t("messages.photoFailed"));
+      return;
+    }
+    setMessages((cur) => (cur.some((m) => m.id === result.data.id) ? cur : [...cur, result.data]));
+  }
+
   // The 3s poll can deliver a message before its own send call returns; don't
   // show the pending copy next to the real one in that moment.
   const visiblePending = pending.filter(
@@ -360,10 +466,18 @@ function ChatPage() {
       !messages.some(
         (m) =>
           m.id > p.afterId &&
-          m.content === p.content &&
-          Number(m.sender_profile_id) === Number(profileId),
+          Number(m.sender_profile_id) === Number(profileId) &&
+          (p.photo ? Boolean(m.image_url) : m.content === p.content),
       ),
   );
+  // "Sent" / "Seen" goes under my message when it's the last one in the chat.
+  const lastMessage = messages[messages.length - 1];
+  const statusId =
+    lastMessage && visiblePending.length === 0 && Number(lastMessage.sender_profile_id) === Number(profileId)
+      ? lastMessage.id
+      : null;
+  // Under the name: "typing..." or "Active 5 min ago".
+  const presence = typing ? t("messages.typing") : activeLabel(lastActiveAt, t);
 
   const page = (
     <>
@@ -393,6 +507,7 @@ function ChatPage() {
                 ) : (
                   <span className={`${styles.partnerPhoto} ${styles.partnerPhotoEmpty}`}>🌸</span>
                 )}
+                {isActiveNow(lastActiveAt) && <span className={styles.onlineDot} aria-hidden="true" />}
               </Link>
               <span className={styles.partnerText}>
                 <Link
@@ -403,6 +518,11 @@ function ChatPage() {
                   {partner.first_name}
                   {partner.age ? `, ${partner.age}` : ""}
                 </Link>
+                {presence && (
+                  <span className={`${styles.presence} ${typing ? styles.presenceTyping : ""}`} aria-live="polite">
+                    {presence}
+                  </span>
+                )}
                 {/* Both actions in plain sight, right under the name. */}
                 <span className={styles.partnerActions}>
                   <Link
@@ -441,21 +561,35 @@ function ChatPage() {
               }}
             />
           )}
-          {messages.map((message) => {
+          {messages.map((message, index) => {
             const isMine =
               Number(message.sender_profile_id) === Number(profileId);
+            const isPhoto = Boolean(message.image_url);
 
             return (
               <Fragment key={message.id}>
+              {startsDay(message, messages[index - 1]) && (
+                <div className={styles.dayRow} role="separator">
+                  <span className={styles.dayText}>{dayLabel(message.created_at, t, i18n.language)}</span>
+                </div>
+              )}
               <div
                 className={`${styles.row} ${isMine ? styles.right : styles.left}`}
               >
                 <div
                   className={`${styles.bubble} ${
                     isMine ? styles.mine : styles.theirs
-                  } ${message.date_spot ? styles.bubbleInvite : ""}`}
+                  } ${message.date_spot ? styles.bubbleInvite : ""} ${isPhoto ? styles.bubblePhoto : ""}`}
                 >
-                  {message.date_spot ? (
+                  {isPhoto ? (
+                    <PhotoMessage
+                      message={message}
+                      mine={isMine}
+                      revealed={revealed.has(message.id)}
+                      onReveal={() => setRevealed((cur) => new Set(cur).add(message.id))}
+                      onOpen={() => setViewer({ url: message.image_url, mine: isMine })}
+                    />
+                  ) : message.date_spot ? (
                     <InviteCard
                       message={message}
                       mine={isMine}
@@ -466,8 +600,16 @@ function ChatPage() {
                   ) : (
                     message.content
                   )}
+                  <time className={styles.time} dateTime={message.created_at}>
+                    {clockTime(message.created_at)}
+                  </time>
                 </div>
               </div>
+              {message.id === statusId && (
+                <span className={`${styles.readStatus} ${message.is_read ? styles.readStatusSeen : ""}`}>
+                  {message.is_read ? `✓✓ ${t("messages.seen")}` : `✓ ${t("messages.sent")}`}
+                </span>
+              )}
               {message.id === riskyId && (
                 <div className={styles.safety}>
                   <span className={styles.safetyRow}>
@@ -488,12 +630,35 @@ function ChatPage() {
 
           {visiblePending.map((message) => (
             <div key={message.id} className={`${styles.row} ${styles.right}`}>
-              <div className={`${styles.bubble} ${styles.mine} ${styles.pending}`}>
-                {message.content}
-                <span className={styles.pendingStatus}>{t("messages.sending")}</span>
-              </div>
+              {message.photo ? (
+                <div className={`${styles.bubble} ${styles.mine} ${styles.bubblePhoto}`}>
+                  <PhotoMessage message={message} mine />
+                  <span className={styles.pendingStatus}>{t("messages.photoSending")}</span>
+                </div>
+              ) : (
+                <div className={`${styles.bubble} ${styles.mine} ${styles.pending}`}>
+                  {message.content}
+                  <span className={styles.pendingStatus}>{t("messages.sending")}</span>
+                </div>
+              )}
             </div>
           ))}
+
+          {typing && (
+            <div
+              className={`${styles.row} ${styles.left}`}
+              role="status"
+              aria-label={t("messages.typingLabel", { name: partner?.first_name || "" })}
+            >
+              <div className={`${styles.bubble} ${styles.theirs} ${styles.typingBubble}`}>
+                <span className={styles.typingDots} aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </div>
+            </div>
+          )}
 
           <div ref={bottomRef} />
         </div>
@@ -532,6 +697,21 @@ function ChatPage() {
               <Icon name="map-pin" size={20} />
             </button>
           )}
+          {partner && !waitingForHer && (
+            <>
+              <button
+                type="button"
+                className={`${styles.photoBtn} ${photosAllowed ? "" : styles.photoBtnLocked}`}
+                onClick={choosePhoto}
+                disabled={sendingPhoto}
+                title={t("messages.sendPhoto")}
+                aria-label={t("messages.sendPhoto")}
+              >
+                <Icon name="image" size={20} />
+              </button>
+              <input ref={fileRef} type="file" accept="image/*" hidden onChange={sendPhoto} />
+            </>
+          )}
           <input
             ref={inputRef}
             value={text}
@@ -547,6 +727,32 @@ function ChatPage() {
             {t("messages.send")}
           </button>
         </form>
+
+        {viewer && (
+          <div className={styles.viewer} role="dialog" aria-modal="true" onClick={() => setViewer(null)}>
+            <img src={IMG.full(viewer.url)} alt="" className={styles.viewerImage} onClick={(e) => e.stopPropagation()} />
+            <div className={styles.viewerBar}>
+              {!viewer.mine && partner ? (
+                // Reporting lives on their profile, like for any message.
+                <Link to={`/profile/${partner.id}`} state={{ matched: true }} className={styles.viewerAction}>
+                  <Icon name="flag" size={17} />
+                  {t("messages.photoReport")}
+                </Link>
+              ) : (
+                <span />
+              )}
+              <button
+                type="button"
+                className={styles.viewerClose}
+                onClick={() => setViewer(null)}
+                aria-label={t("messages.photoClose")}
+                autoFocus
+              >
+                <Icon name="x" size={26} />
+              </button>
+            </div>
+          </div>
+        )}
 
         {suggestOpen && partner && (
           <SpotSuggester

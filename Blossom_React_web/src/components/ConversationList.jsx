@@ -83,7 +83,9 @@ export default function ConversationList({ compact = false, activeConversationId
   function preview(item) {
     const text = item.last_message.is_invite
       ? `💌 ${item.last_message.content}`
-      : item.last_message.content;
+      : item.last_message.is_photo
+        ? t("messages.photo")
+        : item.last_message.content;
     return item.last_message.mine ? `${t("messages.you")}: ${text}` : text;
   }
 
