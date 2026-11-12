@@ -9,6 +9,7 @@ import Localisation from "../components/Localisation";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../api/config";
 import { getSignupDraft, clearSignupDraft } from "../api/signupDraft";
+import { getAuth, setAuth, clearSession } from "../api/session";
 // The browser's time zone, e.g. "Europe/Paris" (sent with a new profile).
 function browserTimezone() {
   try {
@@ -32,7 +33,7 @@ function SignUp() {
   const [resumeAutoStart, setResumeAutoStart] = useState(false);
   const [prefill, setPrefill] = useState(null);
 
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const istokenundefined = token === undefined || token === null || token === "undefined";
 
   // A token alone means signup + email/OTP verification already
@@ -165,7 +166,7 @@ function SignUp() {
     // From a country Blossom isn't open to: the server removed the account.
     if (resp.status === 403) return false;
     const data = await resp.json();
-    sessionStorage.setItem("profile_id", data.id);
+    setAuth("profile_id", data.id);
     return true;
   }, [answer, token]);
 
@@ -173,7 +174,7 @@ function SignUp() {
     async function submit() {
       if (questionEnded && !istokenundefined) {
         if (!(await CreateProfile())) {
-          sessionStorage.clear();
+          clearSession();
           window.alert(`${t("location.removedTitle")}\n\n${t("location.removedText")}`);
           window.location.assign("/");
           return;
@@ -181,7 +182,7 @@ function SignUp() {
         // The profile now exists, so the nav should switch to the logged-in
         // links. Set it here rather than only when a photo is picked, so a
         // user who skips photos doesn't end up seeing "Login" afterwards.
-        sessionStorage.setItem("profilecreated", "yes");
+        setAuth("profilecreated", "yes");
         setPhoto(true);
         setQuestionEnded(false);
         clearSignupDraft();

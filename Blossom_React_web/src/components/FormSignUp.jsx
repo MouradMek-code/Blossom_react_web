@@ -7,6 +7,7 @@ import { saveSignupDraft, clearSignupDraft } from "../api/signupDraft";
 import { postJson } from "../api/errors";
 import { useTranslation } from "react-i18next";
 import FlowerProgress from "./FlowerProgress";
+import { startSession } from "../api/session";
 
 function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefill }) {
   const { t } = useTranslation();
@@ -71,7 +72,7 @@ function FormSignUp({ setRegistered, error, setError, verify, setVerified, prefi
       // straight at the verification screen if the user leaves now.
       saveSignupDraft({ stage: "verify_otp", username, email, phoneNumber, dateOfBirth });
       setVerified((c) => !c);
-      sessionStorage.setItem("token", result.data.access_token);
+      startSession(result.data.access_token);
     }
     SignUp();
   }
@@ -302,7 +303,7 @@ function VerificationForm({
 
     clearSignupDraft();
     setRegistered((c) => !c);
-    sessionStorage.setItem("token", createResult.data.access_token);
+    startSession(createResult.data.access_token);
   };
   return (
     <div className={styles2.container}>

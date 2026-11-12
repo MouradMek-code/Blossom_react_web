@@ -1,8 +1,9 @@
 import { BASE_URL } from "./config";
 import { postJson } from "./errors";
 import { shrink } from "./photoUpload";
+import { getAuth } from "./session";
 
-const authHeader = () => ({ Authorization: `Bearer ${sessionStorage.getItem("token")}` });
+const authHeader = () => ({ Authorization: `Bearer ${getAuth("token")}` });
 
 // An open chat's poll: the messages, whether they're typing, when they were
 // last on Blossom, whether photos can be sent yet. A server without /live yet

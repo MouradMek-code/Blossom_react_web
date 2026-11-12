@@ -7,6 +7,7 @@ import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
 import { formatDeadline } from "../api/offers";
 import styles from "./Promotions.module.css";
+import { getAuth } from "../api/session";
 
 // My promotions: the codes a match and I got by saying yes to a spot with a
 // venue promotion. At the venue, the staff type their code here to mark it
@@ -16,7 +17,7 @@ export default function Promotions() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const highlight = Number(params.get("highlight")) || null;
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [vouchers, setVouchers] = useState(null);
   const [error, setError] = useState("");
   const [staffFor, setStaffFor] = useState(null);

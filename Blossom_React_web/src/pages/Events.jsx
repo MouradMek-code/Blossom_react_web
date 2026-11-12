@@ -8,9 +8,10 @@ import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { EVENT_KINDS, KIND_EMOJI, KIND_GRADIENT, eventDay, eventWhen } from "../api/events";
 import styles from "./Events.module.css";
+import { getAuth } from "../api/session";
 
 function authHeaders() {
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   return token && token !== "null" && token !== "undefined" ? { Authorization: `Bearer ${token}` } : {};
 }
 

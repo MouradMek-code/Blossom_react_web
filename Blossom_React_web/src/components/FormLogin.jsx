@@ -6,11 +6,15 @@ import { Link } from "react-router-dom";
 import { BASE_URL } from "../api/config";
 import { postJson, NETWORK_ERROR } from "../api/errors";
 import { useTranslation } from "react-i18next";
+import { getRemember, setAuth, removeAuth, startSession } from "../api/session";
 function FormLogin() {
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  // Ticked: still logged in after closing the browser. Untick on a shared
+  // computer.
+  const [remember, setRemember] = useState(getRemember);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -49,7 +53,7 @@ function FormLogin() {
       }
 
       const data = result.data;
-      sessionStorage.setItem("token", data.access_token);
+      startSession(data.access_token, remember);
 
       // Finished profile -> straight to Browse; otherwise resume sign-up.
       let profileResp;
@@ -65,12 +69,12 @@ function FormLogin() {
       if (profileResp.status === 200) {
         // Only now: this flag switches on the logged-in menu, and used to be
         // set even for people who hadn't finished their profile.
-        sessionStorage.setItem("profilecreated", "yes");
+        setAuth("profilecreated", "yes");
         const profile = await profileResp.json().catch(() => null);
-        if (profile?.id) sessionStorage.setItem("profile_id", profile.id);
+        if (profile?.id) setAuth("profile_id", profile.id);
         navigate("/profiles");
       } else {
-        sessionStorage.removeItem("profilecreated");
+        removeAuth("profilecreated");
         // The sign-up page lives at /sign_up; "/signup" was a dead link.
         navigate("/sign_up");
       }
@@ -108,6 +112,14 @@ function FormLogin() {
             </button>
           </div>
         </div>
+        <label className={styles.remember}>
+          <input
+            type="checkbox"
+            checked={remember}
+            onChange={(e) => setRemember(e.target.checked)}
+          />
+          {t("login.remember")}
+        </label>
         <div className={styles.registerform}>
           <button onClick={(e) => HandleLogin(e)} disabled={submitting}>
             {submitting ? "Signing in…" : t("login.button")}

@@ -13,13 +13,14 @@ import { formatTimeInput, localToIso } from "../api/offers";
 import { isImageFile, shrink } from "../api/photoUpload";
 import { EVENT_KINDS, KIND_EMOJI, isoToDateText, isoToTimeText } from "../api/events";
 import styles from "./EventForm.module.css";
+import { getAuth } from "../api/session";
 
 const WOMEN = ["Woman", "Trans Woman"];
 const LANGUAGE_QUESTION = (Array.isArray(allQuestions) ? allQuestions : allQuestions.questions || [])
   .find((q) => q.field === "language_name");
 
 function getToken() {
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   return token && token !== "null" && token !== "undefined" ? token : null;
 }
 

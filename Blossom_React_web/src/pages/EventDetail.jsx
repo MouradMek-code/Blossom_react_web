@@ -9,11 +9,12 @@ import { IMG } from "../api/images";
 import { postJson } from "../api/errors";
 import { KIND_EMOJI, KIND_GRADIENT, eventWhen } from "../api/events";
 import styles from "./EventDetail.module.css";
+import { getAuth } from "../api/session";
 
 const WOMEN = ["Woman", "Trans Woman"];
 
 function getToken() {
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   return token && token !== "null" && token !== "undefined" ? token : null;
 }
 

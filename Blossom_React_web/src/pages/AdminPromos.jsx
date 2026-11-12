@@ -7,13 +7,14 @@ import { postJson } from "../api/errors";
 import { formatDeadline, formatHours } from "../api/offers";
 import styles from "./AdminPromos.module.css";
 import { BusinessMessages, EventReports, PartnerRequests, PartnerVenues, SpotSuggestions } from "../components/PartnerAdmin";
+import { getAuth } from "../api/session";
 
 // Admin: venue promotions for couples - publish one on a date spot, follow
 // how many couples got it and used it, pause, add places, end it.
 export default function AdminPromos() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [offers, setOffers] = useState(null);
   const [error, setError] = useState("");
   const [formOpen, setFormOpen] = useState(false);

@@ -6,6 +6,7 @@ import { POSE_EMOJI, fetchVerification, sendSelfie } from "../api/verification";
 import { formatDeadline } from "../api/offers";
 import { Icon } from "../ui";
 import styles from "./Verify.module.css";
+import { getAuth } from "../api/session";
 
 // The ✓ verified badge on the website: copy the pose, take a selfie (a
 // phone's browser opens the front camera), send. The Blossom team compares it
@@ -22,7 +23,7 @@ export default function Verify() {
   const input = useRef(null);
 
   const load = useCallback(async () => {
-    const token = sessionStorage.getItem("token");
+    const token = getAuth("token");
     if (!token || token === "null" || token === "undefined") {
       navigate("/login");
       return;

@@ -1,5 +1,6 @@
 import { BASE_URL } from "./config";
 import { postJson } from "./errors";
+import { getAuth } from "./session";
 
 // The ✓ verified badge (server: database/db_verification.py). The server
 // picks the pose to copy, so an old photo can't be used; the emoji shows it.
@@ -13,7 +14,7 @@ export const POSE_EMOJI = {
 };
 
 function authHeaders() {
-  return { Authorization: `Bearer ${sessionStorage.getItem("token")}` };
+  return { Authorization: `Bearer ${getAuth("token")}` };
 }
 
 // { status: "none" | "pending" | "approved" | "rejected", pose, reason, deadline }

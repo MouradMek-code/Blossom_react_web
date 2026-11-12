@@ -8,6 +8,7 @@ import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { firstMove } from "../api/connection";
 import { Button, EmptyState, Icon, SkeletonTiles } from "../ui";
+import { getAuth, removeAuth } from "../api/session";
 
 // /likes/profile_likes only returns the ids of profiles that liked the
 // current user, so each id has to be resolved via /profile/{id} to get the
@@ -22,7 +23,7 @@ function extractId(entry) {
 function LikedYou() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [likedByProfiles, setLikedByProfiles] = useState(null); // null while loading
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [likingId, setLikingId] = useState(null);
@@ -77,7 +78,7 @@ function LikedYou() {
         headers: { Authorization: `Bearer ${token}` },
       }).catch(() => {});
     } catch (err) {
-      sessionStorage.setItem("token", null);
+      removeAuth("token");
       navigate("/login");
     }
   }, [token, navigate]);

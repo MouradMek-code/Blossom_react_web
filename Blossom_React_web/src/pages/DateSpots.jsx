@@ -27,6 +27,7 @@ import {
 } from "../api/categories";
 import { Icon } from "../ui";
 import styles from "./DateSpots.module.css";
+import { getAuth, setAuth } from "../api/session";
 
 // Fire-and-forget engagement tracking. Never block or surface errors: a missed
 // count must never get in the way of the user opening a place.
@@ -394,7 +395,7 @@ function DateSpots() {
   const { id: routeId } = useParams();
   const navigate = useNavigate();
 
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const isLoggedIn = token && token !== "undefined" && token !== "null";
   const [me, setMe] = useState(null);
   const isAdmin = Boolean(me?.is_admin);
@@ -411,7 +412,7 @@ function DateSpots() {
         setMe(data);
         // Chat works out which bubbles are "mine" from this. An invite sends
         // the user straight into a conversation, so make sure it's set.
-        if (data.profile_id) sessionStorage.setItem("profile_id", data.profile_id);
+        if (data.profile_id) setAuth("profile_id", data.profile_id);
       })
       .catch(() => {});
     return () => {

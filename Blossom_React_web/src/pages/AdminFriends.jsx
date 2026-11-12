@@ -11,6 +11,7 @@ import { IMG } from "../api/images";
 import { postJson } from "../api/errors";
 import { isImageFile, shrink } from "../api/photoUpload";
 import styles from "./AdminFriends.module.css";
+import { getAuth } from "../api/session";
 
 const LANGUAGES = [
   ["en", "English"],
@@ -28,7 +29,7 @@ const ANSWER_FIELDS = [
   "has_children", "wants_children", "personality_type",
 ];
 
-const authHeaders = () => ({ Authorization: `Bearer ${sessionStorage.getItem("token")}` });
+const authHeaders = () => ({ Authorization: `Bearer ${getAuth("token")}` });
 
 function answered(question, answer) {
   const value = answer[question.field];
@@ -64,7 +65,7 @@ export default function AdminFriends() {
   const [notice, setNotice] = useState("");
 
   const load = useCallback(async () => {
-    if (!sessionStorage.getItem("token")) {
+    if (!getAuth("token")) {
       navigate("/login");
       return;
     }

@@ -11,6 +11,7 @@ import { Icon } from "../ui";
 import { getThemeMode, setThemeMode } from "../api/theme";
 import i18n from "../i18n";
 import styles from "./Settings.module.css";
+import { getAuth, clearAuth, clearSession } from "../api/session";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -32,7 +33,7 @@ const THEMES = [
 function Settings() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
 
   const [language, setLanguage] = useState(i18n.language?.slice(0, 2) || "en");
   const [themeMode, setThemeModeState] = useState(getThemeMode);
@@ -100,8 +101,7 @@ function Settings() {
 
   function handleLogout() {
     if (!window.confirm(t("settings.logoutTitle"))) return;
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("profilecreated");
+    clearAuth();
     navigate("/login");
   }
 
@@ -114,7 +114,7 @@ function Settings() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!resp.ok) throw new Error(`delete failed with ${resp.status}`);
-      sessionStorage.clear();
+      clearSession();
       navigate("/");
     } catch {
       setError(t("settings.deleteFailed"));

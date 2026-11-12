@@ -6,6 +6,7 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { Icon } from "../ui";
 import styles from "./EnableLocation.module.css";
+import { getAuth, clearSession } from "../api/session";
 
 // Some browsers never answer when the permission window is just closed.
 const GIVE_UP_MS = 30000;
@@ -41,7 +42,7 @@ async function checkPosition(coords) {
     const result = await postJson(`${BASE_URL}/profile/location/coords`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        Authorization: `Bearer ${getAuth("token")}`,
         "Content-Type": "application/json",
       },
       // Rounded to about a kilometre: the rest isn't needed.
@@ -74,7 +75,7 @@ export default function EnableLocation() {
       // Never in the way: sign-up carries on without it.
     }
     if (result?.removed) {
-      sessionStorage.clear();
+      clearSession();
       window.alert(`${t("location.removedTitle")}\n\n${t("location.removedText")}`);
       window.location.assign("/");
       return;

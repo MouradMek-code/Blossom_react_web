@@ -6,6 +6,7 @@ import { BASE_URL } from "../api/config";
 import { IMG } from "../api/images";
 import { NETWORK_ERROR, postJson } from "../api/errors";
 import styles from "./Claim.module.css";
+import { setAuth, startSession } from "../api/session";
 
 // blossom-date.com/claim/<link> - a friend whose profile an admin made from
 // their answers: they check it, accept the terms and choose their password
@@ -71,9 +72,9 @@ export default function Claim() {
     setBusy(false);
     if (!result.ok) return setError(result.message);
     // Logged in, the same way the login form does it.
-    sessionStorage.setItem("token", result.data.access_token);
-    sessionStorage.setItem("profilecreated", "yes");
-    if (result.data.profile_id) sessionStorage.setItem("profile_id", result.data.profile_id);
+    startSession(result.data.access_token);
+    setAuth("profilecreated", "yes");
+    if (result.data.profile_id) setAuth("profile_id", result.data.profile_id);
     navigate("/profiles", { replace: true });
   }
 

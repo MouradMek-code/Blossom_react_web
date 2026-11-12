@@ -6,6 +6,7 @@ import { BASE_URL } from "../api/config";
 import { postJson } from "../api/errors";
 import { Icon } from "../ui";
 import styles from "./ReportProblem.module.css";
+import { getAuth } from "../api/session";
 
 // What the report is about; child safety first.
 const KINDS = [
@@ -20,7 +21,7 @@ const KINDS = [
 // visitors, no email app needed. It goes straight to the Blossom team.
 export default function ReportProblem() {
   const { t, i18n } = useTranslation();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const loggedIn = Boolean(token) && token !== "null" && token !== "undefined";
   const [kind, setKind] = useState(null);
   const [message, setMessage] = useState("");

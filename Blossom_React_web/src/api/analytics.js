@@ -1,4 +1,5 @@
 import { BASE_URL } from "./config";
+import { getAuth } from "./session";
 
 // Visits for the admin dashboard. The browser keeps a random id (no personal
 // data) so a visitor without a profile can be told apart from another; the
@@ -41,7 +42,7 @@ export function deviceId() {
 }
 
 function currentToken() {
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   return token && token !== "null" && token !== "undefined" ? token : null;
 }
 

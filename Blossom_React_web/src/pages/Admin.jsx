@@ -5,6 +5,7 @@ import AdminReports from "../components/AdminReports";
 import AdminFeedback from "../components/AdminFeedback";
 import AskToVerify from "../components/AskToVerify";
 import { BASE_URL } from "../api/config";
+import { getAuth } from "../api/session";
 
 const th = {
   padding: "12px 16px",
@@ -24,7 +25,7 @@ const td = {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

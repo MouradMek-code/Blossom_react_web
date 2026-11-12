@@ -20,6 +20,7 @@ import {
   tzOffsetMinutes,
 } from "../api/dashboardLabels";
 import styles from "./AdminDashboard.module.css";
+import { getAuth } from "../api/session";
 
 // One week only: tracking is deleted every Monday (db_analytics.delete_old_tracking).
 const PERIODS = [7];
@@ -39,7 +40,7 @@ export default function AdminDashboard() {
   const [updatedAt, setUpdatedAt] = useState(null);
 
   const load = useCallback(async () => {
-    const token = sessionStorage.getItem("token");
+    const token = getAuth("token");
     if (!token || token === "null") {
       navigate("/login");
       return;
@@ -212,7 +213,7 @@ function ForgetOldTracking({ t, onDone }) {
     try {
       const resp = await fetch(`${BASE_URL}/analytics/admin/forget_member_visits?tz_offset=${tzOffsetMinutes()}`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        headers: { Authorization: `Bearer ${getAuth("token")}` },
       });
       if (!resp.ok) throw new Error(`forget ${resp.status}`);
       setDeleted((await resp.json()).deleted || 0);
@@ -250,7 +251,7 @@ function ClearTracking({ t, onDone }) {
     try {
       const resp = await fetch(`${BASE_URL}/analytics/admin/tracking`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        headers: { Authorization: `Bearer ${getAuth("token")}` },
       });
       if (!resp.ok) throw new Error(`clear ${resp.status}`);
       setDeleted((await resp.json()).deleted || 0);
@@ -574,7 +575,7 @@ function DayView({ t, language }) {
   const [filter, setFilter] = useState("all");
 
   const load = useCallback(async () => {
-    const token = sessionStorage.getItem("token");
+    const token = getAuth("token");
     if (!token || token === "null") {
       navigate("/login");
       return;

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import PageNav from "../components/PageNav";
 import { Button, Icon } from "../ui";
 import styles from "./Welcome.module.css";
+import { getAuth } from "../api/session";
 
 // What makes Blossom different, once, right after sign-up (after the
 // location step): women write first, date spots, partner gifts. "Next", the
@@ -26,7 +27,7 @@ export default function Welcome() {
   const last = index === STEPS.length - 1;
 
   useEffect(() => {
-    if (!sessionStorage.getItem("token")) navigate("/login", { replace: true });
+    if (!getAuth("token")) navigate("/login", { replace: true });
   }, [navigate]);
 
   function finish() {

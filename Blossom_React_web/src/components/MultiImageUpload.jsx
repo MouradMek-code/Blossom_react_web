@@ -11,6 +11,7 @@ import {
   uploadPhoto,
 } from "../api/photoUpload";
 import styles from "./MultiImageUpload.module.css";
+import { setAuth } from "../api/session";
 
 const MAX = 6;
 const MIN_REQUIRED = 2;
@@ -56,7 +57,7 @@ export default function ImageUploader() {
 
   function saved(key, photo) {
     knownIds.current?.add(photo.id);
-    sessionStorage.setItem("profilecreated", "yes");
+    setAuth("profilecreated", "yes");
     update(key, { status: "done", id: photo.id, message: "" });
   }
 

@@ -12,6 +12,7 @@ import { IMG } from "../api/images";
 import { isNewMember } from "../api/newMember";
 import { CONNECTION_DOTS, connectionOf, firstMove, languagesLine } from "../api/connection";
 import { Button, EmptyState, Icon, SkeletonTiles } from "../ui";
+import { getAuth, removeAuth } from "../api/session";
 
 // One person in the Browse grid. Several photos: bars on top, and the left or
 // right half of the photo shows the previous or next one.
@@ -130,7 +131,7 @@ function Profiles() {
   // Arabic's joined letters, and Chinese has no capitals.
   const latinScript = !/^(ar|zh)/.test(i18n.language || "");
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [profiles, setProfiles] = useState([]);
   const [ownPhoto, setOwnPhoto] = useState(null);
   const [ownProfile, setOwnProfile] = useState(null);
@@ -204,7 +205,7 @@ function Profiles() {
           setAppliedFilters(initial);
         }
       } catch (err) {
-        sessionStorage.setItem("token", null);
+        removeAuth("token");
         navigate("/login");
       } finally {
         setLoading(false);

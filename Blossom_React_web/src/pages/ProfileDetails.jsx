@@ -7,6 +7,7 @@ import { IMG } from "../api/images";
 import { connectionLabel, connectionOf } from "../api/connection";
 import { Icon } from "../ui";
 import styles from "./ProfileDetails.module.css";
+import { getAuth } from "../api/session";
 
 // Someone's full profile. Liking and passing happen on the Browse cards, not
 // here; opened from a chat it also offers "Unmatch", next to Report and Block.
@@ -30,7 +31,7 @@ function ProfileDetails() {
 
   useEffect(() => {
     async function fetchProfile() {
-      const token = sessionStorage.getItem("token");
+      const token = getAuth("token");
       const resp = await fetch(`${BASE_URL}/profile/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -47,7 +48,7 @@ function ProfileDetails() {
     )}`;
     if (!window.confirm(question)) return;
     setUnmatching(true);
-    const token = sessionStorage.getItem("token");
+    const token = getAuth("token");
     try {
       const resp = await fetch(`${BASE_URL}/matches/unmatch/${id}`, {
         method: "DELETE",
@@ -63,7 +64,7 @@ function ProfileDetails() {
 
   async function handleBlock() {
     setBlocking(true);
-    const token = sessionStorage.getItem("token");
+    const token = getAuth("token");
     try {
       const resp = await fetch(`${BASE_URL}/blocks/${id}`, {
         method: "POST",
@@ -81,7 +82,7 @@ function ProfileDetails() {
     const reason = reportReason.trim();
     if (!reason) return;
     setReporting(true);
-    const token = sessionStorage.getItem("token");
+    const token = getAuth("token");
     try {
       const resp = await fetch(`${BASE_URL}/reports`, {
         method: "POST",

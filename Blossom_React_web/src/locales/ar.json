@@ -32,7 +32,8 @@
     "usernamePlaceholder": "اسم المستخدم أو البريد الإلكتروني",
     "password": "كلمة المرور",
     "button": "دخول",
-    "forgotPassword": "نسيت كلمة المرور؟"
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "remember": "إبقائي متصلاً"
   },
   "signup": {
     "title": "إنشاء حساب",
@@ -371,7 +372,8 @@
     "photoFrom": "صورة من {{name}}",
     "photoReport": "إبلاغ",
     "photoClose": "إغلاق",
-    "photoOpen": "فتح الصورة"
+    "photoOpen": "فتح الصورة",
+    "newBelow": "رسائل جديدة"
   },
   "location": {
     "title": "أين تسكن؟",

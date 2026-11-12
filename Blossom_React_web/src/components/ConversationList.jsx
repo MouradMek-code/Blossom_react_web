@@ -7,6 +7,7 @@ import { NETWORK_ERROR, postJson } from "../api/errors";
 import { shortTime } from "../api/chatTime";
 import { Button, EmptyState, Icon, SkeletonRows } from "../ui";
 import styles from "../pages/Messages.module.css";
+import { getAuth } from "../api/session";
 
 // Refresh while it's on screen, so new messages and badges show up without
 // a reload (there's no push channel).
@@ -18,7 +19,7 @@ const REFRESH_MS = 10000;
 export default function ConversationList({ compact = false, activeConversationId }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [items, setItems] = useState(null); // null while loading
   const [error, setError] = useState("");
   const [openingId, setOpeningId] = useState(null);

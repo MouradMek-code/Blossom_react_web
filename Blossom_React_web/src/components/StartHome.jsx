@@ -2,10 +2,11 @@ import { Link } from "react-router-dom";
 import styles from "./StartHome.module.css";
 import { useTranslation } from "react-i18next";
 import NavIcon from "./NavIcon";
+import { getAuth } from "../api/session";
 
 function StartHome() {
   const { t } = useTranslation();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const istokenundefined = token === "undefined" || token === null;
   return (
     <div className={styles.center}>

@@ -1,8 +1,7 @@
 // Persists in-progress signup state (location + question answers + which
 // question we're on) so a user who closes the tab mid-signup can resume
 // where they left off instead of restarting from question 1. Lives in
-// sessionStorage alongside the token, since neither survives once the
-// browser tab is actually closed - matches the token's own lifetime.
+// sessionStorage: it holds personal details, so it stays with the tab.
 const DRAFT_KEY = "signup_draft";
 
 export function getSignupDraft() {

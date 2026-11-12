@@ -8,6 +8,7 @@ import { postJson } from "../api/errors";
 import { answersFrom, detailsBody, editSections } from "../api/profileCompletion";
 import { Button, Card, Icon, SkeletonRows } from "../ui";
 import styles from "./EditProfile.module.css";
+import { getAuth } from "../api/session";
 
 // /profile/edit: every answer from sign-up that can be completed or changed
 // later - the optional ones skipped at sign-up first of all - with the same
@@ -16,7 +17,7 @@ import styles from "./EditProfile.module.css";
 export default function EditProfile() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [initial, setInitial] = useState(null);
   const [answer, setAnswer] = useState(null);
   const [saving, setSaving] = useState(false);

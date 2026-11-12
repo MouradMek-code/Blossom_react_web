@@ -17,6 +17,7 @@ import { firstRiskyMessageId } from "../api/chatSafety";
 import { fetchChat, sendChatPhoto, sendTyping } from "../api/chatLive";
 import { activeLabel, clockTime, dayLabel, isActiveNow, startsDay } from "../api/chatTime";
 import { isImageFile } from "../api/photoUpload";
+import { getAuth } from "../api/session";
 
 // While the box is changing, "typing..." is sent at most this often.
 const TYPING_EVERY_MS = 3000;
@@ -233,7 +234,7 @@ function ChatPage() {
   const wide = useWide();
   const navigate = useNavigate();
 
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
 
   const [messages, setMessages] = useState([]);
   // Messages already shown in the chat but still on their way to the server.
@@ -256,7 +257,14 @@ function ChatPage() {
   const lastTypingPing = useRef(0);
   const fileRef = useRef(null);
 
-  const bottomRef = useRef(null);
+  const listRef = useRef(null);
+  // Following the newest message: true at the bottom, false once you scroll
+  // up to read older ones - then nothing pulls you back down (polling, "Seen",
+  // "typing..."), and a "New messages" button appears instead.
+  const atBottom = useRef(true);
+  const autoScrollUntil = useRef(0);
+  const shownCount = useRef(0);
+  const [newBelow, setNewBelow] = useState(false);
   const inputRef = useRef(null);
   // Mirrors `text` synchronously. A double click fires send twice before React
   // re-renders, and both calls would otherwise read the same text and post it
@@ -292,7 +300,7 @@ function ChatPage() {
     };
   }, [conversationId, token]);
 
-  const profileId = details?.me_profile_id ?? sessionStorage.getItem("profile_id");
+  const profileId = details?.me_profile_id ?? getAuth("profile_id");
   const partner = details?.profile;
   // Empty chat, a man with a woman: she writes first - his box waits.
   const waitingForHer = messages.length === 0 && details?.first_move === "them";
@@ -372,9 +380,43 @@ function ChatPage() {
     return () => clearInterval(interval);
   }, [loadMessages]);
 
+  const scrollToLatest = useCallback((smooth = true) => {
+    atBottom.current = true;
+    setNewBelow(false);
+    const list = listRef.current;
+    if (!list) return;
+    // Our own smooth scroll passes through "not at the bottom" on the way.
+    autoScrollUntil.current = Date.now() + 700;
+    list.scrollTo({ top: list.scrollHeight, behavior: smooth ? "smooth" : "auto" });
+  }, []);
+
+  function onListScroll() {
+    const list = listRef.current;
+    if (!list) return;
+    const near = list.scrollHeight - list.scrollTop - list.clientHeight < 120;
+    if (near) {
+      atBottom.current = true;
+      setNewBelow(false);
+    } else if (Date.now() > autoScrollUntil.current) {
+      atBottom.current = false;
+    }
+  }
+
+  // Another conversation: start at its newest message.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, pending, typing]);
+    atBottom.current = true;
+    shownCount.current = 0;
+    setNewBelow(false);
+  }, [conversationId]);
+
+  useEffect(() => {
+    const count = messages.length + pending.length;
+    const firstFill = shownCount.current === 0;
+    const grew = count > shownCount.current;
+    shownCount.current = count;
+    if (atBottom.current) scrollToLatest(!firstFill);
+    else if (grew) setNewBelow(true);
+  }, [messages, pending, typing, scrollToLatest]);
 
   // The big photo closes with Escape.
   useEffect(() => {
@@ -401,6 +443,7 @@ function ChatPage() {
 
     const tempId = `pending-${Date.now()}-${Math.random()}`;
     const afterId = messages.reduce((max, m) => Math.max(max, Number(m.id) || 0), 0);
+    atBottom.current = true; // your own message: always shown
     setPending((cur) => [...cur, { id: tempId, content, afterId }]);
 
     const result = await postJson(`${BASE_URL}/messages/conversation/${conversationId}`, {
@@ -447,6 +490,7 @@ function ChatPage() {
     const tempId = `pending-photo-${Date.now()}`;
     const localUrl = URL.createObjectURL(file);
     const afterId = messages.reduce((max, m) => Math.max(max, Number(m.id) || 0), 0);
+    atBottom.current = true;
     setPending((cur) => [...cur, { id: tempId, content: "", localUrl, photo: true, afterId, pending: true }]);
     const result = await sendChatPhoto(conversationId, file);
     setPending((cur) => cur.filter((m) => m.id !== tempId));
@@ -550,7 +594,7 @@ function ChatPage() {
           </Link>
         )}
 
-        <div className={styles.messagesContainer}>
+        <div className={styles.messagesContainer} ref={listRef} onScroll={onListScroll}>
           {messages.length === 0 && details?.first_move && (
             <FirstMoveCard
               move={details.first_move}
@@ -660,7 +704,12 @@ function ChatPage() {
             </div>
           )}
 
-          <div ref={bottomRef} />
+          {newBelow && (
+            <button type="button" className={styles.newBelow} onClick={() => scrollToLatest()}>
+              {t("messages.newBelow")}
+              <Icon name="chevron-down" size={16} />
+            </button>
+          )}
         </div>
 
         {error !== "" && (
@@ -761,6 +810,7 @@ function ChatPage() {
             onClose={() => setSuggestOpen(false)}
             onSent={(message) => {
               setSuggestOpen(false);
+              atBottom.current = true;
               setMessages((cur) => (cur.some((m) => m.id === message.id) ? cur : [...cur, message]));
             }}
           />

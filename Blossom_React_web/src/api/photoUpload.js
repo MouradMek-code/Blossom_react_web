@@ -1,5 +1,6 @@
 import { BASE_URL } from "./config";
 import { friendlyError } from "./errors";
+import { getAuth } from "./session";
 
 // A camera photo is 3-5 MB. Sent as is on a slow connection, the upload could
 // take so long that the connection dropped before the server answered - the
@@ -7,7 +8,7 @@ import { friendlyError } from "./errors";
 const MAX_SIDE = 1600;
 const TIMEOUT_MS = 90000;
 
-const authHeader = () => ({ Authorization: `Bearer ${sessionStorage.getItem("token")}` });
+const authHeader = () => ({ Authorization: `Bearer ${getAuth("token")}` });
 
 export function isImageFile(file) {
   // Some files (HEIC on Windows...) come with no type: let the server decide.

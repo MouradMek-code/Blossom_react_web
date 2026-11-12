@@ -13,6 +13,7 @@ import { MIN_PROFILE_PHOTOS, deletePhoto, fetchOwnPhotos, isImageFile, uploadPho
 import { CONNECTION_EMOJI, CONNECTION_TYPES, connectionLabel, connectionOf } from "../api/connection";
 import { completion } from "../api/profileCompletion";
 import { Button, Icon } from "../ui";
+import { getAuth, setAuth, removeAuth } from "../api/session";
 
 // "Edit" on a section: /profile/edit, opened at that section.
 function EditLink({ section }) {
@@ -37,7 +38,7 @@ function Profile() {
   const [error, setError] = useState("");
   const fileInputRef = useRef(null);
 
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const istokenundefined = token === "undefined" || token === null;
   useEffect(() => {
     if (istokenundefined) {
@@ -51,7 +52,7 @@ function Profile() {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (resp.status === 401) {
-          sessionStorage.setItem("token", null);
+          removeAuth("token");
           navigate("/login");
           return;
         }
@@ -62,9 +63,9 @@ function Profile() {
         }
         const data = await resp.json();
         setProfile(data);
-        sessionStorage.setItem("profile_id", data.id);
+        setAuth("profile_id", data.id);
       } catch (err) {
-        sessionStorage.setItem("token", null);
+        removeAuth("token");
         navigate("/login");
       }
     }

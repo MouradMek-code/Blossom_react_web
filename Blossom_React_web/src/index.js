@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './theme-dark.css';
 import { applyTheme } from './api/theme';
+import { followOtherTabs } from './api/session';
 import './i18n';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // Light or dark (set already by index.html; this also follows the device).
 applyTheme();
+followOtherTabs();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

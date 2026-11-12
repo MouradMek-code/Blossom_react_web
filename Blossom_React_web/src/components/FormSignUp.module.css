@@ -280,3 +280,24 @@
   font-size: 0.9rem;
   font-weight: 500;
 }
+
+/* Login: "Keep me logged in" */
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: -4px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
+}

@@ -32,7 +32,8 @@
     "usernamePlaceholder": "Nom d'utilisateur ou Email",
     "password": "Mot de passe",
     "button": "Connexion",
-    "forgotPassword": "Mot de passe oublié ?"
+    "forgotPassword": "Mot de passe oublié ?",
+    "remember": "Rester connecté(e)"
   },
   "signup": {
     "title": "S'INSCRIRE",
@@ -371,7 +372,8 @@
     "photoFrom": "Photo de {{name}}",
     "photoReport": "Signaler",
     "photoClose": "Fermer",
-    "photoOpen": "Ouvrir la photo"
+    "photoOpen": "Ouvrir la photo",
+    "newBelow": "Nouveaux messages"
   },
   "location": {
     "title": "Où habitez-vous ?",

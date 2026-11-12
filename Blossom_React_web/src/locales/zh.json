@@ -32,7 +32,8 @@
     "usernamePlaceholder": "用户名或邮箱",
     "password": "密码",
     "button": "登录",
-    "forgotPassword": "忘记密码？"
+    "forgotPassword": "忘记密码？",
+    "remember": "保持登录"
   },
   "signup": {
     "title": "注册",
@@ -371,7 +372,8 @@
     "photoFrom": "{{name}} 发来的照片",
     "photoReport": "举报",
     "photoClose": "关闭",
-    "photoOpen": "打开照片"
+    "photoOpen": "打开照片",
+    "newBelow": "新消息"
   },
   "location": {
     "title": "你住在哪里？",

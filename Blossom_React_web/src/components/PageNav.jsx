@@ -7,6 +7,7 @@ import NavIcon from "./NavIcon";
 import { BASE_URL } from "../api/config";
 import i18n from "../i18n";
 import { formatDeadline } from "../api/offers";
+import { getAuth, clearAuth } from "../api/session";
 
 const LANGUAGES = [
   { code: "en", label: "EN", name: "English" },
@@ -125,7 +126,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
   }
 
   const navigate = useNavigate();
-  const [token, setToken] = useState(sessionStorage.getItem("token"));
+  const [token, setToken] = useState(getAuth("token"));
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [counts, setCounts] = useState({ matches: 0, likes: 0, messages: 0 });
@@ -135,7 +136,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
   const onVerifyPage = useLocation().pathname === "/verify";
   const accountRef = useRef(null);
   const istokenundefined = token === "undefined" || token === null;
-  const profileCreated = sessionStorage.getItem("profilecreated");
+  const profileCreated = getAuth("profilecreated");
   const isLoggedInNav = !minimal && istokenundefined !== true && profileCreated === "yes";
   // Only offer Home/Sign-up/Login when there's no session at all. A token
   // without a finished profile means the user is mid-signup, so we show no
@@ -150,8 +151,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
 
   function HandleLogOut() {
     if (!window.confirm(t("settings.logoutTitle"))) return;
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("profilecreated");
+    clearAuth();
     setToken(null);
     setAccountOpen(false);
     setMenuOpen(false);
@@ -189,7 +189,7 @@ function PageNav({ minimal = false, hideTabBar = false, overlay = false }) {
   }, [accountOpen]);
 
   useEffect(() => {
-    const storedToken = sessionStorage.getItem("token");
+    const storedToken = getAuth("token");
     const storedTokenMissing =
       storedToken === "undefined" || storedToken === null;
     if (storedTokenMissing) return;

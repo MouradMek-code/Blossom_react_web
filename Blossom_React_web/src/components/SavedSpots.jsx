@@ -6,12 +6,13 @@ import { postJson } from "../api/errors";
 import { IMG } from "../api/images";
 import { categoryEmoji, categoryGradient, shortPlace } from "../api/categories";
 import styles from "./SavedSpots.module.css";
+import { getAuth } from "../api/session";
 
 // "♡ My saved places" on your profile: the spots you saved, latest first.
 // Tap one to open it (and invite a match from there); ♥ removes it.
 export default function SavedSpots() {
   const { t } = useTranslation();
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   const [spots, setSpots] = useState(null);
 
   useEffect(() => {

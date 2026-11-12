@@ -13,13 +13,14 @@ import SpotsHero from "../components/SpotsHero";
 import InstagramBand from "../components/InstagramBand";
 import Footer from "../components/Footer";
 import styles from "./Homepage.module.css";
+import { getAuth } from "../api/session";
 
 function Homepage() {
   // The homepage is for visitors. Someone logged in goes straight to Browse,
   // or back into sign-up if their profile isn't finished yet.
-  const token = sessionStorage.getItem("token");
+  const token = getAuth("token");
   if (token && token !== "undefined" && token !== "null") {
-    const finished = sessionStorage.getItem("profilecreated") === "yes";
+    const finished = getAuth("profilecreated") === "yes";
     return <Navigate to={finished ? "/profiles" : "/sign_up"} replace />;
   }
 
