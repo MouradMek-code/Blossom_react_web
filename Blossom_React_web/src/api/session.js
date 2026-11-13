@@ -1,9 +1,9 @@
 // Where the login is kept in this browser.
 //
-// "Keep me logged in" (ticked by default) keeps it in localStorage: closing
-// the tab or the browser doesn't log you out, and every tab shares it.
-// Unticked - a shared or public computer - it lives in sessionStorage and is
-// gone when the tab closes, like before.
+// Unticked (the default) it lives in sessionStorage and is gone when the tab
+// closes, like before - safe on a shared or public computer. "Keep me logged
+// in" ticked keeps it in localStorage: closing the tab or the browser doesn't
+// log you out, and every tab shares it. The box remembers its last answer.
 //
 // Only the login lives here (token, profile id, "profile finished").
 // Things that belong to one visit (filters, the sign-up draft) stay in
@@ -55,9 +55,9 @@ export function clearSession() {
   safe(() => sessionStorage.clear());
 }
 
-// The box's last answer on this browser (yes unless they unticked it).
+// The box's last answer on this browser (no until they tick it).
 export function getRemember() {
-  return safe(() => localStorage.getItem(REMEMBER_KEY)) !== "no";
+  return safe(() => localStorage.getItem(REMEMBER_KEY)) === "yes";
 }
 
 // A new login replaces any previous one, then is kept where asked.
