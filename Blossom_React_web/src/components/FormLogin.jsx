@@ -12,7 +12,8 @@ function FormLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  // Off by default. Ticked: still logged in after closing the browser.
+  // Ticked by default: still logged in after closing the browser. Untick on
+  // a shared computer.
   const [remember, setRemember] = useState(getRemember);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
